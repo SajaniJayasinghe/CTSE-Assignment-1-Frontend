@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Image, StyleSheet, Text, TouchableOpacity,TextInput } from "react-native";
 
-export default function SignupScreen() {
+export default function SignupScreen({navigation}) {
     return(
         <View style={styles.container}>
           <Image
