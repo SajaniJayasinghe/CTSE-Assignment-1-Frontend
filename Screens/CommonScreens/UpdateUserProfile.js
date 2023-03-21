@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 
-export default function UpdateUserProfile() {
+export default function UpdateUserProfile({ navigation }) {
   return (
     <View style={styles.container}>
       <Image

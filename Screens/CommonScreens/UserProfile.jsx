@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Image, StyleSheet, Text, TouchableOpacity } from "react-native";
-import Svg, { Ellipse } from "react-native-svg";
 
 export default function UserProfile({navigation}) {
     return(
