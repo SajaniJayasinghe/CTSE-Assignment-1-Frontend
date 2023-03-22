@@ -15,7 +15,7 @@ export default function UpdateUserProfile({ navigation }) {
       <Image
         style={styles.logo}
         source={{
-          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679325197/Screenshot_2023-03-20_at_18.29.26-removebg-preview_y0wd4x.png",
+          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
         }}
       />
       <View style={styles.rect}>
@@ -51,7 +51,6 @@ export default function UpdateUserProfile({ navigation }) {
           Enter Your Name :
         </Text>
         <TextInput
-          keyboardType=" Enter Your Name"
           style={styles.textView}
           //   value={name}
           //   onChange={(e) => setname(e.nativeEvent.text)}
@@ -90,7 +89,7 @@ export default function UpdateUserProfile({ navigation }) {
         <Image
           style={styles.logo2}
           source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679325197/Screenshot_2023-03-20_at_18.29.26-removebg-preview_y0wd4x.png",
+            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
           }}
         />
       </View>
@@ -153,8 +152,8 @@ const styles = StyleSheet.create({
   materialButtonDark: {
     height: 40,
     width: 250,
-    borderColor: "#7E3517",
-    backgroundColor: "#7E3517",
+    borderColor: "#560319",
+    backgroundColor: "#560319",
     borderWidth: 1,
     borderRadius: 100,
     elevation: 5,
@@ -166,7 +165,7 @@ const styles = StyleSheet.create({
   materialButtonDark1: {
     height: 40,
     width: 250,
-    borderColor: "#7E3517",
+    borderColor: "#560319",
     borderWidth: 1,
     borderRadius: 100,
     elevation: 5,
@@ -182,15 +181,15 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   cancelButton: {
-    color: "#7E3517",
+    color: "#560319",
     fontWeight: "bold",
     fontSize: 18,
     lineHeight: 18,
   },
   logo2: {
     width: 400,
-    height: 30,
-    marginTop: 90,
+    height: 40,
+    marginTop: 80,
     marginLeft: 0,
   },
 });

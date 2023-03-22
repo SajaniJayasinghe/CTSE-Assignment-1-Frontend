@@ -7,7 +7,7 @@ export default function AdminDashboard({navigation}) {
           <Image
                 style={styles.homelogo}
                 source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679325197/Screenshot_2023-03-20_at_18.29.26-removebg-preview_y0wd4x.png",
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
                 }}
           />
             <TouchableOpacity onPress={() => navigation.navigate("UserProfile")}>
@@ -64,8 +64,7 @@ export default function AdminDashboard({navigation}) {
                     Sigiriya
                     </Text>
                 </TouchableOpacity>
-             </View>
-             
+             </View>          
               <View style={styles.rect1}>
                 <TouchableOpacity
                     // onPress={() => navigation.navigate("AllOrganizations")}
@@ -91,7 +90,6 @@ export default function AdminDashboard({navigation}) {
                     </Text>
                 </TouchableOpacity>
               </View>
-
              <View style={styles.rect}>     
                 <TouchableOpacity
                     // onPress={() => navigation.navigate("AllOrganizations")}
@@ -117,7 +115,6 @@ export default function AdminDashboard({navigation}) {
                     </Text>
                 </TouchableOpacity>
              </View>
-
               <View style={styles.rect1}>
                 <TouchableOpacity
                     // onPress={() => navigation.navigate("AllOrganizations")}
@@ -143,8 +140,6 @@ export default function AdminDashboard({navigation}) {
                     </Text>
                 </TouchableOpacity>
               </View>
-
-
               <View style={styles.rect1}>
                 <TouchableOpacity
                     // onPress={() => navigation.navigate("AllOrganizations")}
@@ -170,14 +165,11 @@ export default function AdminDashboard({navigation}) {
                     </Text>
                 </TouchableOpacity>
               </View>
-           </ScrollView>
-
+           </ScrollView>            
             <View style={styles.container2}>            
-                <Text
+            <Text
                     style={{
-                        // color: "#000000",
-                        // textAlign: "center",
-                        marginTop: -300,
+                        marginTop: -10,
                         marginLeft:30,
                         fontSize: 18,
                         fontWeight: "bold",
@@ -187,7 +179,7 @@ export default function AdminDashboard({navigation}) {
                    Popular Categories
                 </Text>
                 <TouchableOpacity
-                    // onPress={() => navigation.navigate("AllOrganizations")}
+                    onPress={() => navigation.navigate("HotelHome")}
                  >
                     <Image
                     style={styles.tinyLogo2}
@@ -210,7 +202,7 @@ export default function AdminDashboard({navigation}) {
                  >
                     Hotels
                 </Text>
-
+              
                 <TouchableOpacity
                     // onPress={() => navigation.navigate("AllOrganizations")}
                  >
@@ -236,7 +228,7 @@ export default function AdminDashboard({navigation}) {
                 </Text>
                  
                   <TouchableOpacity
-                    // onPress={() => navigation.navigate("AllOrganizations")}
+                       onPress={() => navigation.navigate("EventsHome")}
                  >
                     <Image
                     style={styles.tinyLogo4}
@@ -259,7 +251,7 @@ export default function AdminDashboard({navigation}) {
                  >Events
                  </Text>
                    <TouchableOpacity
-                    // onPress={() => navigation.navigate("AllOrganizations")}
+                    // onPress={() => navigation.navigate("AddEvents")}
                  >
                     <Image
                     style={styles.tinyLogo5}
@@ -284,7 +276,7 @@ export default function AdminDashboard({navigation}) {
                 </Text>
             </View>
 
-        {/* <!--navigation start--> */}
+          {/* <!--navigation start--> */}
             <View style={styles.container3}>
               <View style={styles.rect3}>
               <TouchableOpacity
@@ -322,7 +314,7 @@ export default function AdminDashboard({navigation}) {
               <Image
                     style={styles.logo2}
                     source={{
-                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679325197/Screenshot_2023-03-20_at_18.29.26-removebg-preview_y0wd4x.png",
+                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
                     }}
             />
             </View>
@@ -343,11 +335,12 @@ const styles = StyleSheet.create({
       },
     container2: {
         width: 500,
-        height: 80,
+        height: 180,
+        marginTop:-100
     },
     container3: {
         flex: 1,
-        marginTop:-340
+        marginTop:10
     },
     logo:{
         width: 55,
@@ -413,7 +406,16 @@ const styles = StyleSheet.create({
         height: 75,
         backgroundColor: "#FAEBD7",
         flexDirection: "row",
-        marginTop: 220,
+        marginTop: 40,
+        marginLeft: 20,
+        borderRadius:30
+      },
+      rect4: {
+        width: 350,
+        height: 105,
+        backgroundColor: "#FAEBD7",
+        flexDirection: "row",
+        marginTop: 20,
         marginLeft: 20,
         borderRadius:30
       },

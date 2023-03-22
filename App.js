@@ -10,6 +10,12 @@ import UpdateUserProfile from "./Screens/CommonScreens/UpdateUserProfile";
 
 //Aroshini
 
+//Sajani
+import EventsHome from "./Screens/Events/EventsHome";
+import EventDetails from "./Screens/Events/EventDetails";
+import AddEvent from "./Screens/Events/AddEvent";
+import UpdateEvent from "./Screens/Events/UpdateEvent";
+
 export default function App() {
   const Stack = createNativeStackNavigator();
 
@@ -23,6 +29,12 @@ export default function App() {
         <Stack.Screen name="SignupScreen" component={SignupScreen} />
         <Stack.Screen name="UserProfile" component={UserProfile} />
         <Stack.Screen name="UpdateUserProfile" component={UpdateUserProfile} />
+
+        {/* Sajani */}
+        <Stack.Screen name="EventsHome" component={EventsHome} />
+        <Stack.Screen name="EventDetails" component={EventDetails} />
+        <Stack.Screen name="AddEvent" component={AddEvent} />
+        <Stack.Screen name="UpdateEvent" component={UpdateEvent} />
       </Stack.Navigator>
     </NavigationContainer>
   );

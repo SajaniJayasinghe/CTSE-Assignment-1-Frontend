@@ -15,7 +15,7 @@ export default function SignInScreen ({navigation}){
            <Image
             style={styles.logo}
             source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679314631/Screenshot_2023-03-20_at_17.45.47-removebg-preview_poz7nt.png",
+            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455024/Screenshot_2023-03-22_at_08.45.23-removebg-preview_uzzb85.png",
             }}
            />
           <Text
@@ -23,7 +23,7 @@ export default function SignInScreen ({navigation}){
             fontSize: 28,
             marginLeft: 100,
             marginTop: 60,
-            color:"#7E3517",
+            color:"#560319",
             fontWeight: "bold",
             marginBottom: 10,
             }}
@@ -52,7 +52,7 @@ export default function SignInScreen ({navigation}){
           <Image
                 style={styles.logo1}
                 source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679325197/Screenshot_2023-03-20_at_18.29.26-removebg-preview_y0wd4x.png",
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
                 }}
           />
           <Text style={styles.loginText4}>Don't have an account?</Text>
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginLeft: 35,
         borderWidth: 1,
-        borderColor:"#5C3317"
+        borderColor:"#560319"
       },
     
       loginText3: {
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   materialButtonDark1: {
     height: 40,
     width: 210,
-    backgroundColor:"#7E3517",
+    backgroundColor:"#560319",
     borderWidth:1,
     borderRadius: 100,
     elevation: 5,
@@ -152,11 +152,11 @@ const styles = StyleSheet.create({
     marginLeft: 90,
 },
 
-loginButton:{
-  color: "white",
-  fontWeight: "bold",
-  fontSize: 18,
-  lineHeight: 18,
-  
-},
+  loginButton:{
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 18,
+    lineHeight: 18,
+    
+  },
 })

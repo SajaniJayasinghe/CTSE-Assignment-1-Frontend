@@ -7,7 +7,7 @@ export default function UserProfile({navigation}) {
           <Image
                 style={styles.logo}
                 source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679325197/Screenshot_2023-03-20_at_18.29.26-removebg-preview_y0wd4x.png",
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
                 }}
           />
            <Image
@@ -74,7 +74,7 @@ export default function UserProfile({navigation}) {
             <Image
                     style={styles.logo2}
                     source={{
-                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679325197/Screenshot_2023-03-20_at_18.29.26-removebg-preview_y0wd4x.png",
+                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
                     }}
             />
         </View>
