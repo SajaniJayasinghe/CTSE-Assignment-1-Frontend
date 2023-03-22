@@ -101,7 +101,7 @@ export default function EventsHome({ navigation }) {
                                 fontFamily: "Times New Roman",
                             }}
                         >
-                        Miss TourisM World
+                        Miss Sri Lanka
                         </Text>
                     </TouchableOpacity>
                  </View>
@@ -164,13 +164,13 @@ export default function EventsHome({ navigation }) {
                                 </Text>
                         </TouchableOpacity>                   
                     </View>
-            </ScrollView> 
+               </ScrollView> 
             <View>
             <TouchableOpacity
               onPress={() => navigation.navigate("AddEvent")}
                 >
                  <Image
-                    style={styles.addhotel}
+                    style={styles.addevent}
                     source={{
                     uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679429885/11-removebg-preview_l55wvj.png",
                     }}
@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
         marginLeft:22,
         shadowRadius: 13, 
         },
-        addhotel: {
+        addevent: {
             width: 80,
             height: 120,
             marginBottom: -20,
