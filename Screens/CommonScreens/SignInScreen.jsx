@@ -7,15 +7,47 @@ import {
   TextInput,
   Alert,
   TouchableOpacity,
-} from "react-native";
+} from "react-native"
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SignInScreen ({navigation}){
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const storetoken = async (value) => {
+    await AsyncStorage.setItem("token", value);
+  };
+
+  const handleSignIn = async () => {
+    await axios
+      .post("http://localhost:8080/api/user/login", {
+        email,
+        password,
+      })
+      .then((res) => {
+        if (res.data) {
+          AsyncStorage.clear();
+          storetoken(res.data.token);
+          if (res.data.role === "Admin") {
+            navigation.push("AdminDashboard");
+          } else if (res.data.role === "user"){
+            navigation.push("UserDashboard");
+          }
+          console.log(res.data);
+
+        }
+        })
+        .catch((err) => {
+          console.log(err);
+          Alert.alert("Logging Failed");       
+         });
+  };
     return(
         <View style={styles.container}>
            <Image
             style={styles.logo}
             source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679314631/Screenshot_2023-03-20_at_17.45.47-removebg-preview_poz7nt.png",
+            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455024/Screenshot_2023-03-22_at_08.45.23-removebg-preview_uzzb85.png",
             }}
            />
           <Text
@@ -23,7 +55,7 @@ export default function SignInScreen ({navigation}){
             fontSize: 28,
             marginLeft: 100,
             marginTop: 60,
-            color:"#7E3517",
+            color:"#560319",
             fontWeight: "bold",
             marginBottom: 10,
             }}
@@ -35,16 +67,22 @@ export default function SignInScreen ({navigation}){
           <TextInput
             placeholder="Enter E-mail Address here"
             style={styles.textInput}
+            onChange={(e) => setEmail(e.nativeEvent.text)}
+            // onChangeText={(e) => setEmail(e.nativeEvent.text)}
+            value={email}
           />
      
           <Text style={styles.passwordText}>
             Enter Your Password
           </Text>
-          <TextInput placeholder="Enter Password here" style={styles.textInput} />
+          <TextInput placeholder="Enter Password here" style={styles.textInput}
+           onChange={(e) => setPassword(e.nativeEvent.text)}
+          value={password} 
+          />
         
           <TouchableOpacity
             style={[styles.containerx, styles.materialButtonDark1]}
-            onPress={() => navigation.navigate("AdminDashboard")}
+            onPress={() => handleSignIn()}
             >
             <Text style={styles.loginButton} >SIGN IN</Text>
           </TouchableOpacity>
@@ -52,7 +90,7 @@ export default function SignInScreen ({navigation}){
           <Image
                 style={styles.logo1}
                 source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679325197/Screenshot_2023-03-20_at_18.29.26-removebg-preview_y0wd4x.png",
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
                 }}
           />
           <Text style={styles.loginText4}>Don't have an account?</Text>
@@ -98,7 +136,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginLeft: 35,
         borderWidth: 1,
-        borderColor:"#5C3317"
+        borderColor:"#560319"
       },
     
       loginText3: {
@@ -142,7 +180,7 @@ const styles = StyleSheet.create({
   materialButtonDark1: {
     height: 40,
     width: 210,
-    backgroundColor:"#7E3517",
+    backgroundColor:"#560319",
     borderWidth:1,
     borderRadius: 100,
     elevation: 5,
@@ -152,11 +190,11 @@ const styles = StyleSheet.create({
     marginLeft: 90,
 },
 
-loginButton:{
-  color: "white",
-  fontWeight: "bold",
-  fontSize: 18,
-  lineHeight: 18,
-  
-},
+  loginButton:{
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 18,
+    lineHeight: 18,
+    
+  },
 })

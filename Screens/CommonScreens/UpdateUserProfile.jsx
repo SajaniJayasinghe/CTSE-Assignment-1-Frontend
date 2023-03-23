@@ -8,14 +8,87 @@ import {
   TextInput,
   Alert,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
-export default function UpdateUserProfile() {
+export default function UpdateUserProfile({ route, navigation }) {
+  useEffect(() => {
+    if (!!!route.prams) {
+    }
+  }, []);
+
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+
+  const getUser = async () => {
+    var token = await AsyncStorage.getItem("token");
+    console.log(token);
+    await axios
+      .get(` `, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        if (res.data.status) {
+          setFullname(res.data.User.fullname);
+          setEmail(res.data.User.email);
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  const updateUser = async () => {
+    const Token = await AsyncStorage.getItem("token");
+    const URL = ` `;
+
+    const payload = {
+      fullname: fullname,
+      email: email,
+    };
+
+    axios
+      .put(URL, payload, {
+        headers: {
+          Authorization: Token,
+        },
+      })
+      .then((_response) => {
+        Alert.alert(
+          "Use Profile Updated",
+          "Your Profile has updated successfully!!",
+          [
+            {
+              text: "OK",
+              onPress: () => navigation.navigate("UserDashboard", {}),
+            },
+          ],
+          { cancelable: false }
+        );
+      })
+      .catch((error) => {
+        console.error(error);
+        Alert.alert(
+          "Error",
+          "Inserting Unsuccessful",
+          [{ text: "Check Again" }],
+          { cancelable: false }
+        );
+      });
+  };
+
+
   return (
     <View style={styles.container}>
       <Image
         style={styles.logo}
         source={{
-          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679325197/Screenshot_2023-03-20_at_18.29.26-removebg-preview_y0wd4x.png",
+          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
         }}
       />
       <View style={styles.rect}>
@@ -51,10 +124,9 @@ export default function UpdateUserProfile() {
           Enter Your Name :
         </Text>
         <TextInput
-          keyboardType=" Enter Your Name"
           style={styles.textView}
-          //   value={name}
-          //   onChange={(e) => setname(e.nativeEvent.text)}
+            value={fullname}
+            onChange={(e) => setFullname(e.nativeEvent.text)}
           placeholder="   Enter Your Name"
         />
         <Text
@@ -71,13 +143,13 @@ export default function UpdateUserProfile() {
         <TextInput
           placeholder=" Enter Your Email Address"
           editable={false}
-          //   value={email}
-          //   onChange={(e) => setemail(e.nativeEvent.text)}
+            value={email}
+            onChange={(e) => setEmail(e.nativeEvent.text)}
           style={styles.textView}
         />
         <TouchableOpacity
           style={[styles.containerx, styles.materialButtonDark]}
-          //   onPress={() => updateUser()}
+            onPress={() => updateUser()}
         >
           <Text style={styles.updateButton}>Update Profile</Text>
         </TouchableOpacity>
@@ -90,7 +162,7 @@ export default function UpdateUserProfile() {
         <Image
           style={styles.logo2}
           source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679325197/Screenshot_2023-03-20_at_18.29.26-removebg-preview_y0wd4x.png",
+            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
           }}
         />
       </View>
@@ -153,8 +225,8 @@ const styles = StyleSheet.create({
   materialButtonDark: {
     height: 40,
     width: 250,
-    borderColor: "#7E3517",
-    backgroundColor: "#7E3517",
+    borderColor: "#560319",
+    backgroundColor: "#560319",
     borderWidth: 1,
     borderRadius: 100,
     elevation: 5,
@@ -166,7 +238,7 @@ const styles = StyleSheet.create({
   materialButtonDark1: {
     height: 40,
     width: 250,
-    borderColor: "#7E3517",
+    borderColor: "#560319",
     borderWidth: 1,
     borderRadius: 100,
     elevation: 5,
@@ -182,15 +254,15 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   cancelButton: {
-    color: "#7E3517",
+    color: "#560319",
     fontWeight: "bold",
     fontSize: 18,
     lineHeight: 18,
   },
   logo2: {
     width: 400,
-    height: 30,
-    marginTop: 90,
+    height: 40,
+    marginTop: 80,
     marginLeft: 0,
   },
 });
