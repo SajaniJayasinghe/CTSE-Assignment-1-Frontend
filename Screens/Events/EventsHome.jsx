@@ -50,7 +50,9 @@ export default function EventsHome({ navigation }) {
                   <View key={event + index}>
                     <View style={styles.event}>
                         <TouchableOpacity
-                                onPress={() => navigation.navigate("EventDetails")}
+                                onPress={() => navigation.navigate("EventDetails",
+                                
+                                )}
                             >
                                 <Image
                                 style={styles.tinyLogo1}

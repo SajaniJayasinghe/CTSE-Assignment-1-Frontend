@@ -10,6 +10,7 @@ export default function AdminDashboard({navigation}) {
                 uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
                 }}
           />
+            <View>
            <TouchableOpacity
               onPress={() => navigation.navigate("SignInScreen")}
                 >
@@ -20,7 +21,7 @@ export default function AdminDashboard({navigation}) {
                     }}
                 />
             </TouchableOpacity>
-            <View>
+          
             <Text style={{
                  marginLeft:260,
                   marginTop:-35,

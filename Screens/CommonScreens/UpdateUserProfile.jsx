@@ -17,21 +17,21 @@ export default function UpdateUserProfile({ route, navigation }) {
     }
   }, []);
 
-  const [fullname, setFullname] = useState("");
+  const [name, setname] = useState("");
   const [email, setEmail] = useState("");
 
   const getUser = async () => {
     var token = await AsyncStorage.getItem("token");
     console.log(token);
     await axios
-      .get(` `, {
+      .get(`http://localhost:8080/api/user/userprofile`, {
         headers: {
           Authorization: token,
         },
       })
       .then((res) => {
         if (res.data.status) {
-          setFullname(res.data.User.fullname);
+          setname(res.data.User.name);
           setEmail(res.data.User.email);
         }
       })
@@ -45,10 +45,10 @@ export default function UpdateUserProfile({ route, navigation }) {
 
   const updateUser = async () => {
     const Token = await AsyncStorage.getItem("token");
-    const URL = ` `;
+    const URL = `http://localhost:8080/api/user/updateuser`;
 
     const payload = {
-      fullname: fullname,
+      name: name,
       email: email,
     };
 
@@ -125,8 +125,8 @@ export default function UpdateUserProfile({ route, navigation }) {
         </Text>
         <TextInput
           style={styles.textView}
-            value={fullname}
-            onChange={(e) => setFullname(e.nativeEvent.text)}
+            value={name}
+            onChange={(e) => setname(e.nativeEvent.text)}
           placeholder="   Enter Your Name"
         />
         <Text
@@ -155,7 +155,7 @@ export default function UpdateUserProfile({ route, navigation }) {
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.containerx, styles.materialButtonDark1]}
-          onPress={() => navigation.navigate("UserProfile")}
+          onPress={() => updateUser()}
         >
           <Text style={styles.cancelButton}>Cancel</Text>
         </TouchableOpacity>
