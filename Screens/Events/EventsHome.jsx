@@ -1,154 +1,62 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 import { View, Text, StyleSheet, Image,TouchableOpacity ,ScrollView,TextInput} from "react-native";
+import axios from "axios";
+
 
 export default function EventsHome({ navigation }) {
+    const [event, setevent] = useState([]);
+    const [filterEvent, setfilterEvent] = useState([]);
+    const [search, setSearch] = useState("");
+
+    useEffect(() => {
+        axios
+          .get("http://localhost:8080/api/events/getevent")
+          .then((res) => {
+            if (res.data.success) {
+                setevent(res.data.Event);
+            }
+          });
+      }, []);
+
+      const searchFunc = (text) => {
+        return event.filter((event) => event.event_name === text);
+      };
+
+      useEffect(() => {
+        setfilterEvent(searchFunc(search));
+      }, [search]);
+    
+
     return (
         <View style={styles.container}>
-        <Image
-                style={styles.homelogo}
-                source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-                }}
-          />
-          <Text
-                    style={{
-                        color: "#000000",
-                        textAlign: "center",
-                        marginTop: 40,
-                        marginLeft:-110,
-                        fontSize: 22,
-                        fontWeight: "bold",
-                        fontFamily: "Times New Roman",
+            <Image
+                    style={styles.homelogo}
+                    source={{
+                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
                     }}
-                    >
-                  Recommended for You
-             </Text>
-            <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                scrollEventThrottle={200}
-                decelerationRate="fast"
-                pagingEnabled
-              >
-               <View style={styles.rect}>
-                    <TouchableOpacity
-                        // onPress={() => navigation.navigate("AllOrganizations")}
-                    >
-                        <Image
-                        style={styles.tinyLogo}
-                        source={{
-                            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481372/6_ukkdab.jpg",
-                        }}
-                        />
-                        <Text
-                            style={{
-                                color: "#000000",
-                                textAlign: "center",
-                                marginTop: 26,
-                                marginBottom: 10,
-                                fontSize: 18,
-                                fontWeight: "bold",
-                                fontFamily: "Times New Roman",
-                            }}
-                        >
-                        New Year Festival
-                        </Text>
-                    </TouchableOpacity>
-                 </View>
-                 <View style={styles.rect1}>
-                    <TouchableOpacity
-                        // onPress={() => navigation.navigate("AllOrganizations")}
-                    >
-                        <Image
-                        style={styles.tinyLogo}
-                        source={{
-                            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481853/7_rl2hpo.jpg",
-                        }}
-                        />
-                        <Text
-                            style={{
-                                color: "#000000",
-                                textAlign: "center",
-                                marginTop: 26,
-                                marginBottom: 10,
-                                fontSize: 18,
-                                fontWeight: "bold",
-                                fontFamily: "Times New Roman",
-                            }}
-                        >
-                        Esela Perahera
-                        </Text>
-                    </TouchableOpacity>
-                 </View>
-                 <View style={styles.rect1}>
-                    <TouchableOpacity
-                        // onPress={() => navigation.navigate("AllOrganizations")}
-                    >
-                        <Image
-                        style={styles.tinyLogo}
-                        source={{
-                            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481441/4_pvzrhq.jpg",
-                        }}
-                        />
-                        <Text
-                            style={{
-                                color: "#000000",
-                                textAlign: "center",
-                                marginTop: 26,
-                                marginBottom: 10,
-                                fontSize: 18,
-                                fontWeight: "bold",
-                                fontFamily: "Times New Roman",
-                            }}
-                        >
-                        Miss Sri Lanka
-                        </Text>
-                    </TouchableOpacity>
-                 </View>
-                 <View style={styles.rect1}>
-                    <TouchableOpacity
-                        // onPress={() => navigation.navigate("AllOrganizations")}
-                    >
-                        <Image
-                        style={styles.tinyLogo}
-                        source={{
-                            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481369/2_w6etem.jpg",
-                        }}
-                        />
-                        <Text
-                            style={{
-                                color: "#000000",
-                                textAlign: "center",
-                                marginTop: 26,
-                                marginBottom: 10,
-                                fontSize: 18,
-                                fontWeight: "bold",
-                                fontFamily: "Times New Roman",
-                            }}
-                        >
-                        Beach Party
-                        </Text>
-                    </TouchableOpacity>
-                 </View>
-            </ScrollView>
-            <Text style={styles.Text1}>All Events</Text>
+            />
+           <View>
+           <Text style={styles.Text1}>All Events</Text>
             <TextInput
                     style={styles.inputserach}
                     placeholder="Search for Event name"
-                    // value={search}
-                    // onChangeText={(text) => setSearch(text)}
+                    value={search}
+                    onChangeText={(text) => setSearch(text)}
                 />
+          
                 <ScrollView style={{ display: "flex", flexDirection: "column" }}>
+                {(search === "" ? event : filterEvent).map(
+                     (event, index) => (
+                  <View key={event + index}>
                     <View style={styles.event}>
                         <TouchableOpacity
                                 onPress={() => navigation.navigate("EventDetails")}
                             >
                                 <Image
                                 style={styles.tinyLogo1}
-                                source={{
-                                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481372/3_vgqveh.jpg",
-                                }}
+                                source={{ uri: event.picture }}
                                 />
+                              
                                 <Text
                                 style={{
                                     color: "#000000",
@@ -160,23 +68,26 @@ export default function EventsHome({ navigation }) {
                                     fontFamily: "Times New Roman",
                                 }}
                                 >
-                               Hellowin - 2023/11/12
+                              {event.event_name}
                                 </Text>
                         </TouchableOpacity>                   
                     </View>
+                   </View>
+                     )
+                )}
                </ScrollView> 
-            <View>
             <TouchableOpacity
               onPress={() => navigation.navigate("AddEvent")}
                 >
                  <Image
                     style={styles.addevent}
                     source={{
-                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679429885/11-removebg-preview_l55wvj.png",
+                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679554256/plus_iskp9w.png",
                     }}
                 />
             </TouchableOpacity>  
             </View>
+           
         </View>
     );
 }
@@ -191,38 +102,6 @@ const styles = StyleSheet.create({
         marginTop:0,
         marginLeft:0
       },
-      rect: {
-        width: 230,
-        height: 260,
-        backgroundColor: "rgba(255,255,255,1)",
-        borderRadius: 25,
-        shadowColor: "rgba(208,194,194,1)",
-        shadowOffset: {
-          width: 5,
-          height: 5,
-        },
-        elevation: 39,
-        shadowOpacity: 1,
-        marginTop: 20,
-        marginLeft:14,
-        shadowRadius: 13,
-      },
-      rect1: {
-        width: 230,
-        height: 260,
-        backgroundColor: "rgba(255,255,255,1)",
-        borderRadius: 25,
-        shadowColor: "rgba(208,194,194,1)",
-        shadowOffset: {
-          width: 5,
-          height: 5,
-        },
-        elevation: 39,
-        shadowOpacity: 1,
-        marginTop: 20,
-        marginLeft:14,
-        shadowRadius: 13,
-      },
       inputserach: {
         backgroundColor: "white",
         shadowColor: "black",
@@ -231,7 +110,7 @@ const styles = StyleSheet.create({
         elevation: 3,
         borderRadius: 40,
         padding: 10,
-        marginTop: 10,
+        marginTop: 20,
         width: 350,
         justifyContent: "center",
         alignItems: "center",
@@ -240,26 +119,18 @@ const styles = StyleSheet.create({
         borderWidth: 1,
       },
     
-    tinyLogo: {
-        width: 230,
-        height: 220,
-        marginBottom: -20,
-        marginTop: -1,
-        borderRadius: 25,
-        marginLeft: 1,
-      },
     Text1: {
         color: "#000000",
         textAlign: "center",
-        marginTop:-50 ,
-        marginLeft:-250,
-        fontSize: 20,
+        marginTop:20 ,
+        fontSize: 30,
+        marginBottom:10,
         fontWeight: "bold",
         fontFamily: "Times New Roman",
       },
     tinyLogo1: {
         width: 350,
-        height: 160,
+        height: 200,
         marginBottom: -20,
         marginTop: 0,
         marginLeft:0,
@@ -267,7 +138,7 @@ const styles = StyleSheet.create({
     },
     event: {
         width: 350,
-        height: 200,
+        height: 240,
         backgroundColor: "rgba(255,255,255,1)",
         borderRadius: 22,
         shadowColor: "rgba(208,194,194,1)",
@@ -277,17 +148,17 @@ const styles = StyleSheet.create({
         },
         elevation: 39,
         shadowOpacity: 1,
-        marginTop: 30,
+        marginTop: 20,
         marginLeft:22,
         shadowRadius: 13, 
         },
-        addevent: {
+    addevent: {
             width: 80,
-            height: 120,
+            height: 80,
             marginBottom: -20,
             marginLeft:290,
             borderRadius:25,
-            marginTop:-130,
+            marginTop:-250,
             borderColor:"black",
         }
 })
