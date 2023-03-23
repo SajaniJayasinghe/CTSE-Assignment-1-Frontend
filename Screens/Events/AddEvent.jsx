@@ -1,8 +1,7 @@
 import React , {useState} from "react";
-import { View, Text, StyleSheet, Image,TouchableOpacity ,ScrollView,TextInput} from "react-native";
+import { View, Text, StyleSheet, Image,TouchableOpacity ,ScrollView,TextInput,Alert} from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
-// import CheckBox from "react-native-check-box";
-
+import axios from "axios";
 
 export default function AddEvent({ navigation }) {
     const data = [
@@ -18,6 +17,38 @@ export default function AddEvent({ navigation }) {
     const [description, setdescription] = useState("");
     const [picture, setpicture] = useState("");
     const [location, setlocation] = useState("");
+    const [date, setdate] = useState("");
+    const [ticket_price, setticket_price] = useState("");
+
+    const addevent = () => {
+      const URL = `https://travel-go.herokuapp.com/api/events/addevent`;
+  
+      const payload = {
+        type: type,
+        event_name: event_name,
+        description: description,
+        picture:picture,
+        location:location,
+        date:date,
+        ticket_price:ticket_price
+      };
+  
+      axios
+        .post(URL, payload)
+        .then((res) => {
+          Alert.alert("Success","Event Added Successfully");
+          navigation.navigate("EventsHome");
+        })
+        .catch((error) => {
+          console.log(error);
+          Alert.alert(
+            "Error",
+            "Event adding Unsuccessful",
+            [{ text: "Check Again" }],
+            { cancelable: false }
+          );
+        });
+    };
 
     return(
         <View style={styles.container}>
@@ -29,7 +60,19 @@ export default function AddEvent({ navigation }) {
                 }}
           />
             </View>
-            <Text
+             <Image
+                style={styles.tinyLogo}
+                source={{
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679492857/1_xmbgom.jpg",
+                }}
+              />
+                <Image
+                style={styles.dance}
+                source={{
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/Screenshot_2023-03-22_at_16.35.13-removebg-preview_m7iojm.png",
+                }}
+              />
+                   <Text
           style={{
             fontWeight: "800",
             textAlign: "center",
@@ -42,14 +85,7 @@ export default function AddEvent({ navigation }) {
         >
        Add New Event
         </Text>
-            <View style={styles.rect}>
-             <Image
-                style={styles.tinyLogo}
-                source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481372/3_vgqveh.jpg",
-                }}
-              />
-          </View>
+          <ScrollView>
           <View>
           <Text style={styles.nameText1}>Select Event Type</Text>
             <Dropdown
@@ -66,50 +102,64 @@ export default function AddEvent({ navigation }) {
                 placeholder="Select  Event Type"
                 searchPlaceholder="Search..."
                 statusBarIsTranslucent={true}
-                // value={value}
-                // onChange={(item) => {
-                //     setrole(item.value);
-                // }}
-                // renderLeftIcon={() => (
-                // )}
+                value={type}
+                onChange={(item) => {
+                  settype(item.value);
+                }}
             >
-               {/* <CheckBox
-          checkedCheckBoxColor="green"
-          onClick={() => {
-            UpdateStatus(todo.id, todo.isDone);
-          }}
-          isChecked={todo.isDone}
-        /> */}
             </Dropdown>
             <Text style={styles.nameText}>Enter Event Name</Text>
                 <TextInput
-                    placeholder="Enter Event Name"
+                    placeholder="Enter Event Name "
                     style={styles.textInput}
+                    onChange={(e) => setevent_name(e.nativeEvent.text)}
+                    value={event_name}
                 />
              <Text style={styles.nameText2}>Enter Location</Text>
                 <TextInput
-                    placeholder="Enter Location"
+                    placeholder="Enter Location "
                     style={styles.textInput}
+                    onChange={(e) => setlocation(e.nativeEvent.text)}
+                    value={location}
              />
              <Text style={styles.nameText2}>Enter Date </Text>
                 <TextInput
                     placeholder="Enter Date"
                     style={styles.textInput}
+                    onChange={(e) => setdate(e.nativeEvent.text)}
+                    value={date}
+             />
+             <Text style={styles.nameText2}>Enter Ticket Price </Text>
+                <TextInput
+                    placeholder="Enter Ticket Price "
+                    style={styles.textInput}
+                    onChange={(e) => setticket_price(e.nativeEvent.text)}
+                    value={ticket_price}
              />
              <Text style={styles.nameText2}>Enter Description</Text>
                 <TextInput
-                    placeholder="Enter Description here"
+                    placeholder="Enter Description"
                     style={styles.nameText3}
-                    // value={donatorName}
-                    // onChange={(e) => setdonatorName(e.nativeEvent.text)}
+                    value={description}
+                    onChange={(e) => setdescription(e.nativeEvent.text)}
                 />
-            <TouchableOpacity
+                 <Text style={styles.nameText2}>Upload Event Image</Text>
+                <TextInput
+                    placeholder="Upload Event Image"
+                    style={styles.textInput}
+                    value={picture}
+                    onChange={(e) => setpicture(e.nativeEvent.text)}
+                />
+          </View>
+          <TouchableOpacity
                 style={[styles.containerx, styles.materialButtonDark1]}
-                onPress={() => navigation.navigate("EventsHome")}
+                onPress={() => {
+                  addevent();
+                }}
                 >
                 <Text style={styles.loginButton} >Add Event</Text>
             </TouchableOpacity>
-          </View>
+          </ScrollView>
           <Image
                 style={styles.logo1}
                 source={{
@@ -141,17 +191,22 @@ const styles = StyleSheet.create({
         shadowRadius: 13,
       },
     tinyLogo: {
-        width: 360,
-        height: 200,
-        marginBottom: -20,
-        marginTop: 0,
-        borderRadius: 25,
-        marginLeft: 0,
+        width: 400,
+        height: 100,
+        marginTop:0,
+        marginLeft:0,
+      },
+      dance:{
+        width: 100,
+        height: 100,
+        marginTop:-50,
+        marginLeft:150,
+        borderRadius:25
       },
     homelogo:{
         width: 400,
         height: 20,
-        marginTop:-5,
+        marginTop:0,
         marginLeft:0
       },
       dropdown: {
@@ -263,7 +318,7 @@ loginButton:{
   },
 logo1:{
     width: 400,
-    height: 50,
+    height: 30,
     marginTop:-5,
     marginLeft:0
 },
