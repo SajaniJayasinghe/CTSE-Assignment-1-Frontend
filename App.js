@@ -7,6 +7,12 @@ import SignupScreen from "./Screens/CommonScreens/SignupScreen";
 import AdminDashboard from "./Screens/CommonScreens/AdminDashboard";
 import UserProfile from "./Screens/CommonScreens/UserProfile";
 import UpdateUserProfile from "./Screens/CommonScreens/UpdateUserProfile";
+import PlacesHome from "./Screens/Places/PlacesHome";
+import AddPlaces from "./Screens/Places/AddPlaces";
+import PlaceDetails from "./Screens/Places/PlaceDetails";
+import UpdatePlace from "./Screens/Places/UpdatePlace";
+import PlaceList from "./Screens/Places/PlaceList";
+import SpecificPlace from "./Screens/Places/SpecificPlace";
 
 //Aroshini
 
@@ -23,6 +29,13 @@ export default function App() {
         <Stack.Screen name="SignupScreen" component={SignupScreen} />
         <Stack.Screen name="UserProfile" component={UserProfile} />
         <Stack.Screen name="UpdateUserProfile" component={UpdateUserProfile} />
+
+        <Stack.Screen name="PlacesHome" component={PlacesHome} />
+        <Stack.Screen name="AddPlaces" component={AddPlaces} />
+        <Stack.Screen name="PlaceDetails" component={PlaceDetails} />
+        <Stack.Screen name="UpdatePlace" component={UpdatePlace} />
+        <Stack.Screen name="PlaceList" component={PlaceList} />
+        <Stack.Screen name="SpecificPlace" component={SpecificPlace} />
       </Stack.Navigator>
     </NavigationContainer>
   );
