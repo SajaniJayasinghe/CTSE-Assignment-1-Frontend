@@ -4,12 +4,6 @@ import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
 export default function HomeScreen ({navigation}) {
   return (
     <View style={styles.container}>
-       <Image
-            style={styles.logo}
-            source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-            }}
-       />
         <Image
         style={styles.homelogo1}
         source={{
@@ -36,14 +30,6 @@ export default function HomeScreen ({navigation}) {
           uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679296071/tr_al0fjx.webp",
         }}
       />
-       
-        <Image
-            style={styles.logo1}
-            source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-            }}
-      />
-      
     </View>
   )
 }
@@ -85,8 +71,7 @@ const styles = StyleSheet.create({
   materialButtonDark1: {
     height: 40,
     width: 250,
-    backgroundColor:"#560319",
-    borderWidth:1,
+    backgroundColor:"#AB784E",
     borderRadius: 100,
     elevation: 5,
     shadowOpacity: 0,
@@ -111,24 +96,12 @@ homelogo:{
     width: 500,
     height: 300,
     marginLeft:-60,
-    marginTop:40
+    marginTop:90
 },
 homelogo1:{
     width: 180,
     height: 100,
     marginLeft:110,
     marginTop:60
-},
-logo1:{
-  width: 400,
-  height: 50,
-  marginTop:-10,
-  marginLeft:0
-},
-logo:{
-  width: 400,
-  height: 30,
-  marginTop:-10,
-  marginLeft:0
 },
 })
