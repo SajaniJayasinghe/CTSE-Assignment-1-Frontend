@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image,TouchableOpacity ,ScrollView,TextInput} from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 
-export default function UpdateEvent({ navigation }) {
+export default function UpdateEvent({route, navigation }) {
     const data = [
         { label: "Festival", value: "Festival" },
         { label: "Cultural", value: "Cultural" },
@@ -11,6 +11,69 @@ export default function UpdateEvent({ navigation }) {
         { label: "DJNight", value: "DJNight" },
         { label: "Adventure", value: "Adventure" },
       ];
+
+      const [type, settype] = useState("");
+      const [event_name, setevent_name] = useState("");
+      const [description, setdescription] = useState("");
+      const [picture, setpicture] = useState("");
+      const [location, setlocation] = useState("");
+      const [date, setdate] = useState("");
+      const [ticket_price, setticket_price] = useState("");
+      const [eventID, seteventID] = useState("");
+
+      useEffect(() => {
+        seteventID(route.params.eventID);
+        settype(route.params.type);
+        setevent_name(route.params.event_name);
+        setdescription(route.params.description);
+        setpicture(route.params.picture);
+        setlocation(route.params.location);
+        setdate(route.params.date);
+        setticket_price(route.params.ticket_price);
+
+      }, []);
+
+      console.log(eventID);
+
+      const updateEvent = () => {
+        const URL = `https://travel-go.herokuapp.com/api/events/update/${eventID}`;
+    
+        const payload = {
+          eid: eID,
+          type: type,
+          event_name: event_name,
+          description: description,
+          picture: picture,
+          location: location,
+          date: date,
+          ticket_price: ticket_price,
+        };
+        console.log(payload);
+        axios
+          .put(URL, payload)
+          .then((res) => {
+            Alert.alert(
+              "Event Updated",
+              "Your Event has updated successfully!!",
+              [
+                {
+                  text: "OK",
+                  onPress: () => navigation.navigate("AdminDashboard"),
+                },
+              ],
+              { cancelable: false }
+            );
+          })
+          .catch((error) => {
+            console.error(error);
+            Alert.alert(
+              "Error",
+              "Updating Unsuccessful",
+              [{ text: "Check Again" }],
+              { cancelable: false }
+            );
+          });
+      };
 
     return(
         <View style={styles.container}>
@@ -43,6 +106,7 @@ export default function UpdateEvent({ navigation }) {
                 }}
               />
           </View>
+          <ScrollView>
           <View>
           <Text style={styles.nameText1}>Select Event Type</Text>
             <Dropdown
@@ -59,50 +123,66 @@ export default function UpdateEvent({ navigation }) {
                 placeholder="Select  Event Type"
                 searchPlaceholder="Search..."
                 statusBarIsTranslucent={true}
-                // value={value}
-                // onChange={(item) => {
-                //     setrole(item.value);
-                // }}
-                // renderLeftIcon={() => (
-                // )}
+                value={type}
+                onChange={(item) => {
+                  settype(item.value);
+                }}              
             >
-               {/* <CheckBox
-          checkedCheckBoxColor="green"
-          onClick={() => {
-            UpdateStatus(todo.id, todo.isDone);
-          }}
-          isChecked={todo.isDone}
-        /> */}
+
             </Dropdown>
             <Text style={styles.nameText}>Enter Event Name</Text>
                 <TextInput
                     placeholder="Enter Event Name"
                     style={styles.textInput}
+                    value={event_name}
+                    onChange={(e) => setevent_name(e.nativeEvent.text)}
                 />
              <Text style={styles.nameText2}>Enter Location</Text>
                 <TextInput
                     placeholder="Enter Location"
+                    value={location}
+                    onChange={(e) => setlocation(e.nativeEvent.text)}
                     style={styles.textInput}
              />
              <Text style={styles.nameText2}>Enter Date </Text>
                 <TextInput
                     placeholder="Enter Date"
                     style={styles.textInput}
+                    value={date}
+                    onChange={(e) => setdate(e.nativeEvent.text)}
+             />
+              <Text style={styles.nameText2}>Enter Ticket Price </Text>
+                <TextInput
+                    placeholder="Enter Ticket Price "
+                    style={styles.textInput}
+                    value={ticket_price}
+                    onChange={(e) => setticket_price(e.nativeEvent.text)}
+                  
              />
              <Text style={styles.nameText2}>Enter Description</Text>
                 <TextInput
                     placeholder="Enter Description here"
                     style={styles.nameText3}
-                    // value={donatorName}
-                    // onChange={(e) => setdonatorName(e.nativeEvent.text)}
+                    value={description}
+                    onChange={(e) => setdescription(e.nativeEvent.text)}
+                />
+              <Text style={styles.nameText2}>Upload Event Image</Text>
+                <TextInput
+                    placeholder="Upload Event Image"
+                    style={styles.textInput}
+                    value={picture}
+                    onChange={(e) => setpicture(e.nativeEvent.text)}
                 />
             <TouchableOpacity
                 style={[styles.containerx, styles.materialButtonDark1]}
-                onPress={() => navigation.navigate("EventsHome")}
+                onPress={() => {
+                  updateEvent();
+                }}
                 >
                 <Text style={styles.loginButton} >Update Event</Text>
             </TouchableOpacity>
           </View>
+          </ScrollView>
           <Image
                 style={styles.logo1}
                 source={{

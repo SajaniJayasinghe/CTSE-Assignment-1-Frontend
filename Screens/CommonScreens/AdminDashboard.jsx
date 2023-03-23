@@ -17,15 +17,16 @@ export default function AdminDashboard({ navigation }) {
           uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png"
         }}
       />
-      <TouchableOpacity onPress={() => navigation.navigate("SignInScreen")}>
-        <Image
-          style={styles.logout}
-          source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679549838/Basic_Element_15-30__28591_29-removebg-preview_vefurd.png"
-          }}
-        />
-      </TouchableOpacity>
       <View>
+        <TouchableOpacity onPress={() => navigation.navigate("SignInScreen")}>
+          <Image
+            style={styles.logout}
+            source={{
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679549838/Basic_Element_15-30__28591_29-removebg-preview_vefurd.png"
+            }}
+          />
+        </TouchableOpacity>
+
         <Text
           style={{
             marginLeft: 260,

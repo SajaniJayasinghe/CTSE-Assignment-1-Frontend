@@ -1,11 +1,11 @@
-import React from "react";
-import { View, Image, StyleSheet, Text, TouchableOpacity } from "react-native";
-
+import { View, Image, StyleSheet, Text, TouchableOpacity,Alert } from "react-native";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function UserProfile({route,navigation}) {
     const [token, settoken] = useState("");
+
     const getToken = async () => {
         settoken(await AsyncStorage.getItem("token"));
       };
@@ -21,7 +21,7 @@ export default function UserProfile({route,navigation}) {
         const userToken = await AsyncStorage.getItem("token");
         console.log(userToken);
         await axios
-          .get(" ", {
+          .get("http://localhost:8080/api/user/userprofile", {
             headers: {
               Authorization: userToken,
             },
@@ -39,7 +39,7 @@ export default function UserProfile({route,navigation}) {
                 const userToken = await AsyncStorage.getItem("token");
                 axios
                   .delete(
-                    ` `,
+                    `http://localhost:8080/api/user/deleteuser `,
                     {
                       headers: {
                         Authorization: userToken,
@@ -54,6 +54,10 @@ export default function UserProfile({route,navigation}) {
                     console.error(e);
                   });
               },
+            },
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
             },
           ]);
       }
@@ -114,7 +118,7 @@ export default function UserProfile({route,navigation}) {
                    }}
                   > Full Name : 
                 </Text>
-                <Text style={styles.textView}>{profile.fullname}</Text>
+                <Text style={styles.textView}>{profile.name}</Text>
                
                 <Text
                  style={{
@@ -123,9 +127,9 @@ export default function UserProfile({route,navigation}) {
                     marginTop: 18,
                     marginRight: 20,
                    }}
-                  > E-Mail Address : 
+                  > E-Mail Address : {profile.email}
                 </Text>
-                <Text style={styles.textView}>{profile.email}</Text>
+                <Text style={styles.textView}></Text>
              </View>
 
                 <TouchableOpacity
@@ -136,7 +140,7 @@ export default function UserProfile({route,navigation}) {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={[styles.containerx, styles.materialButtonDark1]}
-                    // onPress={() => deleteProfile(profile._id)}
+                    onPress={() => deleteProfile(profile._id)}
                     >
                     <Text style={styles.deleteButton}>Delete Profile</Text>
                 </TouchableOpacity>

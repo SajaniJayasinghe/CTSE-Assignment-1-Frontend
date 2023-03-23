@@ -30,7 +30,7 @@ export default function SignInScreen ({navigation}){
           storetoken(res.data.token);
           if (res.data.role === "Admin") {
             navigation.push("AdminDashboard");
-          } else if (res.data.role === "user"){
+          } else if (res.data.role === "User"){
             navigation.push("UserDashboard");
           }
           console.log(res.data);

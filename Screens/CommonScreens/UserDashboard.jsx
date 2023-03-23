@@ -1,8 +1,32 @@
-import React from "react";
 import { View, Image, StyleSheet, Text, TouchableOpacity,ScrollView } from "react-native";
+import React , { useEffect, useState }from "react";
+import axios from "axios";
+
 
 export default function UserDashBoard({ navigation }) {
-   return(
+    const [event, setevent] = useState([]);
+    const [filterEvent, setfilterEvent] = useState([]);
+    const [search, setSearch] = useState("");
+
+    useEffect(() => {
+        axios
+          .get("http://localhost:8080/api/events/getevent")
+          .then((res) => {
+            if (res.data.success) {
+                setevent(res.data.Event);
+            }
+          });
+      }, []);
+
+      const searchFunc = (text) => {
+        return event.filter((event) => event.event_name === text);
+      };
+
+      useEffect(() => {
+        setfilterEvent(searchFunc(search));
+      }, [search]);
+
+    return(
         <View style={styles.container}>
           <Image
                 style={styles.homelogo}
@@ -31,7 +55,7 @@ export default function UserDashBoard({ navigation }) {
                     >
                    Popular Location In this Month
              </Text>
-           
+
            <ScrollView
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
@@ -166,7 +190,7 @@ export default function UserDashBoard({ navigation }) {
                 </TouchableOpacity>
               </View>
            </ScrollView>            
-          
+
            <Text
                     style={{
                         color: "#000000",
@@ -180,8 +204,8 @@ export default function UserDashBoard({ navigation }) {
                     >
                   Recommended for You
              </Text>
-
-           <ScrollView
+{/* 
+             <ScrollView
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 scrollEventThrottle={200}
@@ -193,103 +217,41 @@ export default function UserDashBoard({ navigation }) {
                         // onPress={() => navigation.navigate("AllOrganizations")}
                     >
                         <Image
-                        style={styles.tinyLogo}
-                        source={{
-                            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481441/4_pvzrhq.jpg",
-                        }}
+                        style={styles.rectinyLogo}
+                        source={{ uri: event.picture }}
                         />
-                        <Text
-                            style={{
-                                color: "#000000",
-                                textAlign: "center",
-                                marginTop: 26,
-                                marginBottom: 10,
-                                fontSize: 18,
-                                fontWeight: "bold",
-                                fontFamily: "Times New Roman",
-                            }}
-                        >
-                        Miss Sri Lanka
-                        </Text>
                     </TouchableOpacity>
                  </View>
-                 <View style={styles.rect1}>
+      
+            </ScrollView> */}
+             <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                scrollEventThrottle={200}
+                decelerationRate="fast"
+                pagingEnabled
+              >  
+            {(search === "" ? event : filterEvent).map(
+                (event, index) => (
+                    <View key={event + index}>
+                     <View style={styles.rectangle}>
                     <TouchableOpacity
                         // onPress={() => navigation.navigate("AllOrganizations")}
                     >
                         <Image
-                        style={styles.tinyLogo}
-                        source={{
-                            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481853/7_rl2hpo.jpg",
-                        }}
+                        style={styles.rectinyLogo}
+                        source={{ uri: event.picture }}
                         />
-                        <Text
-                            style={{
-                                color: "#000000",
-                                textAlign: "center",
-                                marginTop: 26,
-                                marginBottom: 10,
-                                fontSize: 18,
-                                fontWeight: "bold",
-                                fontFamily: "Times New Roman",
-                            }}
-                        >
-                        Esela Perahera
-                        </Text>
                     </TouchableOpacity>
                  </View>
-                 <View style={styles.rect}>
-                    <TouchableOpacity
-                        // onPress={() => navigation.navigate("AllOrganizations")}
-                    >
-                        <Image
-                        style={styles.tinyLogo}
-                        source={{
-                            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481372/6_ukkdab.jpg",
-                        }}
-                        />
-                        <Text
-                            style={{
-                                color: "#000000",
-                                textAlign: "center",
-                                marginTop: 26,
-                                marginBottom: 10,
-                                fontSize: 18,
-                                fontWeight: "bold",
-                                fontFamily: "Times New Roman",
-                            }}
-                        >
-                        New Year Festival
-                        </Text>
-                    </TouchableOpacity>
-                 </View>
-                 <View style={styles.rect1}>
-                    <TouchableOpacity
-                        // onPress={() => navigation.navigate("AllOrganizations")}
-                    >
-                        <Image
-                        style={styles.tinyLogo}
-                        source={{
-                            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481369/2_w6etem.jpg",
-                        }}
-                        />
-                        <Text
-                            style={{
-                                color: "#000000",
-                                textAlign: "center",
-                                marginTop: 26,
-                                marginBottom: 10,
-                                fontSize: 18,
-                                fontWeight: "bold",
-                                fontFamily: "Times New Roman",
-                            }}
-                        >
-                        Beach Party
-                        </Text>
-                    </TouchableOpacity>
-                 </View>
-                 </ScrollView>
-        
+      
+                    </View>
+                )
+            )}
+            </ScrollView>
+
+
+
             <View style={styles.container2}>            
             <Text
                     style={{
@@ -373,6 +335,7 @@ export default function UserDashBoard({ navigation }) {
                 }}
                  >Events
                  </Text>
+                 
                    <TouchableOpacity
                     // onPress={() => navigation.navigate("AddEvents")}
                  >
@@ -533,7 +496,7 @@ const styles = StyleSheet.create({
         marginLeft: 305,
       },
     rectangle:{
-        width: 178,
+        width: 360,
         height: 190,
         backgroundColor: "rgba(255,255,255,1)",
         borderRadius: 25,
@@ -547,5 +510,13 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginLeft:14,
         shadowRadius: 13,
-    }
+    },
+    rectinyLogo: {
+        width: 360,
+        height: 200,
+        marginBottom: -20,
+        marginTop: -1,
+        borderRadius: 25,
+        marginLeft: 1,
+      },
 })

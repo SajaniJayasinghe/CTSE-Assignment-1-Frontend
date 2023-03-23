@@ -1,10 +1,17 @@
 import React , {useState} from "react";
-import { View, Text, StyleSheet, Image,TouchableOpacity ,ScrollView,TextInput,Alert} from "react-native";
+import { View, Text, StyleSheet, Image,TouchableOpacity ,ScrollView,TextInput,Alert, Button} from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import axios from "axios";
+import moment from "moment";
+import * as ImagePicker from "expo-image-picker";
+import CustomLoading from "../../components/CustomLoading";
+
 
 export default function AddEvent({ navigation }) {
-    const data = [
+  const [loading, setLoading] = useState(false);
+
+  const [image, setImage] = useState(null);
+  const data = [
         { label: "Festival", value: "Festival" },
         { label: "Cultural", value: "Cultural" },
         { label: "BeachParty", value: "BeachParty" },
@@ -21,26 +28,46 @@ export default function AddEvent({ navigation }) {
     const [ticket_price, setticket_price] = useState("");
 
     const addevent = () => {
-      const URL = `https://travel-go.herokuapp.com/api/events/addevent`;
+      const URL = `http://localhost:8080/api/events/addevent`;
   
-      const payload = {
-        type: type,
-        event_name: event_name,
-        description: description,
-        picture:picture,
-        location:location,
-        date:date,
-        ticket_price:ticket_price
-      };
-  
+      // const payload = {
+      //   type: type,
+      //   event_name: event_name,
+      //   description: description,
+      //   picture:picture,
+      //   location:location,
+      //   date:date,
+      //   ticket_price:ticket_price
+      // };
+      const payload = new FormData();
+      setLoading(true);
+      payload.append("type", type);
+      payload.append("event_name", event_name);
+      payload.append("description", description);
+      payload.append("picture", {
+        uri: image,
+        type: "image/jpeg",
+        name: "image.jpg",
+      });
+      payload.append("location", location);
+      payload.append("date", date);
+      payload.append("ticket_price", ticket_price);
+
+   
       axios
-        .post(URL, payload)
+        .post(URL, payload,{
+          headers: {
+            "Content-Type": "multipart/form-data",
+          }
+        })
         .then((res) => {
           Alert.alert("Success","Event Added Successfully");
+          setLoading(false);
           navigation.navigate("EventsHome");
         })
         .catch((error) => {
           console.log(error);
+          setLoading(false);
           Alert.alert(
             "Error",
             "Event adding Unsuccessful",
@@ -49,9 +76,30 @@ export default function AddEvent({ navigation }) {
           );
         });
     };
+    console.log(image)
+    //for Image upload
+ const pickImage = async () => {
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1,
+  });
+
+
+  if (!result.canceled) {
+    setImage(result.assets[0].uri);
+  } else {
+    setImage(null);
+  }
+};
+
+
 
     return(
+      <>
         <View style={styles.container}>
+          
          <View>
            <Image
                 style={styles.homelogo}
@@ -143,13 +191,22 @@ export default function AddEvent({ navigation }) {
                     value={description}
                     onChange={(e) => setdescription(e.nativeEvent.text)}
                 />
-                 <Text style={styles.nameText2}>Upload Event Image</Text>
-                <TextInput
+                 {/* <Text style={styles.nameText2}>Upload Event Image</Text> */}
+                {/* <TextInput
                     placeholder="Upload Event Image"
                     style={styles.textInput}
                     value={picture}
                     onChange={(e) => setpicture(e.nativeEvent.text)}
-                />
+                /> */}
+                <TouchableOpacity style={[styles.containerx, styles.materialButtonDark1]} onPress={pickImage}>
+                <Text style={{
+                    color: "#fff",
+                    fontSize: 20,
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    fontFamily: "Times New Roman",         
+                }}>Upload Event Image</Text>
+                </TouchableOpacity>
           </View>
           <TouchableOpacity
                 style={[styles.containerx, styles.materialButtonDark1]}
@@ -167,6 +224,8 @@ export default function AddEvent({ navigation }) {
                 }}
           />
         </View>
+      {loading ? < CustomLoading/> : null}
+        </>
     )
 }
 

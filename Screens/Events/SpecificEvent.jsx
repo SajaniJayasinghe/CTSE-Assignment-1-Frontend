@@ -1,8 +1,33 @@
-import React from "react";
-import { View, Image, StyleSheet, Text, TouchableOpacity,ScrollView } from "react-native";
+import React , { useEffect, useState }from "react";
+import { View, Image, StyleSheet, Text, TouchableOpacity,ScrollView,Alert } from "react-native";
+import axios from "axios";
+import { useRoute } from "@react-navigation/native";
 
 
 export default function SpecificEvent({navigation}) {
+  const [event, setevent] = useState([]);
+  const [filterEvent, setfilterEvent] = useState([]);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/api/events/getevent")
+      .then((res) => {
+        if (res.data.success) {
+            setevent(res.data.Event);
+        }
+      });
+  }, []);
+
+  const searchFunc = (text) => {
+    return event.filter((event) => event.event_name === text);
+  };
+
+  useEffect(() => {
+    setfilterEvent(searchFunc(search));
+  }, [search]);
+
+
     return(
         <View style={styles.container}>
            <Image
@@ -11,19 +36,6 @@ export default function SpecificEvent({navigation}) {
                 uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
                 }}
            />
-           <Text
-            style={{
-                fontWeight: "800",
-                textAlign: "center",
-                fontSize: 36,
-                marginLeft: -10,
-                marginTop: 15,
-                color:"#3F000F",
-                fontFamily: "Times New Roman",
-            }}
-            >  Hellowin
-               {/* {hotel.name} */}
-           </Text>
            <View style={styles.rect}>
              <Image
                 style={styles.tinyLogo}
@@ -143,16 +155,10 @@ export default function SpecificEvent({navigation}) {
                }}>
                 Description {'\n'}
               </Text>
-                <TouchableOpacity
-                    // onPress={() =>
-                    //   navigation.navigate("UpdateHotelDetails", {
-                    //     donationID: donations._id,
-                    //   })
-                    // }
-                    onPress={() => navigation.navigate("UpdateEvent")}
-                  >
-                </TouchableOpacity>
              <ScrollView>
+             {(search === "" ? event : filterEvent).map(
+                     (event, index) => (
+                  <View key={event + index}>
                 <View style={styles.rect1}>
                 <Text style={{
                     marginLeft:20,
@@ -162,10 +168,10 @@ export default function SpecificEvent({navigation}) {
                     fontWeight:"bold",
                     marginTop:10
                 }}>
-                   Hellowin {/* {hotel.name} */}
+                {event.event_name} -    {event.type}
                 </Text>
                 <Image
-                    style={styles.tinyLogo6}
+                    style={styles.tinyLogo8}
                     source={{
                         uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679471650/2838912_zdihvz.png",
                     }}
@@ -178,7 +184,7 @@ export default function SpecificEvent({navigation}) {
                     color:"#52595D",
                     fontWeight:"bold"
                 }}>
-                   Unawatuna, Southern Province, Sri Lanka  {/* {hotel.location} */}
+                  {event.location} {/* {hotel.location} */}
                     {'\n'}
                 </Text>
                 <Text style={{
@@ -189,23 +195,36 @@ export default function SpecificEvent({navigation}) {
                     color:"#52595D",
                     fontWeight:"bold"
                 }}>
-                  2023-11-10
+                  {event.date}
                     {'\n'}
+                </Text>
+                <Text style={{
+                    marginLeft:38,
+                    fontSize: 15,
+                    marginTop:-10,
+                    fontFamily:"Times New Roman",
+                    color:"#000000",
+                    textAlign:"justify",
+                    fontWeight:"bold",
+                    marginRight:20
+                }}>
+               Ticket Price :  {event.ticket_price}{'\n'}
                 </Text>
                 <Text style={{
                     marginLeft:20,
                     fontSize: 15,
-                    marginTop:5,
+                    marginTop:15,
                     fontFamily:"Times New Roman",
                     color:"#52595D",
                     textAlign:"justify",
                     fontWeight:"bold",
                     marginRight:20
-                }}>
-                  {/* {hotel.description} */}
-                Take advantage of a free breakfast buffet, a rooftop terrace, and a coffee shop/cafe at Araliya Beach Resort and Spa. This resort is a great place to bask in the sun with a white sand beach. Treat yourself to a Thai massage at the onsite spa. Be sure to enjoy a meal at any of the 4 onsite restaurants, which feature a poolside location and garden views. In addition to a garden and dry cleaning/laundry services, guests can connect to free in-room WiFi, with speed of 50+ Mbps.
+                }}> {event.description}
                 </Text>
+                  </View>
                 </View>
+                     )
+                )}
              </ScrollView>
         </View>
     )
@@ -293,6 +312,15 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         marginLeft: 35,
       },
+      tinyLogo6: {
+        width: 46,
+        height: 46,
+        marginBottom: -20,
+         marginTop: 8,
+        borderRadius: 100,
+        marginLeft: 35,
+      },
+
       tinyLogo7: {
         width: 46,
         height: 46,
@@ -300,6 +328,14 @@ const styles = StyleSheet.create({
          marginTop: 8,
         borderRadius: 100,
         marginLeft: 32,
+      },
+      tinyLogo8:{
+        width: 18,
+        height: 18,
+        marginBottom: -20,
+         marginTop: 13,
+        borderRadius: 100,
+        marginLeft: 19,
       },
     icon: {
         color: "#8B0000",

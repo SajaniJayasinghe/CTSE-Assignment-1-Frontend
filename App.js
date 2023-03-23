@@ -17,7 +17,7 @@ import SpecificPlace from "./Screens/Places/SpecificPlace";
 
 //Sajani
 import EventsHome from "./Screens/Events/EventsHome";
-import EventDetails from "./Screens/Events/EventDetails";
+import AdminEventDetails from "./Screens/Events/AdminEventDetails";
 import AddEvent from "./Screens/Events/AddEvent";
 import UpdateEvent from "./Screens/Events/UpdateEvent";
 import EventList from "./Screens/Events/EventList";
@@ -40,7 +40,7 @@ export default function App() {
 
         {/* Sajani */}
         <Stack.Screen name="EventsHome" component={EventsHome} />
-        <Stack.Screen name="EventDetails" component={EventDetails} />
+        <Stack.Screen name="EventDetails" component={AdminEventDetails} />
         <Stack.Screen name="AddEvent" component={AddEvent} />
         <Stack.Screen name="UpdateEvent" component={UpdateEvent} />
         <Stack.Screen name="EventList" component={EventList} />
