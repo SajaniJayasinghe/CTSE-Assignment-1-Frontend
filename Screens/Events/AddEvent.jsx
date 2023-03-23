@@ -1,4 +1,4 @@
-import React from "react";
+import React , {useState} from "react";
 import { View, Text, StyleSheet, Image,TouchableOpacity ,ScrollView,TextInput} from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 // import CheckBox from "react-native-check-box";
@@ -12,6 +12,12 @@ export default function AddEvent({ navigation }) {
         { label: "DJNight", value: "DJNight" },
         { label: "Adventure", value: "Adventure" },
       ];
+    
+    const [type, settype] = useState("");
+    const [event_name, setevent_name] = useState("");
+    const [description, setdescription] = useState("");
+    const [picture, setpicture] = useState("");
+    const [location, setlocation] = useState("");
 
     return(
         <View style={styles.container}>

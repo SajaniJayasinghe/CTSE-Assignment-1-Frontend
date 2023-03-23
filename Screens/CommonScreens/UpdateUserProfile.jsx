@@ -8,8 +8,81 @@ import {
   TextInput,
   Alert,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
-export default function UpdateUserProfile({ navigation }) {
+export default function UpdateUserProfile({ route, navigation }) {
+  useEffect(() => {
+    if (!!!route.prams) {
+    }
+  }, []);
+
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+
+  const getUser = async () => {
+    var token = await AsyncStorage.getItem("token");
+    console.log(token);
+    await axios
+      .get(` `, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        if (res.data.status) {
+          setFullname(res.data.User.fullname);
+          setEmail(res.data.User.email);
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  const updateUser = async () => {
+    const Token = await AsyncStorage.getItem("token");
+    const URL = ` `;
+
+    const payload = {
+      fullname: fullname,
+      email: email,
+    };
+
+    axios
+      .put(URL, payload, {
+        headers: {
+          Authorization: Token,
+        },
+      })
+      .then((_response) => {
+        Alert.alert(
+          "Use Profile Updated",
+          "Your Profile has updated successfully!!",
+          [
+            {
+              text: "OK",
+              onPress: () => navigation.navigate("UserDashboard", {}),
+            },
+          ],
+          { cancelable: false }
+        );
+      })
+      .catch((error) => {
+        console.error(error);
+        Alert.alert(
+          "Error",
+          "Inserting Unsuccessful",
+          [{ text: "Check Again" }],
+          { cancelable: false }
+        );
+      });
+  };
+
+
   return (
     <View style={styles.container}>
       <Image
@@ -52,8 +125,8 @@ export default function UpdateUserProfile({ navigation }) {
         </Text>
         <TextInput
           style={styles.textView}
-          //   value={name}
-          //   onChange={(e) => setname(e.nativeEvent.text)}
+            value={fullname}
+            onChange={(e) => setFullname(e.nativeEvent.text)}
           placeholder="   Enter Your Name"
         />
         <Text
@@ -70,13 +143,13 @@ export default function UpdateUserProfile({ navigation }) {
         <TextInput
           placeholder=" Enter Your Email Address"
           editable={false}
-          //   value={email}
-          //   onChange={(e) => setemail(e.nativeEvent.text)}
+            value={email}
+            onChange={(e) => setEmail(e.nativeEvent.text)}
           style={styles.textView}
         />
         <TouchableOpacity
           style={[styles.containerx, styles.materialButtonDark]}
-          //   onPress={() => updateUser()}
+            onPress={() => updateUser()}
         >
           <Text style={styles.updateButton}>Update Profile</Text>
         </TouchableOpacity>

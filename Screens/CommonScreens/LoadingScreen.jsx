@@ -36,7 +36,7 @@ const LoadingScreen = ({navigation}) =>{
             
             <TouchableOpacity
                style={[style.containerx, style.materialButtonDark]}
-               onPress={() => navigation.navigate("UserDashboard")}
+               onPress={() => navigation.navigate("HomeScreen")}
              >
                 <Text style={style.letsGetStarted} >Get Started</Text>
             </TouchableOpacity>

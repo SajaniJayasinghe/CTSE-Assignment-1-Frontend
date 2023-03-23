@@ -1,7 +1,42 @@
-import React from "react";
-import { View, Image, StyleSheet, Text, TouchableOpacity,TextInput } from "react-native";
+import React ,{useState} from "react";
+import axios from "axios";
+
+import { View, Image, StyleSheet, Text, TouchableOpacity,TextInput,Alert } from "react-native";
 
 export default function SignupScreen({navigation}) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+
+  const onSignUp = async() => {
+      if (password == confirmPassword) {
+        const payload = {
+          name: name,
+          email: email,
+          password: password,
+        };
+    
+    await axios
+      .post("http://localhost:8080/api/user/register", payload)
+      .then((res) => {
+        if (res.data.status) {
+          Alert.alert("Success", "Registered Successfully");
+          setTimeout(() => {
+            navigation.push("SignInScreen");
+          }, 2000);
+        } else {
+          Alert.alert("Error", "Registration Failed");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+    else {
+      Alert.alert("Error", "Password and Confirm Password should be same");
+    }
+  };
     return(
         <View style={styles.container}>
           <Image
@@ -28,26 +63,35 @@ export default function SignupScreen({navigation}) {
                 <TextInput
                     placeholder="Enter Full Name here"
                     style={styles.textInput}
+                    onChange={(e) => setName(e.nativeEvent.text)}
+                    value={name}
+
             />
 
             <Text style={styles.Text2}> E Mail Address </Text>
                 <TextInput placeholder="Enter E-mail Address here" 
                     style={styles.textInput} 
+                    onChange={(e) => setEmail(e.nativeEvent.text)}
+                    value={email}
             />
 
             <Text style={styles.Text2}> Password </Text>
                 <TextInput placeholder="Enter Password here" 
                     style={styles.textInput} 
+                    onChange={(e) => setPassword(e.nativeEvent.text)}
+                    value={password}
             />
 
             <Text style={styles.Text2}> Confirm Password </Text>
                 <TextInput placeholder="Re-Password here" 
                     style={styles.textInput} 
+                    onChange={(e) => setConfirmPassword(e.nativeEvent.text)}
+                    value={confirmPassword}
             />
 
             <TouchableOpacity
                  style={[styles.containerx, styles.materialButtonDark]}
-                 onPress={() => navigation.navigate("SignInScreen")}
+                 onPress={onSignUp}
                  >
               <Text style={styles.signupButton} >SIGN UP</Text>
             </TouchableOpacity>
