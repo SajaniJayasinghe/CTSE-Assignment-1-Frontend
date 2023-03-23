@@ -9,9 +9,16 @@ import {
   ScrollView,
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
+import * as ImagePicker from "expo-image-picker";
+import CustomLoading from "../../components/CustomLoading";
+import axios from "axios";
+
 // import CheckBox from "react-native-check-box";
 
 export default function AddHotels({ navigation }) {
+  const [loading, setLoading] = useState(false);
+
+  const [image, setImage] = useState(null);
   const data = [
     { label: "Wifi", value: "Wifi" },
     { label: "AC", value: "AC" },
@@ -19,110 +26,206 @@ export default function AddHotels({ navigation }) {
     { label: "Pool", value: "Pool" },
     { label: "Parking", value: "Parking" },
   ];
+
+  const [hotel_name, sethotel_name] = useState("");
+  const [description, setdescription] = useState("");
+  const [address, setaddress] = useState("");
+  const [mobile, setmobile] = useState("");
+  const [facilities, setfacilities] = useState("");
+
+  const addHotel = () => {
+    const URL = `http://localhost:8080/api/hotels/addhotel`;
+
+    const payload = new FormData();
+    setLoading(true);
+    payload.append("hotel_name", hotel_name);
+    payload.append("description", description);
+    payload.append("image", {
+      uri: image,
+      type: "image/jpeg",
+      name: "image.jpg",
+    });
+    payload.append("address", address);
+
+    payload.append("mobile", mobile);
+    payload.append("facilities", facilities);
+
+    axios
+      .post(URL, payload, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        Alert.alert("Success", "Hotel Added Successfully");
+        setLoading(false);
+        navigation.navigate("HotelHome");
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+        Alert.alert(
+          "Error",
+          "Hotel adding Unsuccessful",
+          [{ text: "Check Again" }],
+          { cancelable: false }
+        );
+      });
+  };
+  console.log(image);
+  //for Image upload
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    } else {
+      setImage(null);
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <View>
-        <Image
-          style={styles.homelogo}
-          source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-          }}
-        />
-        <Text
-          style={{
-            fontWeight: "800",
-            textAlign: "center",
-            fontSize: 36,
-            marginLeft: -10,
-            marginTop: 15,
-            color: "#3F000F",
-            fontFamily: "Times New Roman",
-          }}
-        >
-          Add New Hotel
-        </Text>
-        <View style={styles.rect}>
+    <>
+      <View style={styles.container}>
+        <View>
           <Image
-            style={styles.tinyLogo}
+            style={styles.homelogo}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679427495/cinnamon_jmlgpz.webp",
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
             }}
           />
-        </View>
-        <ScrollView
-          vertical={true}
-          showsHorizontalScrollIndicator={false}
-          scrollEventThrottle={200}
-          decelerationRate="fast"
-          pagingEnabled
-        >
-          <Text style={styles.nameText}>Enter Hotel Name</Text>
-          <TextInput
-            placeholder="Enter Hotel Name here"
-            style={styles.textInput}
-          />
-          <Text style={styles.nameText1}>Select Facilities</Text>
-          <Dropdown
-            style={styles.dropdown}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={data}
-            search
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            placeholder="Select Facilities"
-            searchPlaceholder="Search..."
-            statusBarIsTranslucent={true}
-            // value={value}
-            // onChange={(item) => {
-            //     setrole(item.value);
-            // }}
-            // renderLeftIcon={() => (
-            // )}
+          <Text
+            style={{
+              fontWeight: "800",
+              textAlign: "center",
+              fontSize: 36,
+              marginLeft: -10,
+              marginTop: 15,
+              color: "#3F000F",
+              fontFamily: "Times New Roman",
+            }}
           >
-            {/* <CheckBox
+            Add New Hotel
+          </Text>
+          <View style={styles.rect}>
+            <Image
+              style={styles.tinyLogo}
+              source={{
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679427495/cinnamon_jmlgpz.webp",
+              }}
+            />
+          </View>
+          <ScrollView
+            vertical={true}
+            showsHorizontalScrollIndicator={false}
+            scrollEventThrottle={200}
+            decelerationRate="fast"
+            pagingEnabled
+          >
+            <Text style={styles.nameText}>Enter Hotel Name</Text>
+            <TextInput
+              placeholder="Enter Hotel Name here"
+              style={styles.textInput}
+              onChange={(e) => sethotel_name(e.nativeEvent.text)}
+              value={hotel_name}
+            />
+            <Text style={styles.nameText1}>Select Facilities</Text>
+            <Dropdown
+              style={styles.dropdown}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={data}
+              search
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              placeholder="Select Facilities"
+              searchPlaceholder="Search..."
+              statusBarIsTranslucent={true}
+              value={facilities}
+              onChange={(item) => {
+                setfacilities(item.value);
+              }}
+              // value={value}
+              // onChange={(item) => {
+              //     setrole(item.value);
+              // }}
+              // renderLeftIcon={() => (
+              // )}
+            >
+              {/* <CheckBox
          checkedCheckBoxColor="green"
          onClick={() => {
            UpdateStatus(todo.id, todo.isDone);
          }}
          isChecked={todo.isDone}
        /> */}
-          </Dropdown>
-          <Text style={styles.nameText1}>Enter Hotel Address</Text>
-          <TextInput
-            placeholder="Enter Hotel Address here"
-            style={styles.textInput}
-          />
+            </Dropdown>
+            <Text style={styles.nameText1}>Enter Hotel Address</Text>
+            <TextInput
+              placeholder="Enter Hotel Address here"
+              style={styles.textInput}
+              onChange={(e) => setaddress(e.nativeEvent.text)}
+              value={address}
+            />
 
-          <Text style={styles.nameText1}>Enter Contact Number</Text>
-          <TextInput
-            placeholder="Enter Contact Number"
-            style={styles.textInput}
-          />
+            <Text style={styles.nameText1}>Enter Contact Number</Text>
+            <TextInput
+              placeholder="Enter Contact Number"
+              style={styles.textInput}
+              onChange={(e) => setmobile(e.nativeEvent.text)}
+              value={mobile}
+            />
 
-          <Text style={styles.nameText1}>Enter Description</Text>
-          <TextInput
-            placeholder="Enter Description here"
-            style={styles.nameText2}
-          />
-        </ScrollView>
-        <TouchableOpacity
-          style={[styles.containerx, styles.materialButtonDark1]}
-          onPress={() => navigation.navigate("HotelHome")}
-        >
-          <Text style={styles.loginButton}>Add Hotel</Text>
-        </TouchableOpacity>
+            <Text style={styles.nameText1}>Enter Description</Text>
+            <TextInput
+              placeholder="Enter Description here"
+              style={styles.nameText2}
+              onChange={(e) => setdescription(e.nativeEvent.text)}
+              value={description}
+            />
+            <TouchableOpacity
+              style={[styles.containerx, styles.materialButtonDark1]}
+              onPress={pickImage}
+            >
+              <Text
+                style={{
+                  color: "#fff",
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  fontFamily: "Times New Roman",
+                }}
+              >
+                Upload Hotel Image
+              </Text>
+            </TouchableOpacity>
+          </ScrollView>
+          <TouchableOpacity
+            style={[styles.containerx, styles.materialButtonDark1]}
+            onPress={() => {
+              addHotel();
+            }}
+          >
+            <Text style={styles.loginButton}>Add Hotel</Text>
+          </TouchableOpacity>
+        </View>
+        <Image
+          style={styles.logo1}
+          source={{
+            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
+          }}
+        />
       </View>
-      <Image
-        style={styles.logo1}
-        source={{
-          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-        }}
-      />
-    </View>
+      {loading ? <CustomLoading /> : null}
+    </>
   );
 }
 

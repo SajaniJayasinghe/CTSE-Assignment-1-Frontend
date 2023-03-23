@@ -17,6 +17,11 @@ import UpdateEvent from "./Screens/Events/UpdateEvent";
 import EventList from "./Screens/Events/EventList";
 import SpecificEvent from "./Screens/Events/SpecificEvent";
 
+//Imaya
+import AddHotels from "./Screens/Hotels/AddHotels";
+import HotelDetails from "./Screens/Hotels/HotelDetails";
+import HotelHome from "./Screens/Hotels/HotelHome";
+
 export default function App() {
   const Stack = createNativeStackNavigator();
 
@@ -39,6 +44,11 @@ export default function App() {
         <Stack.Screen name="UpdateEvent" component={UpdateEvent} />
         <Stack.Screen name="EventList" component={EventList} />
         <Stack.Screen name="SpecificEvent" component={SpecificEvent} />
+
+        {/* Imaya */}
+        <Stack.Screen name="AddHotels" component={AddHotels} />
+        <Stack.Screen name="HotelDetails" component={HotelDetails} />
+        <Stack.Screen name="HotelHome" component={HotelHome} />
       </Stack.Navigator>
     </NavigationContainer>
   );

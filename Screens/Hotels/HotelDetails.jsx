@@ -8,8 +8,50 @@ import {
   ScrollView,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import axios from "axios";
+import { useRoute } from "@react-navigation/native";
 
 export default function HotelDetails({ navigation }) {
+  const [hotel, sethotel] = useState([]);
+  const route = useRoute();
+
+  useEffect(() => {
+    const data = {
+      hid: route.params.hID,
+      hotel_name: route.params.hotel_name,
+      description: route.params.description,
+      address: route.params.address,
+      image: route.params.image,
+      facilities: route.params.facilities,
+      mobile: route.params.mobile,
+    };
+    sethotel(data);
+  }, []);
+
+  const deletehotel = async () => {
+    const { id } = route.params;
+    Alert.alert("Are you sure?", "This will permanently delete Hotel!", [
+      {
+        text: "OK",
+        onPress: async () => {
+          console.log(id);
+          axios
+            .delete(`https://travel-go.herokuapp.com/api/hotels/delete/${id}`)
+            .then((res) => {
+              navigation.push("ReceivedDonations");
+            })
+            .catch((e) => {
+              console.error(e);
+            });
+        },
+      },
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+      },
+    ]);
+  };
+
   return (
     <View style={styles.container}>
       <Image
@@ -194,7 +236,7 @@ export default function HotelDetails({ navigation }) {
       </TouchableOpacity>
       <Icon
         name="delete-forever"
-        // onPress={() => deletedonation(donations._id)}
+        onPress={() => deletehotel(hotel._id)}
         style={styles.icon}
       ></Icon>
       <ScrollView>
