@@ -8,8 +8,29 @@ import {
   Image,
   ScrollView,
 } from "react-native";
+import axios from "axios";
 
 export default function HotelList({ navigation }) {
+  const [hotel, sethotel] = useState([]);
+  const [filterEvent, setfilterEvent] = useState([]);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    axios.get("http://localhost:8080/api/hotels/gethotel").then((res) => {
+      if (res.data.success) {
+        sethotel(res.data.existinghotels);
+      }
+    });
+  }, []);
+
+  const searchFunc = (text) => {
+    return hotel.filter((hotel) => hotel.hotel_name === text);
+  };
+
+  useEffect(() => {
+    setfilterEvent(searchFunc(search));
+  }, [search]);
+
   return (
     <View style={styles.container}>
       <Image
@@ -21,36 +42,41 @@ export default function HotelList({ navigation }) {
       <TextInput
         style={styles.inputserach}
         placeholder="Search for Hotel name"
-        // value={search}
-        // onChangeText={(text) => setSearch(text)}
+        value={search}
+        onChangeText={(text) => setSearch(text)}
       />
       <Text style={styles.Text1}>Hotel List</Text>
+
       <ScrollView style={{ display: "flex", flexDirection: "column" }}>
-        <View style={styles.hotel}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("SpecificHotel")}
-          >
-            <Image
-              style={styles.tinyLogo1}
-              source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679427404/araliya_nuopxg.jpg",
-              }}
-            />
-            <Text
-              style={{
-                color: "#000000",
-                textAlign: "center",
-                marginTop: 30,
-                marginBottom: 10,
-                fontSize: 18,
-                fontWeight: "bold",
-                fontFamily: "Times New Roman",
-              }}
-            >
-              Araliya Beach Hotel
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {(search === "" ? hotel : filterEvent).map((hotel, index) => (
+          <View key={hotel + index}>
+            <View style={styles.hotel}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("SpecificHotel")}
+              >
+                <Image
+                  style={styles.tinyLogo1}
+                  source={{
+                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679427404/araliya_nuopxg.jpg",
+                  }}
+                />
+                <Text
+                  style={{
+                    color: "#000000",
+                    textAlign: "center",
+                    marginTop: 30,
+                    marginBottom: 10,
+                    fontSize: 18,
+                    fontWeight: "bold",
+                    fontFamily: "Times New Roman",
+                  }}
+                >
+                  {hotel.hotel_name}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ))}
       </ScrollView>
     </View>
   );
