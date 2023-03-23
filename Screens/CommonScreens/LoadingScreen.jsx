@@ -56,7 +56,7 @@ const style = StyleSheet.create({
         marginLeft:-10
     },
     containerx: {
-        backgroundColor: "#7E3517",
+        backgroundColor: "#3F000F",
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "row",

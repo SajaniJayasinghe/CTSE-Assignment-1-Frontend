@@ -7,6 +7,7 @@ import SignupScreen from "./Screens/CommonScreens/SignupScreen";
 import AdminDashboard from "./Screens/CommonScreens/AdminDashboard";
 import UserProfile from "./Screens/CommonScreens/UserProfile";
 import UpdateUserProfile from "./Screens/CommonScreens/UpdateUserProfile";
+import UserDashboard from "./Screens/CommonScreens/UserDashboard";
 import PlacesHome from "./Screens/Places/PlacesHome";
 import AddPlaces from "./Screens/Places/AddPlaces";
 import PlaceDetails from "./Screens/Places/PlaceDetails";
@@ -14,7 +15,13 @@ import UpdatePlace from "./Screens/Places/UpdatePlace";
 import PlaceList from "./Screens/Places/PlaceList";
 import SpecificPlace from "./Screens/Places/SpecificPlace";
 
-//Aroshini
+//Sajani
+import EventsHome from "./Screens/Events/EventsHome";
+import EventDetails from "./Screens/Events/EventDetails";
+import AddEvent from "./Screens/Events/AddEvent";
+import UpdateEvent from "./Screens/Events/UpdateEvent";
+import EventList from "./Screens/Events/EventList";
+import SpecificEvent from "./Screens/Events/SpecificEvent";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -29,6 +36,15 @@ export default function App() {
         <Stack.Screen name="SignupScreen" component={SignupScreen} />
         <Stack.Screen name="UserProfile" component={UserProfile} />
         <Stack.Screen name="UpdateUserProfile" component={UpdateUserProfile} />
+        <Stack.Screen name="UserDashboard" component={UserDashboard} />
+
+        {/* Sajani */}
+        <Stack.Screen name="EventsHome" component={EventsHome} />
+        <Stack.Screen name="EventDetails" component={EventDetails} />
+        <Stack.Screen name="AddEvent" component={AddEvent} />
+        <Stack.Screen name="UpdateEvent" component={UpdateEvent} />
+        <Stack.Screen name="EventList" component={EventList} />
+        <Stack.Screen name="SpecificEvent" component={SpecificEvent} />
 
         <Stack.Screen name="PlacesHome" component={PlacesHome} />
         <Stack.Screen name="AddPlaces" component={AddPlaces} />

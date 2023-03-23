@@ -1,13 +1,48 @@
-import React from "react";
-import { View, Image, StyleSheet, Text, TouchableOpacity,TextInput } from "react-native";
+import React ,{useState} from "react";
+import axios from "axios";
+
+import { View, Image, StyleSheet, Text, TouchableOpacity,TextInput,Alert } from "react-native";
 
 export default function SignupScreen({navigation}) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+
+  const onSignUp = async() => {
+      if (password == confirmPassword) {
+        const payload = {
+          name: name,
+          email: email,
+          password: password,
+        };
+    
+    await axios
+      .post("http://localhost:8080/api/user/register", payload)
+      .then((res) => {
+        if (res.data.status) {
+          Alert.alert("Success", "Registered Successfully");
+          setTimeout(() => {
+            navigation.push("SignInScreen");
+          }, 2000);
+        } else {
+          Alert.alert("Error", "Registration Failed");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+    else {
+      Alert.alert("Error", "Password and Confirm Password should be same");
+    }
+  };
     return(
         <View style={styles.container}>
           <Image
             style={styles.logo}
             source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679314631/Screenshot_2023-03-20_at_17.45.47-removebg-preview_poz7nt.png",
+            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455024/Screenshot_2023-03-22_at_08.45.23-removebg-preview_uzzb85.png",
             }}
           />
           
@@ -16,7 +51,7 @@ export default function SignupScreen({navigation}) {
                 fontSize: 28,
                 marginLeft: 30,
                 marginTop: 60,
-                color:"#7E3517",
+                color:"#560319",
                 fontWeight: "bold",
                 marginBottom: 10,
                 }}
@@ -28,26 +63,35 @@ export default function SignupScreen({navigation}) {
                 <TextInput
                     placeholder="Enter Full Name here"
                     style={styles.textInput}
+                    onChange={(e) => setName(e.nativeEvent.text)}
+                    value={name}
+
             />
 
             <Text style={styles.Text2}> E Mail Address </Text>
                 <TextInput placeholder="Enter E-mail Address here" 
                     style={styles.textInput} 
+                    onChange={(e) => setEmail(e.nativeEvent.text)}
+                    value={email}
             />
 
             <Text style={styles.Text2}> Password </Text>
                 <TextInput placeholder="Enter Password here" 
                     style={styles.textInput} 
+                    onChange={(e) => setPassword(e.nativeEvent.text)}
+                    value={password}
             />
 
             <Text style={styles.Text2}> Confirm Password </Text>
                 <TextInput placeholder="Re-Password here" 
                     style={styles.textInput} 
+                    onChange={(e) => setConfirmPassword(e.nativeEvent.text)}
+                    value={confirmPassword}
             />
 
             <TouchableOpacity
                  style={[styles.containerx, styles.materialButtonDark]}
-                 onPress={() => navigation.navigate("SignInScreen")}
+                 onPress={onSignUp}
                  >
               <Text style={styles.signupButton} >SIGN UP</Text>
             </TouchableOpacity>
@@ -55,7 +99,7 @@ export default function SignupScreen({navigation}) {
             <Image
                 style={styles.logo1}
                 source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679325197/Screenshot_2023-03-20_at_18.29.26-removebg-preview_y0wd4x.png",
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
                 }}
           />
              <Text style={styles.loginText4}>Already have an account?</Text>
@@ -120,7 +164,7 @@ const styles = StyleSheet.create({
   materialButtonDark: {
     height: 40,
     width: 210,
-    backgroundColor:"#7E3517",
+    backgroundColor:"#560319",
     borderWidth:1,
     borderRadius: 100,
     elevation: 5,
