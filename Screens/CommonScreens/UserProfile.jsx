@@ -1,7 +1,83 @@
 import React from "react";
 import { View, Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 
-export default function UserProfile({navigation}) {
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+export default function UserProfile({route,navigation}) {
+    const [token, settoken] = useState("");
+    const getToken = async () => {
+        settoken(await AsyncStorage.getItem("token"));
+      };
+      useEffect(() => {
+        getToken();
+        if (!!!route.prams) {
+        }
+      }, []);
+
+    const [profile, setProfile] = useState([]);
+    
+    const getprofile = async () => {
+        const userToken = await AsyncStorage.getItem("token");
+        console.log(userToken);
+        await axios
+          .get(" ", {
+            headers: {
+              Authorization: userToken,
+            },
+          })
+          .then((res) => {
+            setProfile(res.data.User);
+          });
+      };
+
+      const deleteProfile = async (id) => {
+        Alert.alert("Are you sure?", "This will permanently delete your profile!", [
+            {
+              text: "OK",
+              onPress: async () => {
+                const userToken = await AsyncStorage.getItem("token");
+                axios
+                  .delete(
+                    ` `,
+                    {
+                      headers: {
+                        Authorization: userToken,
+                      },
+                    }
+                  )
+                  .then((res) => {
+                    navigation.push("LoadingScreen");
+                    getprofile();
+                  })
+                  .catch((e) => {
+                    console.error(e);
+                  });
+              },
+            },
+          ]);
+      }
+
+      const onLogOut = async () => {
+        Alert.alert("Are you sure you want to logout?", "", [
+          {
+            text: "Ok",
+            onPress: async () => {
+              await AsyncStorage.clear();
+              navigation.push("LoadingScreen");
+            },
+          },
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+          },
+        ]);
+      };
+
+        useEffect(() => {
+        getprofile();
+        },[])
+
     return(
         <View style={styles.container}>
           <Image
@@ -26,7 +102,7 @@ export default function UserProfile({navigation}) {
                 textAlign:"justify",
                 }}
              >
-               <Text>{/* {profile.name} */}hello</Text>
+               <Text>{profile.fullname}</Text>
             </Text>
             <View style={styles.no1}>
                 <Text
@@ -38,7 +114,7 @@ export default function UserProfile({navigation}) {
                    }}
                   > Full Name : 
                 </Text>
-                {/* <Text style={styles.textView}>{profile.name}</Text> */}
+                <Text style={styles.textView}>{profile.fullname}</Text>
                
                 <Text
                  style={{
@@ -49,7 +125,7 @@ export default function UserProfile({navigation}) {
                    }}
                   > E-Mail Address : 
                 </Text>
-                {/* <Text style={styles.textView}>{profile.name}</Text> */}
+                <Text style={styles.textView}>{profile.email}</Text>
              </View>
 
                 <TouchableOpacity
@@ -66,7 +142,7 @@ export default function UserProfile({navigation}) {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={[styles.containerx, styles.materialButtonDark2]}
-                    // onPress={onLogOut}
+                    onPress={onLogOut}
                     >
                     <Text style={styles.logoutButton}>LogOut</Text>
                 </TouchableOpacity>

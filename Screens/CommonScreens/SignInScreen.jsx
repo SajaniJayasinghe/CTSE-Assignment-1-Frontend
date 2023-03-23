@@ -7,9 +7,41 @@ import {
   TextInput,
   Alert,
   TouchableOpacity,
-} from "react-native";
+} from "react-native"
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SignInScreen ({navigation}){
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const storetoken = async (value) => {
+    await AsyncStorage.setItem("token", value);
+  };
+
+  const handleSignIn = async () => {
+    await axios
+      .post("http://localhost:8080/api/user/login", {
+        email,
+        password,
+      })
+      .then((res) => {
+        if (res.data) {
+          AsyncStorage.clear();
+          storetoken(res.data.token);
+          if (res.data.role === "Admin") {
+            navigation.push("AdminDashboard");
+          } else if (res.data.role === "user"){
+            navigation.push("UserDashboard");
+          }
+          console.log(res.data);
+
+        }
+        })
+        .catch((err) => {
+          console.log(err);
+          Alert.alert("Logging Failed");       
+         });
+  };
     return(
         <View style={styles.container}>
            <Image
@@ -35,16 +67,22 @@ export default function SignInScreen ({navigation}){
           <TextInput
             placeholder="Enter E-mail Address here"
             style={styles.textInput}
+            onChange={(e) => setEmail(e.nativeEvent.text)}
+            // onChangeText={(e) => setEmail(e.nativeEvent.text)}
+            value={email}
           />
      
           <Text style={styles.passwordText}>
             Enter Your Password
           </Text>
-          <TextInput placeholder="Enter Password here" style={styles.textInput} />
+          <TextInput placeholder="Enter Password here" style={styles.textInput}
+           onChange={(e) => setPassword(e.nativeEvent.text)}
+          value={password} 
+          />
         
           <TouchableOpacity
             style={[styles.containerx, styles.materialButtonDark1]}
-            onPress={() => navigation.navigate("AdminDashboard")}
+            onPress={() => handleSignIn()}
             >
             <Text style={styles.loginButton} >SIGN IN</Text>
           </TouchableOpacity>
