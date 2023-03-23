@@ -9,6 +9,7 @@ import {
   ScrollView
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
+import axios from "axios";
 
 export default function AddPlaces({ navigation }) {
   const data = [
@@ -23,6 +24,43 @@ export default function AddPlaces({ navigation }) {
     { label: "Food", value: "Food" },
     { label: "NoSmoking", value: "NoSmoking" }
   ];
+
+  const [type, settype] = useState("");
+  const [place_name, setplace_name] = useState("");
+  const [description, setdescription] = useState("");
+  const [picture, setpicture] = useState("");
+  const [location, setlocation] = useState("");
+  const [facilities, setfacilities] = useState("");
+
+  const addplace = () => {
+    const URL = `https://travel-go.herokuapp.com/api/places/addplace`;
+
+    const payload = {
+      type: type,
+      place_name: place_name,
+      description: description,
+      picture: picture,
+      location: location,
+      facilities: facilities
+    };
+
+    axios
+      .post(URL, payload)
+      .then((res) => {
+        Alert.alert("Success", "Place Added Successfully");
+        navigation.navigate("PlacesHome");
+      })
+      .catch((error) => {
+        console.log(error);
+        Alert.alert(
+          "Error",
+          "Place adding Unsuccessful",
+          [{ text: "Check Again" }],
+          { cancelable: false }
+        );
+      });
+  };
+
   return (
     <View style={styles.container}>
       <View>
@@ -80,12 +118,10 @@ export default function AddPlaces({ navigation }) {
             placeholder="Select Place Type"
             searchPlaceholder="Search..."
             statusBarIsTranslucent={true}
-            // value={value}
-            // onChange={(item) => {
-            //     setrole(item.value);
-            // }}
-            // renderLeftIcon={() => (
-            // )}
+            value={type}
+            onChange={(item) => {
+              settype(item.value);
+            }}
           ></Dropdown>
           <Text style={styles.nameText4}>Select Facilities</Text>
           <Dropdown
@@ -102,24 +138,35 @@ export default function AddPlaces({ navigation }) {
             placeholder="Select Facilities"
             searchPlaceholder="Search..."
             statusBarIsTranslucent={true}
-            // value={value}
-            // onChange={(item) => {
-            //     setrole(item.value);
-            // }}
-            // renderLeftIcon={() => (
-            // )}
+            value={facilities}
+            onChange={(item) => {
+              setfacilities(item.value);
+            }}
           ></Dropdown>
           <Text style={styles.nameText4}>Enter City</Text>
-          <TextInput placeholder="Enter City here" style={styles.textInput} />
+          <TextInput
+            placeholder="Enter City here"
+            style={styles.textInput}
+            onChange={(e) => {
+              setplace_name(e.target.value);
+            }}
+            value={place_name}
+          />
           <Text style={styles.nameText3}>Enter Description</Text>
           <TextInput
             placeholder="Enter Description here"
             style={styles.nameText2}
+            onChange={(e) => {
+              setdescription(e.target.value);
+            }}
+            value={description}
           />
         </ScrollView>
         <TouchableOpacity
           style={[styles.containerx, styles.materialButtonDark1]}
-          onPress={() => navigation.navigate("PlacesHome")}
+          onPress={() => {
+            addplace();
+          }}
         >
           <Text style={styles.loginButton}>Add Place</Text>
         </TouchableOpacity>

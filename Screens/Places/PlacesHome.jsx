@@ -8,8 +8,32 @@ import {
   ScrollView,
   TextInput
 } from "react-native";
+import axios from "axios";
 
 export default function PlacesHome({ navigation }) {
+  const [search, setSearch] = useState("");
+  const [place, setPlaces] = useState([]);
+  const [filteredPlaces, setFilteredPlaces] = useState([]);
+
+  useEffect(() => {
+    const URL = `https://travel-go.herokuapp.com/api/places/getplace`;
+    axios.get(URL).then((res) => {
+      if (res.data.success) {
+        setPlaces(res.data);
+      }
+    });
+  }, []);
+
+  const searchFunc = (text) => {
+    return place.filter((place) =>
+      place.name.toLowerCase().includes(text.toLowerCase())
+    );
+  };
+
+  useEffect(() => {
+    setFilteredPlaces(searchFunc(search));
+  }, [search]);
+
   return (
     <View style={styles.container}>
       <Image
@@ -63,6 +87,7 @@ export default function PlacesHome({ navigation }) {
                 fontFamily: "Times New Roman",
                 color: "#52595D"
               }}
+              // value={
             >
               Beach
             </Text>
@@ -137,46 +162,50 @@ export default function PlacesHome({ navigation }) {
         <TextInput
           style={styles.inputserach}
           placeholder="Search for Place name"
-          // value={search}
-          // onChangeText={(text) => setSearch(text)}
+          value={search}
+          onChangeText={(text) => setSearch(text)}
         />
-        <TouchableOpacity onPress={() => navigation.navigate("AddPlaces")}>
-          <Image
-            style={styles.addPlaces}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679429885/11-removebg-preview_l55wvj.png"
-            }}
-          />
-        </TouchableOpacity>
-        <Text style={styles.Text1}> Places</Text>
-        <View style={styles.places}>
-          <ScrollView style={{ display: "flex", flexDirection: "column" }}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("PlaceDetails")}
-            >
+        {(search === "" ? place : filteredPlaces).map((place, index) => (
+          <View key={place + index}>
+            <TouchableOpacity onPress={() => navigation.navigate("AddPlaces")}>
               <Image
-                style={styles.tinyLogo1}
+                style={styles.addPlaces}
                 source={{
-                  uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679376890/2_wa6zuc.jpg"
+                  uri: place.picture
                 }}
               />
-              <Text
-                style={{
-                  color: "#000000",
-                  textAlign: "justify",
-                  marginTop: 30,
-                  marginBottom: 10,
-                  fontSize: 18,
-                  marginLeft: 20,
-                  fontWeight: "bold",
-                  fontFamily: "Times New Roman"
-                }}
-              >
-                Mirissa Beach
-              </Text>
             </TouchableOpacity>
-          </ScrollView>
-        </View>
+            <Text style={styles.Text1}> Places</Text>
+            <View style={styles.places}>
+              <ScrollView style={{ display: "flex", flexDirection: "column" }}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("PlaceDetails")}
+                >
+                  <Image
+                    style={styles.tinyLogo1}
+                    source={{
+                      uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679376890/2_wa6zuc.jpg"
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: "#000000",
+                      textAlign: "justify",
+                      marginTop: 30,
+                      marginBottom: 10,
+                      fontSize: 18,
+                      marginLeft: 20,
+                      fontWeight: "bold",
+                      fontFamily: "Times New Roman"
+                    }}
+                  >
+                    {places.name}{" "}
+                  </Text>
+                </TouchableOpacity>
+              </ScrollView>
+            </View>
+          </View>
+        ))}
       </View>
     </View>
   );
