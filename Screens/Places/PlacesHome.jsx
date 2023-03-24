@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -16,7 +16,7 @@ export default function PlacesHome({ navigation }) {
   const [filteredPlaces, setFilteredPlaces] = useState([]);
 
   useEffect(() => {
-    const URL = `https://travel-go.herokuapp.com/api/places/getplace`;
+    const URL = `http://localhost:8080/api/places/getplace`;
     axios.get(URL).then((res) => {
       if (res.data.success) {
         setPlaces(res.data);

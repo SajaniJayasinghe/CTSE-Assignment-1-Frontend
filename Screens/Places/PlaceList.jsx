@@ -1,4 +1,5 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,9 +11,9 @@ import {
 } from "react-native";
 
 export default function PlaceList({ navigation }) {
-  const [place, setPlace] = React.useState([]);
-  const [filterPlace, setfilterPlace] = React.useState([]);
-  const [search, setSearch] = React.useState("");
+  const [place, setPlace] = useState([]);
+  const [filterPlace, setfilterPlace] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     axios.get("http://localhost:8080/api/places/getplace").then((res) => {

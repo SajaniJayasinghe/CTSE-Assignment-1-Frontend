@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Image,
@@ -10,6 +10,11 @@ import {
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import axios from "axios";
+import { Alert } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import CustomLoading from "../../components/CustomLoading";
+import { MultiSelect } from "react-native-element-dropdown";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 export default function AddPlaces({ navigation }) {
   const data = [
@@ -26,28 +31,59 @@ export default function AddPlaces({ navigation }) {
   ];
 
   const [type, settype] = useState("");
-  const [place_name, setplace_name] = useState("");
+  const [name, setname] = useState("");
   const [description, setdescription] = useState("");
   const [picture, setpicture] = useState("");
-  const [location, setlocation] = useState("");
+  const [city, setcity] = useState("");
   const [facilities, setfacilities] = useState("");
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [imageUploadStatus, setImageUploadStatus] = useState(
+    "Choose Event Picture"
+  );
+  const [validationErrors, setValidationErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  //For Multiple selection
+  const renderItem = (item) => {
+    return (
+      <View style={styles.item}>
+        <Text style={styles.selectedTextStyle}>{item.label}</Text>
+      </View>
+    );
+  };
 
   const addplace = () => {
-    const URL = `https://travel-go.herokuapp.com/api/places/addplace`;
+    const URL = `http://localhost:8080/api/places/addplace`;
 
-    const payload = {
-      type: type,
-      place_name: place_name,
-      description: description,
-      picture: picture,
-      location: location,
-      facilities: facilities
-    };
+    const payload = new FormData();
+    setLoading(true);
+    payload.append("type", type);
+    payload.append("name", name);
+    payload.append("description", description);
+    payload.append("picture", {
+      uri: picture,
+      type: "picture/jpeg",
+      name: "picture.jpg"
+    });
+    payload.append("city", city);
+    payload.append("facilities", facilities);
+
+    //for multiple selection
+    if (selectedItems.length > 0) {
+      for (var i = 0; i < selectedItems.length; i++) {
+        payload.append(`type[${i}]`, selectedItems[i]);
+      }
+    }
 
     axios
-      .post(URL, payload)
+      .post(URL, payload, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
       .then((res) => {
         Alert.alert("Success", "Place Added Successfully");
+        setLoading(false);
         navigation.navigate("PlacesHome");
       })
       .catch((error) => {
@@ -61,70 +97,91 @@ export default function AddPlaces({ navigation }) {
       });
   };
 
+  //for Image upload
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1
+    });
+
+    if (!result.canceled) {
+      setpicture(result.assets[0].uri);
+      setImageUploadStatus("Image Uploaded");
+    } else {
+      setpicture(null);
+      setImageUploadStatus("Choose Event Picture");
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <View>
-        <Image
+    <>
+      <View style={styles.container}>
+        <View>
+          {/* <Image
           style={styles.homelogo}
           source={{
             uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png"
           }}
-        />
-        <Text
-          style={{
-            fontWeight: "800",
-            textAlign: "center",
-            fontSize: 36,
-            marginLeft: -10,
-            marginTop: 15,
-            color: "#3F000F",
-            fontFamily: "Times New Roman"
-          }}
-        >
-          Add New Places
-        </Text>
-        <View style={styles.rect}>
+        /> */}
+          <Text
+            style={{
+              fontWeight: "800",
+              textAlign: "center",
+              fontSize: 36,
+              marginLeft: -10,
+              marginTop: 15,
+              color: "#3F000F",
+              fontFamily: "Times New Roman"
+            }}
+          >
+            Add New Places
+          </Text>
+          {/* <View style={styles.rect}>
           <Image
             style={styles.tinyLogo}
             source={{
               uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679378950/6_gm0xk4.webp"
             }}
           />
-        </View>
-        <ScrollView
-          vertical={true}
-          showsHorizontalScrollIndicator={false}
-          scrollEventThrottle={200}
-          decelerationRate="fast"
-          pagingEnabled
-        >
-          <Text style={styles.nameText}>Enter Place Name</Text>
-          <TextInput
-            placeholder="Enter Place Name here"
-            style={styles.textInput}
-          />
-          <Text style={styles.nameText3}>Select Place Type</Text>
-          <Dropdown
-            style={styles.dropdown}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={data}
-            search
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            placeholder="Select Place Type"
-            searchPlaceholder="Search..."
-            statusBarIsTranslucent={true}
-            value={type}
-            onChange={(item) => {
-              settype(item.value);
-            }}
-          ></Dropdown>
-          <Text style={styles.nameText4}>Select Facilities</Text>
-          <Dropdown
+        </View> */}
+          <ScrollView
+            vertical={true}
+            showsHorizontalScrollIndicator={false}
+            scrollEventThrottle={200}
+            decelerationRate="fast"
+            pagingEnabled
+          >
+            <Text style={styles.nameText}>Enter Place Name</Text>
+            <TextInput
+              placeholder="Enter Place Name here"
+              style={styles.textInput}
+              value={name}
+              onChangeText={(text) => setname(text)}
+            />
+            <Text style={styles.nameText3}>Select Place Type</Text>
+            <Dropdown
+              style={styles.dropdown}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={data}
+              search
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              placeholder="Select Place Type"
+              searchPlaceholder="Search..."
+              statusBarIsTranslucent={true}
+              value={type}
+              onChange={(item) => {
+                settype(item.value);
+              }}
+            ></Dropdown>
+            <Text style={styles.nameText4}>Select Facilities</Text>
+            {/* <Dropdown
             style={styles.dropdown}
             placeholderStyle={styles.placeholderStyle}
             selectedTextStyle={styles.selectedTextStyle}
@@ -142,42 +199,104 @@ export default function AddPlaces({ navigation }) {
             onChange={(item) => {
               setfacilities(item.value);
             }}
-          ></Dropdown>
-          <Text style={styles.nameText4}>Enter City</Text>
-          <TextInput
-            placeholder="Enter City here"
-            style={styles.textInput}
-            onChange={(e) => {
-              setplace_name(e.target.value);
+          ></Dropdown> */}
+            <MultiSelect
+              style={styles.textInputnew}
+              placeholderStyle={{
+                fontSize: 17,
+                color: "#BCC6CC",
+                fontFamily: "Times New Roman",
+                marginTop: 10,
+                marginBottom: 10
+              }}
+              search
+              data={placedata}
+              labelField="label"
+              valueField="value"
+              placeholder="Select Facilities"
+              searchPlaceholder="Search..."
+              value={selectedItems}
+              onChange={(item) => {
+                setSelectedItems(item);
+              }}
+              renderItem={renderItem}
+              renderSelectedItem={(item, unSelect) => (
+                <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      padding: 20,
+                      backgroundColor: "white",
+                      borderRadius: 5,
+                      gap: 20,
+                      marginTop: "10%",
+                      marginBottom: "10%",
+                      marginLeft: "8%"
+                    }}
+                  >
+                    <Text style={styles.textSelectedStyle}>{item.label}</Text>
+                    <Icon name="delete" size={20} color="red" />
+                  </View>
+                </TouchableOpacity>
+              )}
+            />
+            {validationErrors.type ? (
+              <Text style={styles.errorTextSelection}>
+                {validationErrors.type}
+              </Text>
+            ) : (
+              ""
+            )}
+            <Text style={styles.nameText4}>Enter City</Text>
+            <TextInput
+              placeholder="Enter City here"
+              style={styles.textInput}
+              onChange={(e) => {
+                setcity(e.target.value);
+              }}
+              value={name}
+            />
+            <Text style={styles.nameText3}>Enter Description</Text>
+            <TextInput
+              placeholder="Enter Description here"
+              style={styles.nameText2}
+              onChange={(e) => {
+                setdescription(e.target.value);
+              }}
+              value={description}
+            />
+            <View style={styles.imageUploadField}>
+              <TextInput
+                style={styles.ImageTextInput}
+                placeholder="Choose File"
+                editable={false}
+                selectTextOnFocus={false}
+                value={imageUploadStatus}
+              />
+              <TouchableOpacity onPress={pickImage} style={styles.uploadButton}>
+                <Text style={styles.uploadTxt}>Upload</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+          <TouchableOpacity
+            style={[styles.containerx, styles.materialButtonDark1]}
+            onPress={() => {
+              addplace();
             }}
-            value={place_name}
-          />
-          <Text style={styles.nameText3}>Enter Description</Text>
-          <TextInput
-            placeholder="Enter Description here"
-            style={styles.nameText2}
-            onChange={(e) => {
-              setdescription(e.target.value);
-            }}
-            value={description}
-          />
-        </ScrollView>
-        <TouchableOpacity
-          style={[styles.containerx, styles.materialButtonDark1]}
-          onPress={() => {
-            addplace();
+          >
+            <Text style={styles.loginButton}>Add Place</Text>
+          </TouchableOpacity>
+        </View>
+        <Image
+          style={styles.logo1}
+          source={{
+            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png"
           }}
-        >
-          <Text style={styles.loginButton}>Add Place</Text>
-        </TouchableOpacity>
+        />
       </View>
-      <Image
-        style={styles.logo1}
-        source={{
-          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png"
-        }}
-      />
-    </View>
+      {/* {loading ? <CustomLoading /> : null}{" "} */}
+    </>
   );
 }
 
@@ -327,5 +446,16 @@ const styles = StyleSheet.create({
     height: 50,
     marginTop: -1,
     marginLeft: 0
+  },
+  textInputnew: {
+    width: "80%",
+    height: 40,
+    backgroundColor: "white",
+    borderRadius: 10,
+    paddingLeft: 10,
+    marginLeft: "10%",
+    marginTop: "5%",
+    borderColor: "grey",
+    borderWidth: 1
   }
 });

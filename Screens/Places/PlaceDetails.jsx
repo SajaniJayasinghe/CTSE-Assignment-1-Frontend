@@ -1,5 +1,5 @@
 import { useRoute } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Image,
@@ -12,7 +12,7 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 export default function PlaceDetails({ navigation }) {
-  const [place, setPlace] = React.useState();
+  const [place, setPlace] = useState();
   const route = useRoute();
 
   useEffect(() => {
