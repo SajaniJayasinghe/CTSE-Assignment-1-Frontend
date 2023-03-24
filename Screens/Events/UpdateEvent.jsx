@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image,TouchableOpacity ,ScrollView,TextInput} from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
+import * as ImagePicker from "expo-image-picker";
+import CustomLoading from "../../components/CustomLoading";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { MultiSelect } from "react-native-element-dropdown";
+import {
+  responsiveWidth,
+ } from "react-native-responsive-dimensions";
 
-
+ 
 export default function UpdateEvent({route, navigation }) {
     const data = [
         { label: "Festival", value: "Festival" },
@@ -20,6 +27,14 @@ export default function UpdateEvent({route, navigation }) {
       const [date, setdate] = useState("");
       const [ticket_price, setticket_price] = useState("");
       const [eventID, seteventID] = useState("");
+      const [loading, setLoading] = useState(false);
+      const [image, setImage] = useState(null);
+      const [selectedItems, setSelectedItems] = useState([]);
+      const [imageUploadStatus, setImageUploadStatus] = useState(
+        "Choose Event Picture"
+      );
+      const [validationErrors, setValidationErrors] = useState({});
+      const [error, setError] = useState("");
 
       useEffect(() => {
         seteventID(route.params.eventID);
@@ -32,25 +47,57 @@ export default function UpdateEvent({route, navigation }) {
         setticket_price(route.params.ticket_price);
 
       }, []);
+       //For Multiple selection
+        const renderItem = (item) => {
+          return (
+            <View style={styles.item}>
+              <Text style={styles.selectedTextStyle}>{item.label}</Text>
+            </View>
+          );
+        };
+
 
       console.log(eventID);
 
       const updateEvent = () => {
         const URL = `https://travel-go.herokuapp.com/api/events/update/${eventID}`;
     
-        const payload = {
-          eid: eID,
-          type: type,
-          event_name: event_name,
-          description: description,
-          picture: picture,
-          location: location,
-          date: date,
-          ticket_price: ticket_price,
-        };
-        console.log(payload);
+        // const payload = {
+        //   eid: eID,
+        //   type: type,
+        //   event_name: event_name,
+        //   description: description,
+        //   picture: picture,
+        //   location: location,
+        //   date: date,
+        //   ticket_price: ticket_price,
+        // };
+        const payload = new FormData();
+        setLoading(true);
+        payload.append("event_name", event_name);
+        payload.append("description", description);
+        payload.append("picture", {
+          uri: image,
+          type: "image/jpeg",
+          name: "image.jpg",
+        });
+        payload.append("location", location);
+        payload.append("date", date);
+        payload.append("ticket_price", ticket_price);
+
+        //for multiple selection
+        if (selectedItems.length > 0) {
+          for (var i = 0; i < selectedItems.length; i++) {
+            payload.append(`type[${i}]`, selectedItems[i]);
+          }
+        }
+
         axios
-          .put(URL, payload)
+          .put(URL, payload,{
+            headers: {
+              "Content-Type": "multipart/form-data",
+            }
+          })
           .then((res) => {
             Alert.alert(
               "Event Updated",
@@ -63,9 +110,11 @@ export default function UpdateEvent({route, navigation }) {
               ],
               { cancelable: false }
             );
+            setLoading(false);
           })
           .catch((error) => {
             console.error(error);
+            setLoading(false);
             Alert.alert(
               "Error",
               "Updating Unsuccessful",
@@ -75,16 +124,25 @@ export default function UpdateEvent({route, navigation }) {
           });
       };
 
+    //for Image upload
+    const pickImage = async () => {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+  });
+
+  if (!result.canceled) {
+    setImage(result.assets[0].uri);
+    setImageUploadStatus("Image Uploaded");
+  } else {
+    setImage(null);
+    setImageUploadStatus("Choose Event Picture");
+  }
+};
     return(
         <View style={styles.container}>
-         <View>
-           <Image
-                style={styles.homelogo}
-                source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-                }}
-          />
-            </View>
             <Text
           style={{
             fontWeight: "800",
@@ -109,7 +167,7 @@ export default function UpdateEvent({route, navigation }) {
           <ScrollView>
           <View>
           <Text style={styles.nameText1}>Select Event Type</Text>
-            <Dropdown
+            {/* <Dropdown
                 style={styles.dropdown}
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
@@ -128,8 +186,51 @@ export default function UpdateEvent({route, navigation }) {
                   settype(item.value);
                 }}              
             >
-
-            </Dropdown>
+            </Dropdown> */}
+               <MultiSelect
+               style={styles.textInput}
+               placeholderStyle={{
+                 fontSize: 14,
+                 color: "grey",
+               }}
+               search
+               data={data}
+               labelField="label"
+               valueField="value"
+               placeholder="Select Events"
+               searchPlaceholder="Search..."
+               value={selectedItems}
+               onChange={(item) => {
+                 setSelectedItems(item);
+               }}
+               renderItem={renderItem}
+               renderSelectedItem={(item, unSelect) => (
+                 <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
+                   <View
+                     style={{
+                       flexDirection: "row",
+                       justifyContent: "space-between",
+                       padding: 10,
+                       backgroundColor: "white",
+                       borderRadius: 5,
+                       gap: 10,
+                       marginBottom: "9%",
+                       marginLeft: "8%",
+                     }}
+                   >
+                     <Text style={styles.textSelectedStyle}>{item.label}</Text>
+                     <Icon name="delete" size={20} color="red" />
+                   </View>
+                 </TouchableOpacity>
+               )}
+             />
+             {validationErrors.type ? (
+               <Text style={styles.errorTextSelection}>
+                 {validationErrors.type}
+               </Text>
+             ) : (
+               ""
+             )}
             <Text style={styles.nameText}>Enter Event Name</Text>
                 <TextInput
                     placeholder="Enter Event Name"
@@ -183,12 +284,6 @@ export default function UpdateEvent({route, navigation }) {
             </TouchableOpacity>
           </View>
           </ScrollView>
-          <Image
-                style={styles.logo1}
-                source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-                }}
-          />
         </View>
     )
 }
@@ -199,7 +294,7 @@ const styles = StyleSheet.create({
     },
     rect: {
         width: 360,
-        height: 200,
+        height: 180,
         backgroundColor: "rgba(255,255,255,1)",
         borderRadius: 22,
         shadowColor: "rgba(208,194,194,1)",
@@ -210,22 +305,16 @@ const styles = StyleSheet.create({
         elevation: 39,
         shadowOpacity: 1,
         marginTop: 10,
-        marginLeft:14,
+        marginLeft:15,
         shadowRadius: 13,
       },
     tinyLogo: {
         width: 360,
-        height: 200,
+        height: 180,
         marginBottom: -20,
         marginTop: 0,
         borderRadius: 25,
         marginLeft: 0,
-      },
-    homelogo:{
-        width: 400,
-        height: 20,
-        marginTop:-5,
-        marginLeft:0
       },
       dropdown: {
         margin: 16,
@@ -334,10 +423,40 @@ loginButton:{
     lineHeight: 18,
     
   },
-logo1:{
-    width: 400,
-    height: 50,
-    marginTop:-5,
-    marginLeft:0
+
+imageUploadField: {
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "space-between",
+  width: "100%",
+  marginBottom: "5%",
+},
+
+ImageTextInput: {
+  width: "50%",
+  height: 50,
+  borderColor: "grey",
+  borderWidth: 1,
+  borderRadius: 10,
+  paddingLeft: 10,
+  color: "gray",
+  marginLeft:"10%",
+  marginTop:"5%"
+},
+uploadTxt: {
+  color: "black",
+  fontWeight: "bold",
+},
+uploadButton: {
+  width: "30%",
+  height: "30%",
+  marginRight:"20%",
+  backgroundColor: "#E8A317",
+  borderRadius: 10,
+  alignItems: "center",
+  justifyContent: "center",
+  minHeight: 50,
+  marginTop:"5%",
+  marginLeft: responsiveWidth(2),
 },
 })

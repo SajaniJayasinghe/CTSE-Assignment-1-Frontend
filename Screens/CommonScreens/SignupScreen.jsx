@@ -42,21 +42,21 @@ export default function SignupScreen({navigation}) {
           <Image
             style={styles.logo}
             source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679597585/Screenshot_2023-03-24_at_00.20.41-removebg-preview_j8yj3o.png"
+            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679627198/Screenshot_2023-03-24_at_08.35.25-removebg-preview_x2ljmf.png"
             }}
           />
           
             <Text
                 style={{
                 fontSize: 28,
-                marginLeft: 30,
                 marginTop: 0,
                 color:"#560319",
                 fontWeight: "bold",
                 marginBottom: -30,
+                textAlign: "center",
                 }}
              >
-             CREATE YOUR ACCOUNT
+             CREATE ACCOUNT
             </Text>
 
             <Text style={styles.Text}>Full Name </Text>
@@ -108,10 +108,9 @@ const styles = StyleSheet.create({
         flex:1,
     },
     logo:{
-        width: 300,
-        height: 255,
-        marginTop:-10,
-        marginLeft:50
+        width: 400,
+        height: 190,
+        marginTop:0,
     },
     Text: {
         color: "#6D7B8D",
@@ -165,7 +164,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0,
     marginTop: 25,
     marginBottom: 20,
-    marginLeft: 80,
+    marginLeft: 90,
 },
 signupButton:{
     color: "white",

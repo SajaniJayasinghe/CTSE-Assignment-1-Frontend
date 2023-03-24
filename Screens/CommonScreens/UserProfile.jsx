@@ -84,52 +84,42 @@ export default function UserProfile({route,navigation}) {
 
     return(
         <View style={styles.container}>
-          <Image
-                style={styles.logo}
-                source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-                }}
-          />
-           <Image
-                style={styles.logo1}
-                source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679339046/user-removebg-preview_iwug42.png",
-                }}
-            />
+           <View style={styles.rect}>
+        <Image
+          style={styles.tinyLogo}
+          source={{ uri: profile.picture }}
+        />
+      </View>
             <Text
                 style={{
                 marginVertical: 2,
                 fontSize: 25,
                 marginTop: 0,
-                marginLeft: 134,
                 fontWeight: "bold",
-                textAlign:"justify",
+                textAlign:"center",
                 }}
              >
-               <Text>{profile.fullname}</Text>
+               <Text>{profile.name}</Text>
             </Text>
             <View style={styles.no1}>
                 <Text
                  style={{
-                    marginLeft: 50,
+                    marginLeft: "20%",
                     fontSize: 18,
                     marginTop: 25,
                     marginRight: 20,
                    }}
-                  > Full Name : 
+                  > Full Name : {profile.name}
                 </Text>
-                <Text style={styles.textView}>{profile.name}</Text>
-               
                 <Text
                  style={{
-                    marginLeft: 50,
+                  marginLeft: "20%",
                     fontSize: 18,
                     marginTop: 18,
                     marginRight: 20,
                    }}
                   > E-Mail Address : {profile.email}
                 </Text>
-                <Text style={styles.textView}></Text>
              </View>
 
                 <TouchableOpacity
@@ -150,13 +140,6 @@ export default function UserProfile({route,navigation}) {
                     >
                     <Text style={styles.logoutButton}>LogOut</Text>
                 </TouchableOpacity>
-
-            <Image
-                    style={styles.logo2}
-                    source={{
-                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-                    }}
-            />
         </View>
     )
 }
@@ -165,12 +148,6 @@ const styles = StyleSheet.create({
     container:{
         flex:1,
     },
-    logo:{
-        width: 400,
-        height: 10,
-        marginTop:0,
-        marginLeft:0
-    },
     logo1:{
         width: 150,
         height: 170,
@@ -178,25 +155,10 @@ const styles = StyleSheet.create({
         marginLeft:120,
         borderRadius:100
     },
-    logo2:{
-        width: 400,
-        height: 30,
-        marginTop:100,
-        marginLeft:0
-    },
     no1: {
         color: "rgba(155,155,155,1)",
         fontSize: 29,
         marginTop: 4,
-      },
-    textView: {
-        marginLeft: 150,
-        height: 40,
-        padding: 10,
-        marginTop: -30,
-        width: 200,
-        fontSize: 16,
-        textAlign: "left",
       },
     containerx: {
         backgroundColor: "#FFFFFF",
@@ -270,5 +232,27 @@ logoutButton:{
     fontWeight: "bold",
     fontSize: 18,
     lineHeight: 18,
-}
+},
+rect: {
+  width: 200,
+  height: 190,
+  backgroundColor: "rgba(255,255,255,1)",
+  shadowColor: "rgba(208,194,194,1)",
+  shadowOffset: {
+    width: 5,
+    height: 5,
+  },
+  elevation: 39,
+  marginTop: "10%",
+  marginBottom:"5%",
+  marginLeft:"26%",
+  shadowRadius: 13,
+},
+tinyLogo: {
+  width: 200,
+  height: 190,
+  marginBottom: 20,
+  marginTop: 0,
+  marginLeft: 0,
+},
 })

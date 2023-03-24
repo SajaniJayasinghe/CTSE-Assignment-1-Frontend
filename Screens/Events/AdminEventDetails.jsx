@@ -52,10 +52,6 @@ export default function AdminEventDetails({navigation}) {
 
     return(
         <View style={styles.container}>
-           <Image
-                style={styles.homelogo}
-                 source={{ uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png" }}
-           />
            <Text
             style={{
                 fontWeight: "800",
@@ -78,7 +74,7 @@ export default function AdminEventDetails({navigation}) {
           <Text 
                    style={{
                     marginLeft:20,
-                    marginTop:27,
+                    marginTop:40,
                     fontSize: 19,
                     fontWeight: "bold",
                     fontFamily: "Times New Roman",
@@ -174,14 +170,15 @@ export default function AdminEventDetails({navigation}) {
                   Games
                 </Text>
           </ScrollView>
+
           </View>
               <Text style={{
-                marginLeft:20,
-                fontSize: 18,
-                marginTop:20,
+                marginLeft:30,
+                fontSize: 20,
+                marginTop:25,
                 fontWeight: "bold",
                 fontFamily: "Times New Roman",
-                color:"#000000"
+                color:"grey"
                }}>
                 Description {'\n'}
               </Text>
@@ -288,12 +285,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    homelogo:{
-        width: 400,
-        height: 20,
-        marginTop:-5,
-        marginLeft:0
-      },
     rect: {
         width: 357,
         height: 167,

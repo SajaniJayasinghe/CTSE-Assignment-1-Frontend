@@ -1,47 +1,49 @@
 import React , {useState} from "react";
 import { View, Text, StyleSheet, Image,TouchableOpacity ,ScrollView,TextInput,Alert, Button} from "react-native";
-import { Dropdown } from "react-native-element-dropdown";
 import axios from "axios";
-import moment from "moment";
 import * as ImagePicker from "expo-image-picker";
 import CustomLoading from "../../components/CustomLoading";
-
+import {
+  responsiveWidth,
+ } from "react-native-responsive-dimensions";
+ import Icon from "react-native-vector-icons/MaterialIcons";
+ import { MultiSelect } from "react-native-element-dropdown";
 
 export default function AddEvent({ navigation }) {
-  const [loading, setLoading] = useState(false);
-
-  const [image, setImage] = useState(null);
   const data = [
-        { label: "Festival", value: "Festival" },
-        { label: "Cultural", value: "Cultural" },
-        { label: "BeachParty", value: "BeachParty" },
-        { label: "DJNight", value: "DJNight" },
-        { label: "Adventure", value: "Adventure" },
-      ];
-    
-    const [type, settype] = useState("");
+    { label: "Festival", value: "Festival" },
+    { label: "Cultural", value: "Cultural" },
+    { label: "BeachParty", value: "BeachParty" },
+    { label: "DJNight", value: "DJNight" },
+    { label: "Adventure", value: "Adventure" },
+  ];
+    const [loading, setLoading] = useState(false);
+    const [image, setImage] = useState(null);
     const [event_name, setevent_name] = useState("");
     const [description, setdescription] = useState("");
-    const [picture, setpicture] = useState("");
     const [location, setlocation] = useState("");
     const [date, setdate] = useState("");
     const [ticket_price, setticket_price] = useState("");
+    const [selectedItems, setSelectedItems] = useState([]);
+    const [imageUploadStatus, setImageUploadStatus] = useState(
+      "Choose Event Picture"
+    );
+    const [validationErrors, setValidationErrors] = useState({});
+ 
+    //For Multiple selection
+    const renderItem = (item) => {
+      return (
+        <View style={styles.item}>
+          <Text style={styles.selectedTextStyle}>{item.label}</Text>
+        </View>
+      );
+    };
 
     const addevent = () => {
       const URL = `http://localhost:8080/api/events/addevent`;
-  
-      // const payload = {
-      //   type: type,
-      //   event_name: event_name,
-      //   description: description,
-      //   picture:picture,
-      //   location:location,
-      //   date:date,
-      //   ticket_price:ticket_price
-      // };
+
       const payload = new FormData();
       setLoading(true);
-      payload.append("type", type);
       payload.append("event_name", event_name);
       payload.append("description", description);
       payload.append("picture", {
@@ -53,7 +55,13 @@ export default function AddEvent({ navigation }) {
       payload.append("date", date);
       payload.append("ticket_price", ticket_price);
 
-   
+      //for multiple selection
+      if (selectedItems.length > 0) {
+        for (var i = 0; i < selectedItems.length; i++) {
+          payload.append(`type[${i}]`, selectedItems[i]);
+        }
+      }
+
       axios
         .post(URL, payload,{
           headers: {
@@ -76,38 +84,28 @@ export default function AddEvent({ navigation }) {
           );
         });
     };
-    console.log(image)
+    
     //for Image upload
- const pickImage = async () => {
-  let result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    allowsEditing: true,
-    aspect: [4, 3],
-    quality: 1,
+    const pickImage = async () => {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
   });
-
 
   if (!result.canceled) {
     setImage(result.assets[0].uri);
+    setImageUploadStatus("Image Uploaded");
   } else {
     setImage(null);
+    setImageUploadStatus("Choose Event Picture");
   }
 };
-
-
 
     return(
       <>
         <View style={styles.container}>
-          
-         <View>
-           <Image
-                style={styles.homelogo}
-                source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-                }}
-          />
-            </View>
              <Image
                 style={styles.tinyLogo}
                 source={{
@@ -126,7 +124,7 @@ export default function AddEvent({ navigation }) {
             textAlign: "center",
             fontSize: 36,
             marginLeft: -10,
-            marginTop: 15,
+            marginTop: 0,
             color:"#3F000F",
             fontFamily: "Times New Roman",
           }}
@@ -135,27 +133,55 @@ export default function AddEvent({ navigation }) {
         </Text>
           <ScrollView>
           <View>
-          <Text style={styles.nameText1}>Select Event Type</Text>
-            <Dropdown
-                style={styles.dropdown}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                inputSearchStyle={styles.inputSearchStyle}
-                iconStyle={styles.iconStyle}
-                data={data}
-                search
-                maxHeight={300}
-                labelField="label"
-                valueField="value"
-                placeholder="Select  Event Type"
-                searchPlaceholder="Search..."
-                statusBarIsTranslucent={true}
-                value={type}
-                onChange={(item) => {
-                  settype(item.value);
-                }}
-            >
-            </Dropdown>
+          <MultiSelect
+               style={styles.textInputnew}
+               placeholderStyle={{
+                  fontSize: 17,
+                  color: "#BCC6CC",
+                  fontFamily: "Times New Roman",
+                  marginTop: 10,
+                  marginBottom: 10,
+               }}
+               search
+               data={data}
+               labelField="label"
+               valueField="value"
+               placeholder="Select Events"
+               searchPlaceholder="Search..."
+               value={selectedItems}
+               onChange={(item) => {
+                 setSelectedItems(item);
+               }}
+               renderItem={renderItem}
+               renderSelectedItem={(item, unSelect) => (
+                 <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
+                   <View
+                     style={{
+                       flexDirection: "row",
+                       justifyContent: "space-between",
+                       padding: 20,
+                       backgroundColor: "white",
+                       borderRadius: 5,
+                       gap:20,
+                        marginTop: "10%",
+                       marginBottom: "10%",
+                       marginLeft: "8%",
+                     }}
+                   >
+                     <Text style={styles.textSelectedStyle}>{item.label}</Text>
+                     <Icon name="delete" size={20} color="red" />
+                   </View>
+                 </TouchableOpacity>
+               )}
+             />
+             {validationErrors.type ? (
+               <Text style={styles.errorTextSelection}>
+                 {validationErrors.type}
+               </Text>
+             ) : (
+               ""
+             )}
+
             <Text style={styles.nameText}>Enter Event Name</Text>
                 <TextInput
                     placeholder="Enter Event Name "
@@ -191,22 +217,23 @@ export default function AddEvent({ navigation }) {
                     value={description}
                     onChange={(e) => setdescription(e.nativeEvent.text)}
                 />
-                 {/* <Text style={styles.nameText2}>Upload Event Image</Text> */}
-                {/* <TextInput
-                    placeholder="Upload Event Image"
-                    style={styles.textInput}
-                    value={picture}
-                    onChange={(e) => setpicture(e.nativeEvent.text)}
-                /> */}
-                <TouchableOpacity style={[styles.containerx, styles.materialButtonDark1]} onPress={pickImage}>
-                <Text style={{
-                    color: "#fff",
-                    fontSize: 20,
-                    fontWeight: "bold",
-                    textAlign: "center",
-                    fontFamily: "Times New Roman",         
-                }}>Upload Event Image</Text>
-                </TouchableOpacity>
+
+
+              <View style={styles.imageUploadField}>
+               <TextInput
+                 style={styles.ImageTextInput}
+                 placeholder="Choose File"
+                 editable={false}
+                 selectTextOnFocus={false}
+                 value={imageUploadStatus}
+               />
+               <TouchableOpacity
+                 onPress={pickImage}
+                 style={styles.uploadButton}
+               >
+                 <Text style={styles.uploadTxt}>Upload</Text>
+               </TouchableOpacity>
+             </View>
           </View>
           <TouchableOpacity
                 style={[styles.containerx, styles.materialButtonDark1]}
@@ -217,12 +244,9 @@ export default function AddEvent({ navigation }) {
                 <Text style={styles.loginButton} >Add Event</Text>
             </TouchableOpacity>
           </ScrollView>
-          <Image
-                style={styles.logo1}
-                source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-                }}
-          />
+
+
+
         </View>
       {loading ? < CustomLoading/> : null}
         </>
@@ -251,7 +275,7 @@ const styles = StyleSheet.create({
       },
     tinyLogo: {
         width: 400,
-        height: 100,
+        height: 70,
         marginTop:0,
         marginLeft:0,
       },
@@ -261,12 +285,6 @@ const styles = StyleSheet.create({
         marginTop:-50,
         marginLeft:150,
         borderRadius:25
-      },
-    homelogo:{
-        width: 400,
-        height: 20,
-        marginTop:0,
-        marginLeft:0
       },
       dropdown: {
         margin: 16,
@@ -292,7 +310,7 @@ const styles = StyleSheet.create({
         color: "#6D7B8D",
         fontSize: 16,
         lineHeight: 18,
-        marginTop:-10,
+        marginTop:10,
         marginLeft: 36,
     },
       nameText1:{
@@ -308,6 +326,7 @@ const styles = StyleSheet.create({
         lineHeight: 18,
         marginTop: -5,
         marginLeft: 36,
+        fontFamily: "Times New Roman",
     },
     nameText2:{
         color: "#6D7B8D",
@@ -315,6 +334,7 @@ const styles = StyleSheet.create({
         lineHeight: 18,
         marginTop: 5,
         marginLeft: 36,
+        fontFamily: "Times New Roman",
     },
     nameText3:{
         height: 80,
@@ -325,10 +345,11 @@ const styles = StyleSheet.create({
         marginTop:7,
         marginLeft: 36,
         borderWidth: 1,
-        borderColor:"#560319"
+        borderColor:"#560319",
+        fontFamily: "Times New Roman",
     },
     textInput: {
-        height: 40,
+        height: 35,
         width: 320,
         textAlign: "center",
         fontSize: 15,
@@ -336,7 +357,8 @@ const styles = StyleSheet.create({
         marginTop: 7,
         marginLeft: 36,
         borderWidth: 1,
-        borderColor:"#560319"
+        borderColor:"#560319",
+        fontFamily: "Times New Roman",
       },
       containerx: {
         backgroundColor: "#FFFFFF",
@@ -359,12 +381,11 @@ const styles = StyleSheet.create({
   materialButtonDark1: {
     height: 40,
     width: 210,
-    backgroundColor:"#560319",
-    borderWidth:1,
+    backgroundColor:"#551606",
     borderRadius: 100,
     elevation: 5,
     shadowOpacity: 0,
-    marginTop: 15,
+    marginTop: 2,
     marginBottom: 10,
     marginLeft: 90,
 },
@@ -373,12 +394,57 @@ loginButton:{
     fontWeight: "bold",
     fontSize: 18,
     lineHeight: 18,
+    fontFamily: "Times New Roman",
     
   },
-logo1:{
-    width: 400,
-    height: 30,
-    marginTop:-5,
-    marginLeft:0
-},
+  imageUploadField: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: "5%",
+  },
+ 
+  ImageTextInput: {
+    width: "50%",
+    height: 50,
+    borderColor: "grey",
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingLeft: 10,
+    color: "gray",
+    marginLeft:"10%",
+    marginTop:"5%"
+  },
+  uploadTxt: {
+    color: "black",
+    fontSize: "20px",
+    fontWeight: "bold",
+    fontFamily: "Times New Roman",
+  },
+  uploadButton: {
+    width: "30%",
+    height: "30%",
+    marginRight:"20%",
+    backgroundColor: "#E8A317",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 50,
+    marginTop:"5%",
+    marginLeft: responsiveWidth(2),
+    fontFamily: "Times New Roman",
+  },
+  textInputnew: {
+    width: "80%",
+    height: 40,
+    backgroundColor: "white",
+    borderRadius: 10,
+    paddingLeft: 10,
+    marginLeft:"10%",
+    marginTop:"5%",
+    borderColor: "grey",  
+    borderWidth: 1,
+  },
+
 })

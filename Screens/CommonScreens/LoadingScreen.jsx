@@ -1,5 +1,9 @@
 import React from "react";
 import { View, Image, StyleSheet, Text, TouchableOpacity } from "react-native";
+import {
+    responsiveWidth,
+    responsiveHeight
+   } from "react-native-responsive-dimensions";
 
 const LoadingScreen = ({navigation}) =>{
     return (
@@ -50,10 +54,10 @@ const style = StyleSheet.create({
         backgroundColor:"#F7E7CE"
     },
     loadingImage:{
-        width: 480,
-        height: 450,
-        marginTop:20,
-        marginLeft:-10
+        width: responsiveWidth(105),
+        height: responsiveHeight(60),
+        marginLeft:"0%",
+        marginTop:"-5%",
     },
     containerx: {
         backgroundColor: "#3F000F",
@@ -86,7 +90,7 @@ const style = StyleSheet.create({
         shadowRadius: 0,
         marginTop: 10,
         marginBottom: 10,
-        marginLeft: 120,
+        marginLeft: responsiveWidth(30),
   },
 
     letsGetStarted: {
