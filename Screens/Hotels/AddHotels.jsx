@@ -12,13 +12,13 @@ import { Dropdown } from "react-native-element-dropdown";
 import * as ImagePicker from "expo-image-picker";
 import CustomLoading from "../../components/CustomLoading";
 import axios from "axios";
+import { responsiveWidth } from "react-native-responsive-dimensions";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { MultiSelect } from "react-native-element-dropdown";
 
 // import CheckBox from "react-native-check-box";
 
 export default function AddHotels({ navigation }) {
-  const [loading, setLoading] = useState(false);
-
-  const [image, setImage] = useState(null);
   const data = [
     { label: "Wifi", value: "Wifi" },
     { label: "AC", value: "AC" },
@@ -26,12 +26,26 @@ export default function AddHotels({ navigation }) {
     { label: "Pool", value: "Pool" },
     { label: "Parking", value: "Parking" },
   ];
-
+  const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null);
   const [hotel_name, sethotel_name] = useState("");
   const [description, setdescription] = useState("");
   const [address, setaddress] = useState("");
   const [mobile, setmobile] = useState("");
-  const [facilities, setfacilities] = useState("");
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [imageUploadStatus, setImageUploadStatus] = useState(
+    "Choose Event Picture"
+  );
+  const [validationErrors, setValidationErrors] = useState({});
+
+  //For Multiple selection
+  const renderItem = (item) => {
+    return (
+      <View style={styles.item}>
+        <Text style={styles.selectedTextStyle}>{item.label}</Text>
+      </View>
+    );
+  };
 
   const addHotel = () => {
     const URL = `http://localhost:8080/api/hotels/addhotel`;
@@ -48,7 +62,13 @@ export default function AddHotels({ navigation }) {
     payload.append("address", address);
 
     payload.append("mobile", mobile);
-    payload.append("facilities", facilities);
+
+    //for multiple selection
+    if (selectedItems.length > 0) {
+      for (var i = 0; i < selectedItems.length; i++) {
+        payload.append(`type[${i}]`, selectedItems[i]);
+      }
+    }
 
     axios
       .post(URL, payload, {
@@ -84,8 +104,10 @@ export default function AddHotels({ navigation }) {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      setImageUploadStatus("Image Uploaded");
     } else {
       setImage(null);
+      setImageUploadStatus("Choose Hotel Picture");
     }
   };
 
@@ -134,40 +156,55 @@ export default function AddHotels({ navigation }) {
               onChange={(e) => sethotel_name(e.nativeEvent.text)}
               value={hotel_name}
             />
-            <Text style={styles.nameText1}>Select Facilities</Text>
-            <Dropdown
-              style={styles.dropdown}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              inputSearchStyle={styles.inputSearchStyle}
-              iconStyle={styles.iconStyle}
-              data={data}
+            <MultiSelect
+              style={styles.textInputnew}
+              placeholderStyle={{
+                fontSize: 17,
+                color: "#BCC6CC",
+                fontFamily: "Times New Roman",
+                marginTop: 10,
+                marginBottom: 10,
+              }}
               search
-              maxHeight={300}
+              data={data}
               labelField="label"
               valueField="value"
               placeholder="Select Facilities"
               searchPlaceholder="Search..."
-              statusBarIsTranslucent={true}
-              value={facilities}
+              value={selectedItems}
               onChange={(item) => {
-                setfacilities(item.value);
+                setSelectedItems(item);
               }}
-              // value={value}
-              // onChange={(item) => {
-              //     setrole(item.value);
-              // }}
-              // renderLeftIcon={() => (
-              // )}
-            >
-              {/* <CheckBox
-         checkedCheckBoxColor="green"
-         onClick={() => {
-           UpdateStatus(todo.id, todo.isDone);
-         }}
-         isChecked={todo.isDone}
-       /> */}
-            </Dropdown>
+              renderItem={renderItem}
+              renderSelectedItem={(item, unSelect) => (
+                <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      padding: 20,
+                      backgroundColor: "white",
+                      borderRadius: 5,
+                      gap: 20,
+                      marginTop: "10%",
+                      marginBottom: "10%",
+                      marginLeft: "8%",
+                    }}
+                  >
+                    <Text style={styles.textSelectedStyle}>{item.label}</Text>
+                    <Icon name="delete" size={20} color="red" />
+                  </View>
+                </TouchableOpacity>
+              )}
+            />
+            {validationErrors.type ? (
+              <Text style={styles.errorTextSelection}>
+                {validationErrors.type}
+              </Text>
+            ) : (
+              ""
+            )}
+
             <Text style={styles.nameText1}>Enter Hotel Address</Text>
             <TextInput
               placeholder="Enter Hotel Address here"
@@ -191,22 +228,18 @@ export default function AddHotels({ navigation }) {
               onChange={(e) => setdescription(e.nativeEvent.text)}
               value={description}
             />
-            <TouchableOpacity
-              style={[styles.containerx, styles.materialButtonDark1]}
-              onPress={pickImage}
-            >
-              <Text
-                style={{
-                  color: "#fff",
-                  fontSize: 20,
-                  fontWeight: "bold",
-                  textAlign: "center",
-                  fontFamily: "Times New Roman",
-                }}
-              >
-                Upload Hotel Image
-              </Text>
-            </TouchableOpacity>
+            <View style={styles.imageUploadField}>
+              <TextInput
+                style={styles.ImageTextInput}
+                placeholder="Choose File"
+                editable={false}
+                selectTextOnFocus={false}
+                value={imageUploadStatus}
+              />
+              <TouchableOpacity onPress={pickImage} style={styles.uploadButton}>
+                <Text style={styles.uploadTxt}>Upload</Text>
+              </TouchableOpacity>
+            </View>
           </ScrollView>
           <TouchableOpacity
             style={[styles.containerx, styles.materialButtonDark1]}
@@ -361,5 +394,53 @@ const styles = StyleSheet.create({
     height: 50,
     marginTop: -1,
     marginLeft: 0,
+  },
+  textInputnew: {
+    width: "80%",
+    height: 40,
+    backgroundColor: "white",
+    borderRadius: 10,
+    paddingLeft: 10,
+    marginLeft: "10%",
+    marginTop: "5%",
+    borderColor: "grey",
+    borderWidth: 1,
+  },
+  imageUploadField: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: "5%",
+  },
+  ImageTextInput: {
+    width: "50%",
+    height: 50,
+    borderColor: "grey",
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingLeft: 10,
+    color: "gray",
+    marginLeft: "10%",
+    marginTop: "5%",
+  },
+  uploadButton: {
+    width: "30%",
+    height: "30%",
+    marginRight: "20%",
+    backgroundColor: "#E8A317",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 50,
+    marginTop: "5%",
+    marginLeft: responsiveWidth(2),
+    fontFamily: "Times New Roman",
+  },
+  uploadTxt: {
+    color: "black",
+    fontSize: "20px",
+    fontWeight: "bold",
+    fontFamily: "Times New Roman",
   },
 });

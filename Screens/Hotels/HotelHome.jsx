@@ -10,6 +10,26 @@ import {
 } from "react-native";
 
 export default function HotelHome({ navigation }) {
+  const [hotel, sethotel] = useState([]);
+  const [filterHotel, setfilterHotel] = useState([]);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    axios.get("http://localhost:8080/api/hotels/gethotel").then((res) => {
+      if (res.data.success) {
+        sethotel(res.data.existinghotels);
+      }
+    });
+  }, []);
+
+  const searchFunc = (text) => {
+    return hotel.filter((hotel) => hotel.hotel_name === text);
+  };
+
+  useEffect(() => {
+    setfilterHotel(searchFunc(search));
+  }, [search]);
+
   return (
     <View style={styles.container}>
       <Image
@@ -154,34 +174,48 @@ export default function HotelHome({ navigation }) {
       <Text style={styles.Text1}>All Hotels</Text>
       <TextInput
         style={styles.inputserach}
-        placeholder="Search for Hotel name"
-        // value={search}
-        // onChangeText={(text) => setSearch(text)}
+        placeholder="Search for Event name"
+        value={search}
+        onChangeText={(text) => setSearch(text)}
       />
+
       <ScrollView style={{ display: "flex", flexDirection: "column" }}>
-        <View style={styles.hotel}>
-          <TouchableOpacity onPress={() => navigation.navigate("HotelDetails")}>
-            <Image
-              style={styles.tinyLogo1}
-              source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679427404/araliya_nuopxg.jpg",
-              }}
-            />
-            <Text
-              style={{
-                color: "#000000",
-                textAlign: "center",
-                marginTop: 30,
-                marginBottom: 10,
-                fontSize: 18,
-                fontWeight: "bold",
-                fontFamily: "Times New Roman",
-              }}
-            >
-              Araliya Beach Hotel
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {(search === "" ? hotel : filterHotel).map((hotel, index) => (
+          <View key={hotel + index}>
+            <View style={styles.hotel}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("HotelDetails", {
+                    id: hotel.hotel_id,
+                    facilities: hotel.facilities,
+                    hotel_name: hotel.hotel_name,
+                    description: hotel.description,
+                    address: hotel.address,
+                    picture: hotel.picture,
+                    mobile: hotel.mobile,
+                  })
+                }
+              >
+                <Image
+                  style={styles.tinyLogo1}
+                  source={{ uri: hotel.picture }}
+                />
+                <Text
+                  style={{
+                    color: "#000000",
+                    textAlign: "center",
+                    marginTop: 30,
+                    fontSize: 18,
+                    fontWeight: "bold",
+                    fontFamily: "Times New Roman",
+                  }}
+                >
+                  {hotel.hotel_name}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ))}
       </ScrollView>
     </View>
   );

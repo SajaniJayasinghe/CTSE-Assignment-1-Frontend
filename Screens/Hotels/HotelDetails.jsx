@@ -21,7 +21,7 @@ export default function HotelDetails({ navigation }) {
       hotel_name: route.params.hotel_name,
       description: route.params.description,
       address: route.params.address,
-      image: route.params.image,
+      picture: route.params.picture,
       facilities: route.params.facilities,
       mobile: route.params.mobile,
     };
