@@ -1,16 +1,57 @@
-import React from "react";
-import { View, Image, StyleSheet, Text, TouchableOpacity,ScrollView } from "react-native";
+import React , { useEffect, useState }from "react";
+import { View, Image, StyleSheet, Text, TouchableOpacity,ScrollView,Alert } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import axios from "axios";
+import { useRoute } from "@react-navigation/native";
 
-export default function EventDetails({navigation}) {
+export default function AdminEventDetails({navigation}) {
+  const [event, setevent] = useState([]);
+  const route = useRoute();
+  
+  useEffect(() => {
+    const data = {
+      eid: route.params.eID,
+      type: route.params.type,
+      event_name: route.params.event_name,
+      description: route.params.description,
+      picture: route.params.picture,
+      location: route.params.location,
+      date: route.params.date,
+      ticket_price: route.params.ticket_price,
+    };
+    setevent(data);
+  }, []);
+
+  
+  const deleteevent = async () => {
+    const { id } = route.params;
+    Alert.alert("Are you sure?", "This will permanently delete Event!", [
+      {
+        text: "OK",
+        onPress: async () => {
+          console.log(id);
+          axios
+            .delete(
+              `https://travel-go.herokuapp.com/api/events/delete/${id}`
+            )
+            .then((res) => {
+              navigation.push("ReceivedDonations");
+            })
+            .catch((e) => {
+              console.error(e);
+            });
+        },
+      },
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+      },
+    ]);
+  };
+
+
     return(
         <View style={styles.container}>
-           <Image
-                style={styles.homelogo}
-                source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-                }}
-           />
            <Text
             style={{
                 fontWeight: "800",
@@ -21,22 +62,19 @@ export default function EventDetails({navigation}) {
                 color:"#3F000F",
                 fontFamily: "Times New Roman",
             }}
-            >  Hellowin
-               {/* {hotel.name} */}
+            >  {event.event_name}
            </Text>
            <View style={styles.rect}>
              <Image
                 style={styles.tinyLogo}
-                source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481372/3_vgqveh.jpg",
-                }}
+                source={{ uri: event.picture }}
               />
           </View>
          <View>
           <Text 
                    style={{
                     marginLeft:20,
-                    marginTop:27,
+                    marginTop:40,
                     fontSize: 19,
                     fontWeight: "bold",
                     fontFamily: "Times New Roman",
@@ -132,24 +170,29 @@ export default function EventDetails({navigation}) {
                   Games
                 </Text>
           </ScrollView>
+
           </View>
               <Text style={{
-                marginLeft:20,
-                fontSize: 18,
-                marginTop:20,
+                marginLeft:30,
+                fontSize: 20,
+                marginTop:25,
                 fontWeight: "bold",
                 fontFamily: "Times New Roman",
-                color:"#000000"
+                color:"grey"
                }}>
                 Description {'\n'}
               </Text>
                 <TouchableOpacity
-                    // onPress={() =>
-                    //   navigation.navigate("UpdateHotelDetails", {
-                    //     donationID: donations._id,
-                    //   })
-                    // }
-                    onPress={() => navigation.navigate("UpdateEvent")}
+                    onPress={() => navigation.navigate("UpdateEvent",{
+                      eID: event.eid,
+                      type: event.type,
+                      event_name: event.event_name,
+                      description: event.description,
+                      picture: event.picture,
+                      location: event.location,
+                      date: event.date,
+                      ticket_price: event.ticket_price,
+                    })}
                   >
                     <Icon
                       name="edit"
@@ -163,12 +206,14 @@ export default function EventDetails({navigation}) {
                       }}
                     />
                 </TouchableOpacity>
+              <TouchableOpacity>
               <Icon
                     name="delete-forever"
-                    // onPress={() => deletedonation(donations._id)}
+                    onPress={() => deleteevent(event._id)}
                     style={styles.icon}
                   >
               </Icon>
+              </TouchableOpacity>
              <ScrollView>
                 <View style={styles.rect1}>
                 <Text style={{
@@ -179,7 +224,7 @@ export default function EventDetails({navigation}) {
                     fontWeight:"bold",
                     marginTop:10
                 }}>
-                   Hellowin {/* {hotel.name} */}
+                   {event.event_name} -    {event.type}
                 </Text>
                 <Image
                     style={styles.tinyLogo6}
@@ -190,12 +235,12 @@ export default function EventDetails({navigation}) {
                 <Text style={{
                     marginLeft:40,
                     fontSize: 15,
-                    marginTop:3,
+                    marginTop:0,
                     fontFamily:"Times New Roman",
                     color:"#52595D",
                     fontWeight:"bold"
                 }}>
-                   Unawatuna, Southern Province, Sri Lanka  {/* {hotel.location} */}
+                   {event.location}
                     {'\n'}
                 </Text>
                 <Text style={{
@@ -206,21 +251,29 @@ export default function EventDetails({navigation}) {
                     color:"#52595D",
                     fontWeight:"bold"
                 }}>
-                  2023-11-10
+                   {event.date}
                     {'\n'}
+                </Text>
+                <Text style={{
+                    marginLeft:40,
+                    fontSize: 15,
+                    marginTop:-13,
+                    fontFamily:"Times New Roman",
+                    color:"#000000",
+                    fontWeight:"bold"
+                }}>
+                  Tickect Prices : {event.ticket_price}
                 </Text>
                 <Text style={{
                     marginLeft:20,
                     fontSize: 15,
-                    marginTop:5,
+                    marginTop:15,
                     fontFamily:"Times New Roman",
                     color:"#52595D",
                     textAlign:"justify",
                     fontWeight:"bold",
                     marginRight:20
-                }}>
-                  {/* {hotel.description} */}
-                Take advantage of a free breakfast buffet, a rooftop terrace, and a coffee shop/cafe at Araliya Beach Resort and Spa. This resort is a great place to bask in the sun with a white sand beach. Treat yourself to a Thai massage at the onsite spa. Be sure to enjoy a meal at any of the 4 onsite restaurants, which feature a poolside location and garden views. In addition to a garden and dry cleaning/laundry services, guests can connect to free in-room WiFi, with speed of 50+ Mbps.
+                }}> {event.description}
                 </Text>
                 </View>
              </ScrollView>
@@ -232,12 +285,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    homelogo:{
-        width: 400,
-        height: 20,
-        marginTop:-5,
-        marginLeft:0
-      },
     rect: {
         width: 357,
         height: 167,
@@ -309,6 +356,14 @@ const styles = StyleSheet.create({
          marginTop: 8,
         borderRadius: 100,
         marginLeft: 35,
+      },
+      tinyLogo6:{
+        width: 18,
+        height: 18,
+        marginBottom: -20,
+         marginTop: 13,
+        borderRadius: 100,
+        marginLeft: 19,
       },
       tinyLogo7: {
         width: 46,

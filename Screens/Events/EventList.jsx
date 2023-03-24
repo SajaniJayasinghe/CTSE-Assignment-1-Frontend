@@ -1,7 +1,30 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 import { View, Text, StyleSheet ,TextInput,TouchableOpacity,Image,ScrollView} from "react-native";
+import axios from "axios";
 
 export default function EventList({ navigation }) {
+    const [event, setevent] = useState([]);
+    const [filterEvent, setfilterEvent] = useState([]);
+    const [search, setSearch] = useState("");
+
+    useEffect(() => {
+        axios
+          .get("http://localhost:8080/api/events/getevent")
+          .then((res) => {
+            if (res.data.success) {
+                setevent(res.data.Event);
+            }
+          });
+      }, []);
+
+      const searchFunc = (text) => {
+        return event.filter((event) => event.event_name === text);
+      };
+
+      useEffect(() => {
+        setfilterEvent(searchFunc(search));
+      }, [search]);
+    
     return (
         <View style={styles.container}>
               <Image
@@ -12,22 +35,25 @@ export default function EventList({ navigation }) {
           />
              <TextInput
                     style={styles.inputserach}
-                    placeholder="Search for Hotel name"
-                    // value={search}
-                    // onChangeText={(text) => setSearch(text)}
+                    placeholder="Search for Event name"
+                    value={search}
+                    onChangeText={(text) => setSearch(text)}
                 />
             <Text style={styles.Text1}>Event List</Text>
+            
             <ScrollView style={{ display: "flex", flexDirection: "column" }}>
+            {(search === "" ? event : filterEvent).map(
+                     (event, index) => (
+                  <View key={event + index}>
                 <View style={styles.hotel}>
                     <TouchableOpacity
                         onPress={() => navigation.navigate("SpecificEvent")}
                     >
                         <Image
                         style={styles.tinyLogo1}
-                        source={{
-                            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481372/3_vgqveh.jpg",
-                        }}
+                        source={{ uri: event.picture }}
                         />
+
                         <Text
                         style={{
                             color: "#000000",
@@ -39,10 +65,13 @@ export default function EventList({ navigation }) {
                             fontFamily: "Times New Roman",
                         }}
                         >
-                       Hellowin Party
+                       {event.event_name}
                         </Text>
                     </TouchableOpacity>                   
+                   </View>
                  </View>
+                     )
+                )}
             </ScrollView> 
         </View>
     )

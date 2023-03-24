@@ -1,15 +1,62 @@
-import React from "react";
 import { View, Image, StyleSheet, Text, TouchableOpacity,ScrollView } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-export default function UserDashBoard({ navigation }) {
-   return(
+
+export default function UserDashBoard({ route,navigation }) {
+    const [event, setevent] = useState([]);
+    const [filterEvent, setfilterEvent] = useState([]);
+    const [search, setSearch] = useState("");
+    const [token, settoken] = useState("");
+
+
+    const getToken = async () => {
+      settoken(await AsyncStorage.getItem("token"));
+    };
+    useEffect(() => {
+      getToken();
+      if (!!!route.prams) {
+      }
+    }, []);
+
+  const [profile, setProfile] = useState([]);
+  
+  const getprofile = async () => {
+      const userToken = await AsyncStorage.getItem("token");
+      console.log(userToken);
+      await axios
+        .get("http://localhost:8080/api/user/userprofile", {
+          headers: {
+            Authorization: userToken,
+          },
+        })
+        .then((res) => {
+          setProfile(res.data.User);
+        });
+    };
+
+    useEffect(() => {
+        axios
+          .get("http://localhost:8080/api/events/getevent")
+          .then((res) => {
+            if (res.data.success) {
+                setevent(res.data.Event);
+            }
+          });
+      }, []);
+
+      const searchFunc = (text) => {
+        return event.filter((event) => event.event_name === text);
+      };
+
+      useEffect(() => {
+        getprofile();
+        setfilterEvent(searchFunc(search));
+      }, [search]);
+
+    return(
         <View style={styles.container}>
-          <Image
-                style={styles.homelogo}
-                source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-                }}
-          />
             <TouchableOpacity onPress={() => navigation.navigate("UserProfile")}>
                 <Image
                     style={styles.logo}
@@ -17,21 +64,29 @@ export default function UserDashBoard({ navigation }) {
                     uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679339046/user-removebg-preview_iwug42.png",
                     }}
                 />
+                 <Text style={{
+                    marginLeft:200,
+                    marginTop:-40,
+                    marginBottom:10,
+                    fontSize: 18,
+                    fontWeight: "bold",
+                    fontFamily: "Times New Roman",
+                }}>Hi,  {profile.name}</Text>
             </TouchableOpacity>
             <Text
                     style={{
                         color: "#000000",
                         textAlign: "center",
-                        marginTop: -10,
-                        marginLeft:-110,
-                        fontSize: 18,
+                        marginTop:30,
+                        marginLeft:-75,
+                        fontSize: 20,
                         fontWeight: "bold",
                         fontFamily: "Times New Roman",
                     }}
                     >
                    Popular Location In this Month
              </Text>
-           
+
            <ScrollView
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
@@ -166,12 +221,12 @@ export default function UserDashBoard({ navigation }) {
                 </TouchableOpacity>
               </View>
            </ScrollView>            
-          
+
            <Text
                     style={{
                         color: "#000000",
                         textAlign: "center",
-                        marginTop: -70,
+                        marginTop: 0,
                         marginLeft:-150,
                         fontSize: 20,
                         fontWeight: "bold",
@@ -180,116 +235,33 @@ export default function UserDashBoard({ navigation }) {
                     >
                   Recommended for You
              </Text>
-
-           <ScrollView
+             <ScrollView
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 scrollEventThrottle={200}
                 decelerationRate="fast"
                 pagingEnabled
               >  
-                <View style={styles.rectangle}>
+            {(search === "" ? event : filterEvent).map(
+                (event, index) => (
+                    <View key={event + index}>
+                     <View style={styles.rectangle}>
                     <TouchableOpacity
                         // onPress={() => navigation.navigate("AllOrganizations")}
                     >
                         <Image
-                        style={styles.tinyLogo}
-                        source={{
-                            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481441/4_pvzrhq.jpg",
-                        }}
+                        style={styles.rectinyLogo}
+                        source={{ uri: event.picture }}
                         />
-                        <Text
-                            style={{
-                                color: "#000000",
-                                textAlign: "center",
-                                marginTop: 26,
-                                marginBottom: 10,
-                                fontSize: 18,
-                                fontWeight: "bold",
-                                fontFamily: "Times New Roman",
-                            }}
-                        >
-                        Miss Sri Lanka
-                        </Text>
                     </TouchableOpacity>
                  </View>
-                 <View style={styles.rect1}>
-                    <TouchableOpacity
-                        // onPress={() => navigation.navigate("AllOrganizations")}
-                    >
-                        <Image
-                        style={styles.tinyLogo}
-                        source={{
-                            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481853/7_rl2hpo.jpg",
-                        }}
-                        />
-                        <Text
-                            style={{
-                                color: "#000000",
-                                textAlign: "center",
-                                marginTop: 26,
-                                marginBottom: 10,
-                                fontSize: 18,
-                                fontWeight: "bold",
-                                fontFamily: "Times New Roman",
-                            }}
-                        >
-                        Esela Perahera
-                        </Text>
-                    </TouchableOpacity>
-                 </View>
-                 <View style={styles.rect}>
-                    <TouchableOpacity
-                        // onPress={() => navigation.navigate("AllOrganizations")}
-                    >
-                        <Image
-                        style={styles.tinyLogo}
-                        source={{
-                            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481372/6_ukkdab.jpg",
-                        }}
-                        />
-                        <Text
-                            style={{
-                                color: "#000000",
-                                textAlign: "center",
-                                marginTop: 26,
-                                marginBottom: 10,
-                                fontSize: 18,
-                                fontWeight: "bold",
-                                fontFamily: "Times New Roman",
-                            }}
-                        >
-                        New Year Festival
-                        </Text>
-                    </TouchableOpacity>
-                 </View>
-                 <View style={styles.rect1}>
-                    <TouchableOpacity
-                        // onPress={() => navigation.navigate("AllOrganizations")}
-                    >
-                        <Image
-                        style={styles.tinyLogo}
-                        source={{
-                            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481369/2_w6etem.jpg",
-                        }}
-                        />
-                        <Text
-                            style={{
-                                color: "#000000",
-                                textAlign: "center",
-                                marginTop: 26,
-                                marginBottom: 10,
-                                fontSize: 18,
-                                fontWeight: "bold",
-                                fontFamily: "Times New Roman",
-                            }}
-                        >
-                        Beach Party
-                        </Text>
-                    </TouchableOpacity>
-                 </View>
-                 </ScrollView>
-        
+      
+                    </View>
+                )
+            )}
+            </ScrollView>
+
+            <View>
             <View style={styles.container2}>            
             <Text
                     style={{
@@ -302,6 +274,7 @@ export default function UserDashBoard({ navigation }) {
                     >
                    Popular Categories
                 </Text>
+              
                 <TouchableOpacity
                     onPress={() => navigation.navigate("HotelHome")}
                  >
@@ -315,8 +288,8 @@ export default function UserDashBoard({ navigation }) {
                 
                 <Text 
                    style={{
-                    marginLeft:34,
-                    marginTop:30,
+                    marginLeft:27,
+                    marginTop:25,
                     fontSize: 18,
                     fontWeight: "bold",
                     fontFamily: "Times New Roman",
@@ -339,8 +312,8 @@ export default function UserDashBoard({ navigation }) {
                 </TouchableOpacity>
                 <Text 
                    style={{
-                    marginLeft:130,
-                    marginTop:-19,
+                    marginLeft:125,
+                    marginTop:-23,
                     fontSize: 18,
                     fontWeight: "bold",
                     fontFamily: "Times New Roman",
@@ -364,7 +337,7 @@ export default function UserDashBoard({ navigation }) {
                 
                  <Text 
                    style={{
-                    marginLeft:230,
+                    marginLeft:220,
                     marginTop:-19,
                     fontSize: 18,
                     fontWeight: "bold",
@@ -373,6 +346,7 @@ export default function UserDashBoard({ navigation }) {
                 }}
                  >Events
                  </Text>
+                 
                    <TouchableOpacity
                     // onPress={() => navigation.navigate("AddEvents")}
                  >
@@ -387,7 +361,7 @@ export default function UserDashBoard({ navigation }) {
                 
                 <Text 
                    style={{
-                    marginLeft:320,
+                    marginLeft:315,
                     marginTop:-19,
                     fontSize: 18,
                     fontWeight: "bold",
@@ -398,12 +372,7 @@ export default function UserDashBoard({ navigation }) {
                     Blogs
                 </Text>
             </View>
-              <Image
-                    style={styles.logo2}
-                    source={{
-                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-                    }}
-            />
+            </View>
             </View>
     )
 }
@@ -421,7 +390,7 @@ const styles = StyleSheet.create({
     container2: {
         width: 500,
         height: 190,
-        marginTop:-100
+        marginTop:-80
     },
     logo:{
         width: 55,
@@ -429,21 +398,9 @@ const styles = StyleSheet.create({
         marginLeft:320,
         marginTop:13
     },
-    homelogo:{
-      width: 400,
-      height: 10,
-      marginTop:0,
-      marginLeft:0
-    },
-    logo2:{
-      width: 400,
-      height: 30,
-      marginTop:15,
-      marginLeft:0
-  },
     rect: {
         width: 178,
-        height: 190,
+        height: 170,
         backgroundColor: "rgba(255,255,255,1)",
         borderRadius: 22,
         shadowColor: "rgba(208,194,194,1)",
@@ -459,16 +416,14 @@ const styles = StyleSheet.create({
       },
     
     tinyLogo: {
-        width: 176,
-        height: 160,
+        width: 178,
+        height: 170,
         marginBottom: -20,
-        marginTop: -1,
         borderRadius: 25,
-        marginLeft: 1,
       },
     rect1: {
         width: 178,
-        height: 190,
+        height: 170,
         backgroundColor: "rgba(255,255,255,1)",
         borderRadius: 22,
         shadowColor: "rgba(208,194,194,1)",
@@ -494,46 +449,44 @@ const styles = StyleSheet.create({
       },
     tinyLogo1: {
         width: 178,
-        height: 160,
+        height: 170,
         marginBottom: -20,
-        marginTop: 0,
         borderRadius: 25,
-        marginLeft: 0,
       },    
     tinyLogo2: {
-        width: 80,
-        height: 80,
+        width: 70,
+        height: 70,
         marginBottom: -20,
-        marginTop: 20,
+        marginTop:15,
         borderRadius: 100,
         marginLeft: 20,
       },
     tinyLogo3: {
-        width: 80,
-        height: 80,
+        width: 70,
+        height: 70,
         marginBottom: -20,
-        marginTop: -110,
+        marginTop: -100,
         borderRadius: 100,
         marginLeft: 115,
       },
     tinyLogo4: {
-        width: 80,
-        height: 80,
+      width: 70,
+      height: 70,
         marginBottom: -20,
-        marginTop: -110,
+        marginTop: -100,
         borderRadius: 100,
         marginLeft: 215,
       },
       tinyLogo5: {
-        width: 80,
-        height: 80,
+        width: 70,
+        height: 70,
         marginBottom: -20,
-        marginTop: -110,
+        marginTop: -100,
         borderRadius: 100,
         marginLeft: 305,
       },
     rectangle:{
-        width: 178,
+        width: 365,
         height: 190,
         backgroundColor: "rgba(255,255,255,1)",
         borderRadius: 25,
@@ -544,8 +497,17 @@ const styles = StyleSheet.create({
         },
         elevation: 39,
         shadowOpacity: 1,
-        marginTop: 20,
+        marginTop: 10,
         marginLeft:14,
+        marginBottom: 20,
         shadowRadius: 13,
-    }
+    },
+    rectinyLogo: {
+        width: 365,
+        height: 200,
+        marginBottom: -20,
+        marginTop: -1,
+        borderRadius: 25,
+        marginLeft: 1,
+      },
 })

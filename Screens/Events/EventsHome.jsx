@@ -28,13 +28,8 @@ export default function EventsHome({ navigation }) {
     
 
     return (
+      <>
         <View style={styles.container}>
-            <Image
-                    style={styles.homelogo}
-                    source={{
-                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-                    }}
-            />
            <View>
            <Text style={styles.Text1}>All Events</Text>
             <TextInput
@@ -50,19 +45,27 @@ export default function EventsHome({ navigation }) {
                   <View key={event + index}>
                     <View style={styles.event}>
                         <TouchableOpacity
-                                onPress={() => navigation.navigate("EventDetails")}
+                                onPress={() => navigation.navigate("EventDetails",{
+                                    id: event.event_id,
+                                    type: event.type,
+                                    event_name: event.event_name,
+                                    description: event.description,
+                                    date: event.date, 
+                                    picture: event.picture,
+                                    location: event.location,
+                                    ticket_price: event.ticket_price,
+                                }
+                                )}
                             >
                                 <Image
                                 style={styles.tinyLogo1}
                                 source={{ uri: event.picture }}
                                 />
-                              
                                 <Text
                                 style={{
                                     color: "#000000",
                                     textAlign: "center",
                                     marginTop: 30,
-                                    marginBottom: 10,
                                     fontSize: 18,
                                     fontWeight: "bold",
                                     fontFamily: "Times New Roman",
@@ -76,19 +79,19 @@ export default function EventsHome({ navigation }) {
                      )
                 )}
                </ScrollView> 
-            <TouchableOpacity
+            </View>
+        </View>
+        <TouchableOpacity
               onPress={() => navigation.navigate("AddEvent")}
                 >
                  <Image
                     style={styles.addevent}
                     source={{
-                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679554256/plus_iskp9w.png",
+                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679429885/11-removebg-preview_l55wvj.png",
                     }}
                 />
             </TouchableOpacity>  
-            </View>
-           
-        </View>
+        </>
     );
 }
 
@@ -96,12 +99,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    homelogo:{
-        width: 400,
-        height: 20,
-        marginTop:0,
-        marginLeft:0
-      },
       inputserach: {
         backgroundColor: "white",
         shadowColor: "black",
@@ -138,7 +135,7 @@ const styles = StyleSheet.create({
     },
     event: {
         width: 350,
-        height: 240,
+        height: 200,
         backgroundColor: "rgba(255,255,255,1)",
         borderRadius: 22,
         shadowColor: "rgba(208,194,194,1)",
@@ -150,15 +147,15 @@ const styles = StyleSheet.create({
         shadowOpacity: 1,
         marginTop: 20,
         marginLeft:22,
+        marginBottom: 30,
         shadowRadius: 13, 
         },
     addevent: {
-            width: 80,
-            height: 80,
-            marginBottom: -20,
-            marginLeft:290,
+            width: 120,
+            height: 120,
+            marginLeft:270,
             borderRadius:25,
-            marginTop:-250,
+            marginTop:0,
             borderColor:"black",
         }
 })

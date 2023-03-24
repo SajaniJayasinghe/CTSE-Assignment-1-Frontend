@@ -8,8 +8,13 @@ import {
   TextInput,
   Alert,
 } from "react-native";
+import {
+  responsiveWidth,
+ } from "react-native-responsive-dimensions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import * as ImagePicker from "expo-image-picker";
+import CustomLoading from "../../components/CustomLoading";
 
 export default function UpdateUserProfile({ route, navigation }) {
   useEffect(() => {
@@ -17,21 +22,30 @@ export default function UpdateUserProfile({ route, navigation }) {
     }
   }, []);
 
-  const [fullname, setFullname] = useState("");
+  const [name, setname] = useState("");
   const [email, setEmail] = useState("");
+  const [image, setImage] = useState(null);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [imageUploadStatus, setImageUploadStatus] = useState(
+      "Choose Picture"
+    );
+  const [loading, setLoading] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
+  const [error, setError] = useState("");
+  
 
   const getUser = async () => {
     var token = await AsyncStorage.getItem("token");
     console.log(token);
     await axios
-      .get(` `, {
+      .get(`http://localhost:8080/api/user/userprofile`, {
         headers: {
           Authorization: token,
         },
       })
       .then((res) => {
         if (res.data.status) {
-          setFullname(res.data.User.fullname);
+          setname(res.data.User.name);
           setEmail(res.data.User.email);
         }
       })
@@ -43,19 +57,25 @@ export default function UpdateUserProfile({ route, navigation }) {
     getUser();
   }, []);
 
+
   const updateUser = async () => {
     const Token = await AsyncStorage.getItem("token");
-    const URL = ` `;
+    const URL = `http://localhost:8080/api/user/updateuser`;
 
-    const payload = {
-      fullname: fullname,
-      email: email,
-    };
+    const payload = new FormData();
+    payload.append("name", name);
+    payload.append("email", email);
+    payload.append("picture", {
+        uri: image,
+        type: "image/jpeg",
+        name: "image.jpg",
+      });
 
     axios
       .put(URL, payload, {
         headers: {
           Authorization: Token,
+           "Content-Type": "multipart/form-data",
         },
       })
       .then((_response) => {
@@ -70,9 +90,11 @@ export default function UpdateUserProfile({ route, navigation }) {
           ],
           { cancelable: false }
         );
+          setLoading(false);
       })
       .catch((error) => {
         console.error(error);
+         setLoading(false);
         Alert.alert(
           "Error",
           "Inserting Unsuccessful",
@@ -81,29 +103,32 @@ export default function UpdateUserProfile({ route, navigation }) {
         );
       });
   };
+ console.log(image)
+    //for Image upload
+    const pickImage = async () => {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+  });
 
+  if (!result.canceled) {
+    setImage(result.assets[0].uri);
+  } else {
+    setImage(null);
+  }
+};
 
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.logo}
-        source={{
-          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-        }}
-      />
       <View style={styles.rect}>
-        <Image
-          style={styles.tinyLogo}
-          source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679392630/14_bzemlw.jpg",
-          }}
-        />
       </View>
       <Text
         style={{
           marginVertical: 2,
           fontSize: 25,
-          marginTop: 0,
+          marginTop: "30%",
           marginLeft: 90,
           fontWeight: "bold",
           textAlign: "justify",
@@ -121,12 +146,12 @@ export default function UpdateUserProfile({ route, navigation }) {
             marginLeft: 50,
           }}
         >
-          Enter Your Name :
+           Full Name :
         </Text>
         <TextInput
           style={styles.textView}
-            value={fullname}
-            onChange={(e) => setFullname(e.nativeEvent.text)}
+            value={name}
+            onChange={(e) => setname(e.nativeEvent.text)}
           placeholder="   Enter Your Name"
         />
         <Text
@@ -138,7 +163,7 @@ export default function UpdateUserProfile({ route, navigation }) {
             marginLeft: 50,
           }}
         >
-          Your Email Address :
+          Email Address :
         </Text>
         <TextInput
           placeholder=" Enter Your Email Address"
@@ -147,6 +172,22 @@ export default function UpdateUserProfile({ route, navigation }) {
             onChange={(e) => setEmail(e.nativeEvent.text)}
           style={styles.textView}
         />
+          <View style={styles.imageUploadField}>
+               <TextInput
+                 style={styles.ImageTextInput}
+                 placeholder="Choose File"
+                 editable={false}
+                 selectTextOnFocus={false}
+                 value={imageUploadStatus}
+               />
+               <TouchableOpacity
+                 onPress={pickImage}
+                 style={styles.uploadButton}
+               >
+                 <Text style={styles.uploadTxt}>Upload</Text>
+               </TouchableOpacity>
+             </View>
+
         <TouchableOpacity
           style={[styles.containerx, styles.materialButtonDark]}
             onPress={() => updateUser()}
@@ -159,12 +200,6 @@ export default function UpdateUserProfile({ route, navigation }) {
         >
           <Text style={styles.cancelButton}>Cancel</Text>
         </TouchableOpacity>
-        <Image
-          style={styles.logo2}
-          source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-          }}
-        />
       </View>
     </View>
   );
@@ -173,12 +208,6 @@ export default function UpdateUserProfile({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  logo: {
-    width: 400,
-    height: 20,
-    marginTop: 0,
-    marginLeft: 0,
   },
   tinyLogo: {
     width: 180,
@@ -225,8 +254,8 @@ const styles = StyleSheet.create({
   materialButtonDark: {
     height: 40,
     width: 250,
-    borderColor: "#560319",
-    backgroundColor: "#560319",
+    borderColor: "#E8A317",
+    backgroundColor: "#E8A317",
     borderWidth: 1,
     borderRadius: 100,
     elevation: 5,
@@ -248,7 +277,7 @@ const styles = StyleSheet.create({
     marginLeft: 65,
   },
   updateButton: {
-    color: "#ffff",
+    color: "black",
     fontWeight: "bold",
     fontSize: 18,
     lineHeight: 18,
@@ -259,10 +288,39 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 18,
   },
-  logo2: {
-    width: 400,
-    height: 40,
-    marginTop: 80,
-    marginLeft: 0,
+imageUploadField: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: "5%",
+  },
+ 
+  ImageTextInput: {
+    width: "48%",
+    height: 50,
+    borderColor: "grey",
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingLeft: 10,
+    color: "gray",
+    marginLeft:"13%",
+    marginTop:"5%"
+  },
+  uploadTxt: {
+    color: "black",
+    fontWeight: "bold",
+  },
+  uploadButton: {
+    width: "25%",
+    height: "30%",
+    marginRight:"20%",
+    backgroundColor: "#E8A317",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 50,
+    marginTop:"5%",
+    marginLeft: responsiveWidth(2),
   },
 });

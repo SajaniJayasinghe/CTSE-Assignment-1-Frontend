@@ -42,21 +42,21 @@ export default function SignupScreen({navigation}) {
           <Image
             style={styles.logo}
             source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455024/Screenshot_2023-03-22_at_08.45.23-removebg-preview_uzzb85.png",
+            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679627198/Screenshot_2023-03-24_at_08.35.25-removebg-preview_x2ljmf.png"
             }}
           />
           
             <Text
                 style={{
                 fontSize: 28,
-                marginLeft: 30,
-                marginTop: 60,
+                marginTop: 0,
                 color:"#560319",
                 fontWeight: "bold",
-                marginBottom: 10,
+                marginBottom: -30,
+                textAlign: "center",
                 }}
              >
-             CREATE YOUR ACCOUNT
+             CREATE ACCOUNT
             </Text>
 
             <Text style={styles.Text}>Full Name </Text>
@@ -95,13 +95,6 @@ export default function SignupScreen({navigation}) {
                  >
               <Text style={styles.signupButton} >SIGN UP</Text>
             </TouchableOpacity>
-  
-            <Image
-                style={styles.logo1}
-                source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-                }}
-          />
              <Text style={styles.loginText4}>Already have an account?</Text>
              <Text style={styles.loginText5}  onPress={() => navigation.navigate("SignInScreen")}>Sign In</Text>
            
@@ -116,7 +109,8 @@ const styles = StyleSheet.create({
     },
     logo:{
         width: 400,
-        height: 100,
+        height: 190,
+        marginTop:0,
     },
     Text: {
         color: "#6D7B8D",
@@ -140,7 +134,7 @@ const styles = StyleSheet.create({
         color: "#6D7B8D",
         fontSize: 16,
         lineHeight: 18,
-        marginTop: 20,
+        marginTop: 10,
         marginLeft: 40,
       },
       containerx: {
@@ -164,14 +158,13 @@ const styles = StyleSheet.create({
   materialButtonDark: {
     height: 40,
     width: 210,
-    backgroundColor:"#560319",
-    borderWidth:1,
+    backgroundColor:"#AB784E",
     borderRadius: 100,
     elevation: 5,
     shadowOpacity: 0,
     marginTop: 25,
     marginBottom: 20,
-    marginLeft: 80,
+    marginLeft: 90,
 },
 signupButton:{
     color: "white",
@@ -179,17 +172,11 @@ signupButton:{
     fontSize: 18,
     lineHeight: 18,
   },
-  logo1:{
-    width: 400,
-    height: 50,
-    marginTop:50,
-    marginLeft:0
-},
 loginText4: {
     color: "black",
     fontSize: 15,
     lineHeight: 18,
-    marginTop: -100,
+    marginTop: 0,
     marginLeft: 80,
   },
   loginText5: {

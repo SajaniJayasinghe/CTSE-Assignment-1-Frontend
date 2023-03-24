@@ -9,6 +9,10 @@ import {
   TouchableOpacity,
 } from "react-native"
 import axios from "axios";
+import {
+  responsiveWidth,
+  responsiveHeight
+ } from "react-native-responsive-dimensions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SignInScreen ({navigation}){
@@ -30,7 +34,7 @@ export default function SignInScreen ({navigation}){
           storetoken(res.data.token);
           if (res.data.role === "Admin") {
             navigation.push("AdminDashboard");
-          } else if (res.data.role === "user"){
+          } else if (res.data.role === "User"){
             navigation.push("UserDashboard");
           }
           console.log(res.data);
@@ -47,20 +51,20 @@ export default function SignInScreen ({navigation}){
            <Image
             style={styles.logo}
             source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455024/Screenshot_2023-03-22_at_08.45.23-removebg-preview_uzzb85.png",
+            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679595504/q-removebg-preview_urtpsv.png",
             }}
            />
           <Text
             style={{
             fontSize: 28,
-            marginLeft: 100,
-            marginTop: 60,
+            marginTop: 10,
             color:"#560319",
             fontWeight: "bold",
             marginBottom: 10,
+            textAlign: "center",
             }}
            >
-           HELLO SIGN IN
+           SIGN IN
           </Text>
          
           <Text style={styles.emailText}>Enter Your Email</Text>
@@ -104,8 +108,9 @@ const styles = StyleSheet.create({
         flex: 1,
       },
     logo:{
-        width: 400,
-        height: 100,
+      width: responsiveWidth(100),
+      height: responsiveHeight(35),
+      marginTop: 0,
     },
     logo1:{
         width: 400,
@@ -117,7 +122,7 @@ const styles = StyleSheet.create({
         color: "#6D7B8D",
         fontSize: 16,
         lineHeight: 18,
-        marginTop: 50,
+        marginTop: 10,
         marginLeft: 40,
       },
     passwordText: {
@@ -178,16 +183,15 @@ const styles = StyleSheet.create({
         paddingRight: 16,
   },
   materialButtonDark1: {
-    height: 40,
-    width: 210,
-    backgroundColor:"#560319",
-    borderWidth:1,
+    width: responsiveWidth(50),
+   height: responsiveHeight(5),
+    backgroundColor:"#AB784E",
     borderRadius: 100,
     elevation: 5,
     shadowOpacity: 0,
     marginTop: 40,
     marginBottom: 10,
-    marginLeft: 90,
+    marginLeft: responsiveWidth(23),
 },
 
   loginButton:{
