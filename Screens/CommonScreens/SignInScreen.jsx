@@ -9,6 +9,10 @@ import {
   TouchableOpacity
 } from "react-native";
 import axios from "axios";
+import {
+  responsiveWidth,
+  responsiveHeight
+} from "react-native-responsive-dimensions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SignInScreen({ navigation }) {
@@ -108,8 +112,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   logo: {
-    width: 390,
-    height: 290,
+    width: responsiveWidth(100),
+    height: responsiveHeight(35),
     marginTop: 0
   },
   logo1: {
@@ -183,16 +187,15 @@ const styles = StyleSheet.create({
     paddingRight: 16
   },
   materialButtonDark1: {
-    height: 40,
-    width: 210,
+    width: responsiveWidth(50),
+    height: responsiveHeight(5),
     backgroundColor: "#AB784E",
     borderRadius: 100,
     elevation: 5,
-    borderWidth: 1,
     shadowOpacity: 0,
     marginTop: 40,
     marginBottom: 10,
-    marginLeft: 90
+    marginLeft: responsiveWidth(23)
   },
 
   loginButton: {

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   View,
   Image,
@@ -7,30 +6,96 @@ import {
   TouchableOpacity,
   ScrollView
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import {
+  responsiveWidth,
+  responsiveHeight
+} from "react-native-responsive-dimensions";
 
-export default function AdminDashboard({ navigation }) {
+export default function AdminDashboard({ route, navigation }) {
+  const [token, settoken] = useState("");
+  const [event, setevent] = useState([]);
+  const [filterEvent, setfilterEvent] = useState([]);
+  const [search, setSearch] = useState("");
+
+  const getToken = async () => {
+    settoken(await AsyncStorage.getItem("token"));
+  };
+  useEffect(() => {
+    getToken();
+    if (!!!route.prams) {
+    }
+  }, []);
+
+  const [profile, setProfile] = useState([]);
+
+  const getprofile = async () => {
+    const userToken = await AsyncStorage.getItem("token");
+    console.log(userToken);
+    await axios
+      .get("http://localhost:8080/api/user/userprofile", {
+        headers: {
+          Authorization: userToken
+        }
+      })
+      .then((res) => {
+        setProfile(res.data.User);
+      });
+  };
+  const searchFunc = (text) => {
+    return event.filter((event) => event.event_name === text);
+  };
+
+  useEffect(() => {
+    getprofile();
+    setfilterEvent(searchFunc(search));
+  }, [search]);
+
+  useEffect(() => {
+    axios.get("http://localhost:8080/api/events/getevent").then((res) => {
+      if (res.data.success) {
+        setevent(res.data.Event);
+      }
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.homelogo}
-        source={{
-          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png"
-        }}
-      />
       <View>
-        <TouchableOpacity onPress={() => navigation.navigate("SignInScreen")}>
-          <Image
-            style={styles.logout}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679549838/Basic_Element_15-30__28591_29-removebg-preview_vefurd.png"
-            }}
-          />
-        </TouchableOpacity>
+        <Image
+          style={styles.logo}
+          source={{
+            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679627840/Screenshot_2023-03-24_at_08.41.59-removebg-preview_o8ksis.png"
+          }}
+        />
+        <Text
+          style={{
+            marginLeft: 220,
+            marginTop: -35,
+            fontSize: 18,
+            fontWeight: "bold",
+            fontFamily: "Times New Roman"
+          }}
+        >
+          Hi, {profile.name}
+        </Text>
+        <View>
+          <TouchableOpacity onPress={() => navigation.navigate("SignInScreen")}>
+            <Image
+              style={styles.logout}
+              source={{
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679549838/Basic_Element_15-30__28591_29-removebg-preview_vefurd.png"
+              }}
+            />
+          </TouchableOpacity>
+        </View>
 
         <Text
           style={{
-            marginLeft: 260,
-            marginTop: -35,
+            marginLeft: 50,
+            marginTop: -25,
             fontSize: 18,
             fontWeight: "bold",
             fontFamily: "Times New Roman"
@@ -204,31 +269,33 @@ export default function AdminDashboard({ navigation }) {
           decelerationRate="fast"
           pagingEnabled
         >
-          <View style={styles.eventrect}>
-            <TouchableOpacity
-            // onPress={() => navigation.navigate("AllOrganizations")}
-            >
-              <Image
-                style={styles.tinyLogo}
-                source={{
-                  uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481372/3_vgqveh.jpg"
-                }}
-              />
-              <Text
-                style={{
-                  color: "#000000",
-                  textAlign: "center",
-                  marginTop: 30,
-                  marginBottom: 10,
-                  fontSize: 18,
-                  fontWeight: "bold",
-                  fontFamily: "Times New Roman"
-                }}
-              >
-                Hellowin
-              </Text>
-            </TouchableOpacity>
-          </View>
+          {(search === "" ? event : filterEvent).map((event, index) => (
+            <View key={event + index}>
+              <View style={styles.eventrect}>
+                <TouchableOpacity
+                // onPress={() => navigation.navigate("AllOrganizations")}
+                >
+                  <Image
+                    style={styles.tinyLogo}
+                    source={{ uri: event.picture }}
+                  />
+                  <Text
+                    style={{
+                      color: "#000000",
+                      textAlign: "center",
+                      marginTop: 30,
+                      marginBottom: 10,
+                      fontSize: 18,
+                      fontWeight: "bold",
+                      fontFamily: "Times New Roman"
+                    }}
+                  >
+                    {event.event_name}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))}
         </ScrollView>
         {/* END --- POPULAR EVENTS SECTION */}
 
@@ -330,14 +397,6 @@ export default function AdminDashboard({ navigation }) {
         </ScrollView>
         {/* END --- BLOGS SECTION */}
       </ScrollView>
-      {/* <!--navigation start--> */}
-      <Image
-        style={styles.logo2}
-        source={{
-          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png"
-        }}
-      />
-      {/* <!---navigation end--> */}
     </View>
   );
 }
@@ -353,16 +412,9 @@ const styles = StyleSheet.create({
     marginTop: 40
   },
   container2: {
-    width: 500,
-    height: 120,
-    marginTop: 6
-  },
-
-  homelogo: {
-    width: 400,
-    height: 30,
-    marginTop: 0,
-    marginLeft: 0
+    width: responsiveWidth(100),
+    height: responsiveHeight(15),
+    marginTop: "5%"
   },
   logo2: {
     width: 400,
@@ -477,10 +529,14 @@ const styles = StyleSheet.create({
   logout: {
     width: 30,
     height: 30,
-    marginBottom: 10,
-    marginLeft: 340,
-    borderRadius: 25,
-    marginTop: 10,
+    marginLeft: 10,
+    marginTop: -20,
     borderColor: "black"
+  },
+  logo: {
+    width: 50,
+    height: 50,
+    marginLeft: 330,
+    marginTop: 10
   }
 });

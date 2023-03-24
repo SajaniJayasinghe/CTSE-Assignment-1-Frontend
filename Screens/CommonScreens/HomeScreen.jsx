@@ -1,6 +1,11 @@
 import React from "react";
 import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
+import {
+  responsiveWidth,
+  responsiveHeight
+ } from "react-native-responsive-dimensions";
 
+ 
 export default function HomeScreen ({navigation}) {
   return (
     <View style={styles.container}>
@@ -31,6 +36,7 @@ export default function HomeScreen ({navigation}) {
         }}
       />
     </View>
+    
   )
 }
 
@@ -65,7 +71,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0,
         marginTop: 100,
         marginBottom: 10,
-        marginLeft: 80,
+        marginLeft: "20%",
 
   },
   materialButtonDark1: {
@@ -77,7 +83,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0,
     marginTop: 10,
     marginBottom: 10,
-    marginLeft: 80,
+    marginLeft: "20%",
 },
 
   loginButton: {
@@ -93,10 +99,10 @@ const styles = StyleSheet.create({
     lineHeight: 18,
 },
 homelogo:{
-    width: 500,
-    height: 300,
-    marginLeft:-60,
-    marginTop:90
+  width: responsiveWidth(95),
+  height: responsiveHeight(45),
+  marginLeft: responsiveWidth(0),
+  marginTop:responsiveHeight(5),
 },
 homelogo1:{
     width: 180,
