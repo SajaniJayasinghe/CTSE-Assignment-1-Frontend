@@ -1,3 +1,4 @@
+import { useRoute } from "@react-navigation/native";
 import React from "react";
 import {
   View,
@@ -5,11 +6,53 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  Alert
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 export default function PlaceDetails({ navigation }) {
+  const [place, setPlace] = React.useState();
+  const route = useRoute();
+
+  useEffect(() => {
+    const data = {
+      placeID: route.params.placeID,
+      type: route.params.type,
+      name: route.params.name,
+      description: route.params.description,
+      picture: route.params.picture,
+      city: route.params.city,
+      facilities: route.params.facilities
+    };
+    setPlace(data);
+  }, []);
+
+  const deletePlace = async () => {
+    const { placeID } = route.params;
+    Alert.alert("Are you sure you want to delete this place?", [
+      {
+        text: "OK",
+        onPress: async () => {
+          console.log(placeID);
+          await axios
+            .delete(`http://localhost:8080/api/places/${placeID}`)
+            .then((res) => {
+              navigation.navigate("PlacesList");
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      },
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel"
+      }
+    ]);
+  };
+
   return (
     <View style={styles.container}>
       <Image
@@ -29,7 +72,7 @@ export default function PlaceDetails({ navigation }) {
           fontFamily: "Times New Roman"
         }}
       >
-        {" "}
+        {place.name}
         Place Name
         {/* {hotel.name} */}
       </Text>
@@ -37,7 +80,7 @@ export default function PlaceDetails({ navigation }) {
         <Image
           style={styles.tinyLogo}
           source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679378950/6_gm0xk4.webp"
+            uri: place.picture
           }}
         />
       </View>
@@ -52,8 +95,9 @@ export default function PlaceDetails({ navigation }) {
             color: "#000000"
           }}
         >
-          Amenities
+          {place.description}
         </Text>
+
         <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={false}
@@ -68,6 +112,18 @@ export default function PlaceDetails({ navigation }) {
           borderColor="#A9A9A9"
           marginTop={10}
         >
+          {/* {place.facilities.map((item, index) => {
+            return (
+              <View style={{ flexDirection: "row" }}>
+                <Image
+                  style={styles.tinyLogo1}
+                  source={{
+                    uri: item
+                  }}
+                />
+              </View>
+            );
+          })} */}
           <Image
             style={styles.tinyLogo2}
             source={{
@@ -84,7 +140,7 @@ export default function PlaceDetails({ navigation }) {
               color: "#52595D"
             }}
           >
-            Wifi
+            {place.facilities.wifi}
           </Text>
           <Image
             style={styles.tinyLogo3}
@@ -154,6 +210,7 @@ export default function PlaceDetails({ navigation }) {
       >
         Description {"\n"}
       </Text>
+
       <TouchableOpacity
         // onPress={() =>
         //   navigation.navigate("UpdateHotelDetails", {

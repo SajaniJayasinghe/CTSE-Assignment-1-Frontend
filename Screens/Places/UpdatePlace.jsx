@@ -1,3 +1,4 @@
+import axios from "axios";
 import React from "react";
 import {
   View,
@@ -23,6 +24,63 @@ export default function UpdatePlace({ navigation }) {
     { label: "Food", value: "Food" },
     { label: "NoSmoking", value: "NoSmoking" }
   ];
+
+  const [type, settype] = useState("");
+  const [name, setname] = useState("");
+  const [description, setdescription] = useState("");
+  const [picture, setpicture] = useState("");
+  const [city, setcity] = useState("");
+  const [facilities, setfacilities] = useState([]);
+  const [placeID, setplaceID] = useState("");
+
+  useEffect(() => {
+    setplaceID(route.params.placeID);
+    settype(route.params.type);
+    setname(route.params.name);
+    setdescription(route.params.description);
+    setpicture(route.params.picture);
+    setcity(route.params.city);
+    setfacilities(route.params.facilities);
+  }, []);
+
+  const updatePlace = () => {
+    const URL = `"http://localhost:8080/api/places/update/${placeID}`;
+
+    const payload = {
+      placeID: placeID,
+      type: type,
+      name: name,
+      description: description,
+      picture: picture,
+      city: city,
+      facilities: facilities
+    };
+    axios
+      .put(URL, payload)
+      .then((res) => {
+        Alert.alert(
+          "Place Updated",
+          "Your Place has updated successfully!!",
+          [
+            {
+              text: "OK",
+              onPress: () => navigation.navigate("AdminDashboard")
+            }
+          ],
+          { cancelable: false }
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+        Alert.alert(
+          "Error",
+          "Updating Unsuccessful",
+          [{ text: "Check Again" }],
+          { cancelable: false }
+        );
+      });
+  };
+
   return (
     <View style={styles.container}>
       <View>
@@ -64,6 +122,8 @@ export default function UpdatePlace({ navigation }) {
           <TextInput
             placeholder="Enter Place Name here"
             style={styles.textInput}
+            value={name}
+            onChangeText={(e) => setname(e.nativeEvent.text)}
           />
           <Text style={styles.nameText3}>Select Place Type</Text>
           <Dropdown
@@ -80,12 +140,10 @@ export default function UpdatePlace({ navigation }) {
             placeholder="Select Place Type"
             searchPlaceholder="Search..."
             statusBarIsTranslucent={true}
-            // value={value}
-            // onChange={(item) => {
-            //     setrole(item.value);
-            // }}
-            // renderLeftIcon={() => (
-            // )}
+            value={type}
+            onChange={(item) => {
+              settype(item.value);
+            }}
           ></Dropdown>
           <Text style={styles.nameText4}>Select Facilities</Text>
           <Dropdown
@@ -102,19 +160,24 @@ export default function UpdatePlace({ navigation }) {
             placeholder="Select Facilities"
             searchPlaceholder="Search..."
             statusBarIsTranslucent={true}
-            // value={value}
-            // onChange={(item) => {
-            //     setrole(item.value);
-            // }}
-            // renderLeftIcon={() => (
-            // )}
+            value={facilities}
+            onChange={(item) => {
+              setfacilities(item.value);
+            }}
           ></Dropdown>
           <Text style={styles.nameText4}>Enter City</Text>
-          <TextInput placeholder="Enter City here" style={styles.textInput} />
+          <TextInput
+            placeholder="Enter City here"
+            style={styles.textInput}
+            value={city}
+            onChange={(e) => setcity(e.nativeEvent.text)}
+          />
           <Text style={styles.nameText3}>Enter Description</Text>
           <TextInput
             placeholder="Enter Description here"
             style={styles.nameText2}
+            value={description}
+            onChange={(e) => setdescription(e.nativeEvent.text)}
           />
         </ScrollView>
         <TouchableOpacity

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Image,
@@ -9,6 +9,28 @@ import {
 } from "react-native";
 
 export default function SpecificPlace({ navigation }) {
+  const [place, setPlace] = useState([]);
+  const [filterPlace, setfilterPlace] = useState([]);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    axios.get("http://localhost:8080/api/places/getplace").then((res) => {
+      if (res.data.success) {
+        setPlace(res.data.Place);
+      }
+    });
+  }, []);
+
+  const searchPlace = (text) => {
+    return place.filter((place) => {
+      place.name.toLowerCase().includes(text.toLowerCase());
+    });
+  };
+
+  useEffect(() => {
+    setfilterPlace(searchPlace(search));
+  }, [search]);
+
   return (
     <View style={styles.container}>
       <Image
@@ -83,7 +105,7 @@ export default function SpecificPlace({ navigation }) {
               color: "#52595D"
             }}
           >
-            Wifi
+            {place.facilities[0].wifi}
           </Text>
           <Image
             style={styles.tinyLogo3}
@@ -162,57 +184,57 @@ export default function SpecificPlace({ navigation }) {
         onPress={() => navigation.navigate("UpdatePlace")}
       ></TouchableOpacity>
       <ScrollView>
-        <View style={styles.rect1}>
-          <Text
-            style={{
-              marginLeft: 20,
-              fontSize: 20,
-              fontFamily: "Times New Roman",
-              color: "#0C090A",
-              fontWeight: "bold",
-              marginTop: 15
-            }}
-          >
-            Mirissa Beach {/* {hotel.name} */}
-          </Text>
-          <Image
-            style={styles.tinyLogo6}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679471650/2838912_zdihvz.png"
-            }}
-          />
-          <Text
-            style={{
-              marginLeft: 40,
-              fontSize: 15,
-              marginTop: 3,
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-              fontWeight: "bold"
-            }}
-          >
-            Matara,Southern Province ,Sri Lanka{/* {hotel.name} */}
-            {"\n"}
-          </Text>
-          <Text
-            style={{
-              marginLeft: 20,
-              fontSize: 15,
-              marginTop: 5,
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-              textAlign: "justify",
-              fontWeight: "bold",
-              marginRight: 20
-            }}
-          >
-            {/* {hotel.description} */}
-            Now, where is this Secret Beach Mirissa that I speak of? Well, it's
-            a little hidden gem just around the corner from the main beach in
-            Mirissa, which is located in the southeast corner of Sri Lanka that
-            makes up Weligama Bay.
-          </Text>
-        </View>
+        {(search === "" ? place : filterPlace).map((place, index) => (
+          <View key={event + index}>
+            <View style={styles.rect1}>
+              <Text
+                style={{
+                  marginLeft: 20,
+                  fontSize: 20,
+                  fontFamily: "Times New Roman",
+                  color: "#0C090A",
+                  fontWeight: "bold",
+                  marginTop: 15
+                }}
+              >
+                {place.name}
+              </Text>
+              <Image
+                style={styles.tinyLogo6}
+                source={{
+                  uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679471650/2838912_zdihvz.png"
+                }}
+              />
+              <Text
+                style={{
+                  marginLeft: 40,
+                  fontSize: 15,
+                  marginTop: 3,
+                  fontFamily: "Times New Roman",
+                  color: "#52595D",
+                  fontWeight: "bold"
+                }}
+              >
+                {place.city}
+                {"\n"}
+              </Text>
+              <Text
+                style={{
+                  marginLeft: 20,
+                  fontSize: 15,
+                  marginTop: 5,
+                  fontFamily: "Times New Roman",
+                  color: "#52595D",
+                  textAlign: "justify",
+                  fontWeight: "bold",
+                  marginRight: 20
+                }}
+              >
+                {place.description}
+              </Text>
+            </View>
+          </View>
+        ))}
       </ScrollView>
     </View>
   );

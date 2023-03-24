@@ -26,7 +26,7 @@ export default function SignupScreen({ navigation }) {
       };
 
       await axios
-        .post("https://travel-go.herokuapp.com/api/user/register", payload)
+        .post(`http://localhost:8080/api/user/register`, payload)
         .then((res) => {
           if (res.data.status) {
             Alert.alert("Success", "Registered Successfully");

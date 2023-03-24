@@ -10,6 +10,28 @@ import {
 } from "react-native";
 
 export default function PlaceList({ navigation }) {
+  const [place, setPlace] = React.useState([]);
+  const [filterPlace, setfilterPlace] = React.useState([]);
+  const [search, setSearch] = React.useState("");
+
+  useEffect(() => {
+    axios.get("http://localhost:8080/api/places/getplace").then((res) => {
+      if (res.data.success) {
+        setPlace(res.data.Place);
+      }
+    });
+  }, []);
+
+  const searchPlace = (text) => {
+    return place.filter((item) => {
+      place.name.toLowerCase().includes(text.toLowerCase());
+    });
+  };
+
+  useEffect(() => {
+    setfilterPlace(searchPlace(search));
+  }, [search]);
+
   return (
     <View style={styles.container}>
       <Image
@@ -21,36 +43,40 @@ export default function PlaceList({ navigation }) {
       <TextInput
         style={styles.inputserach}
         placeholder="Search for Place name"
-        // value={search}
-        // onChangeText={(text) => setSearch(text)}
+        value={search}
+        onChangeText={(text) => setSearch(text)}
       />
-      <Text style={styles.Text1}> Places in Sri Lanka</Text>
+      <Text style={styles.Text1}> Places to Teavel in Sri Lanka</Text>
       <ScrollView style={{ display: "flex", flexDirection: "column" }}>
-        <View style={styles.beach}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("SpecificPlace")}
-          >
-            <Image
-              style={styles.tinyLogo1}
-              source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679376890/2_wa6zuc.jpg"
-              }}
-            />
-            <Text
-              style={{
-                color: "#000000",
-                textAlign: "center",
-                marginTop: 30,
-                marginBottom: 10,
-                fontSize: 18,
-                fontWeight: "bold",
-                fontFamily: "Times New Roman"
-              }}
-            >
-              Mirissa Beach
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {(search === "" ? place : filterPlace).map((place, index) => (
+          <View key={place + index}>
+            <View style={styles.beach}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("SpecificPlace")}
+              >
+                <Image
+                  style={styles.tinyLogo1}
+                  source={{
+                    uri: place.picture
+                  }}
+                />
+                <Text
+                  style={{
+                    color: "#000000",
+                    textAlign: "center",
+                    marginTop: 30,
+                    marginBottom: 10,
+                    fontSize: 18,
+                    fontWeight: "bold",
+                    fontFamily: "Times New Roman"
+                  }}
+                >
+                  {place.name}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ))}
       </ScrollView>
     </View>
   );
