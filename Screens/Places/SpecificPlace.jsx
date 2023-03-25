@@ -175,14 +175,9 @@ export default function SpecificPlace({ navigation }) {
       >
         Description {"\n"}
       </Text>
-      <TouchableOpacity
-        // onPress={() =>
-        //   navigation.navigate("UpdateHotelDetails", {
-        //     donationID: donations._id,
-        //   })
-        // }
+      {/* <TouchableOpacity
         onPress={() => navigation.navigate("UpdatePlace")}
-      ></TouchableOpacity>
+      ></TouchableOpacity> */}
       <ScrollView>
         {(search === "" ? place : filterPlace).map((place, index) => (
           <View key={event + index}>
