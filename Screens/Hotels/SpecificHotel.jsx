@@ -1,44 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   View,
   Image,
   StyleSheet,
   Text,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
 } from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import axios from "axios";
 
-export default function SpecificPlace({ navigation }) {
-  const [place, setPlace] = useState([]);
-  const [filterPlace, setfilterPlace] = useState([]);
+export default function SpecificHotel({ navigation }) {
+  const [hotel, sethotel] = useState([]);
+  const [filterEvent, setfilterEvent] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/places/getplace").then((res) => {
+    axios.get("http://localhost:8080/api/hotels/gethotel").then((res) => {
       if (res.data.success) {
-        setPlace(res.data.Place);
+        sethotel(res.data.existinghotels);
       }
     });
   }, []);
 
-  const searchPlace = (text) => {
-    return place.filter((place) => {
-      place.name.toLowerCase().includes(text.toLowerCase());
-    });
+  const searchFunc = (text) => {
+    return hotel.filter((hotel) => hotel.hotel_name === text);
   };
 
   useEffect(() => {
-    setfilterPlace(searchPlace(search));
+    setfilterEvent(searchFunc(search));
   }, [search]);
 
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.homelogo}
-        source={{
-          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png"
-        }}
-      />
       <Text
         style={{
           fontWeight: "800",
@@ -47,18 +41,18 @@ export default function SpecificPlace({ navigation }) {
           marginLeft: -10,
           marginTop: 15,
           color: "#3F000F",
-          fontFamily: "Times New Roman"
+          fontFamily: "Times New Roman",
         }}
       >
         {" "}
-        Place Name
+        Hotel Name
         {/* {hotel.name} */}
       </Text>
       <View style={styles.rect}>
         <Image
           style={styles.tinyLogo}
           source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679378950/6_gm0xk4.webp"
+            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679427495/cinnamon_jmlgpz.webp",
           }}
         />
       </View>
@@ -70,7 +64,7 @@ export default function SpecificPlace({ navigation }) {
             fontSize: 19,
             fontWeight: "bold",
             fontFamily: "Times New Roman",
-            color: "#000000"
+            color: "#000000",
           }}
         >
           Amenities
@@ -92,7 +86,7 @@ export default function SpecificPlace({ navigation }) {
           <Image
             style={styles.tinyLogo2}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679468287/1-removebg-preview_okhsn3.png"
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679468287/1-removebg-preview_okhsn3.png",
             }}
           />
           <Text
@@ -102,15 +96,15 @@ export default function SpecificPlace({ navigation }) {
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
-              color: "#52595D"
+              color: "#52595D",
             }}
           >
-            {place.facilities[0].wifi}
+            Wifi
           </Text>
           <Image
             style={styles.tinyLogo3}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679468938/download-removebg-preview_xreebs.png"
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679468938/download-removebg-preview_xreebs.png",
             }}
           />
           <Text
@@ -120,25 +114,43 @@ export default function SpecificPlace({ navigation }) {
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
-              color: "#52595D"
+              color: "#52595D",
             }}
           >
             Foods
           </Text>
           <Image
-            style={styles.tinyLogo5}
+            style={styles.tinyLogo4}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679469394/p-removebg-preview_lzlkak.png"
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679469173/2_kxc3wg.png",
             }}
           />
           <Text
             style={{
-              marginLeft: -53,
+              marginLeft: -40,
               marginTop: 70,
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
-              color: "#52595D"
+              color: "#52595D",
+            }}
+          >
+            A/C
+          </Text>
+          <Image
+            style={styles.tinyLogo5}
+            source={{
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679469394/p-removebg-preview_lzlkak.png",
+            }}
+          />
+          <Text
+            style={{
+              marginLeft: -60,
+              marginTop: 70,
+              fontSize: 18,
+              fontWeight: "bold",
+              fontFamily: "Times New Roman",
+              color: "#52595D",
             }}
           >
             Parking
@@ -146,20 +158,20 @@ export default function SpecificPlace({ navigation }) {
           <Image
             style={styles.tinyLogo4}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679495155/tvectoricons180806148-removebg-preview_t0ngho.png"
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679469557/pool-removebg-preview_zputhg.png",
             }}
           />
           <Text
             style={{
-              marginLeft: -75,
+              marginLeft: -45,
               marginTop: 70,
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
-              color: "#52595D"
+              color: "#52595D",
             }}
           >
-            No Smoking
+            Pool
           </Text>
         </ScrollView>
       </View>
@@ -170,66 +182,67 @@ export default function SpecificPlace({ navigation }) {
           marginTop: 20,
           fontWeight: "bold",
           fontFamily: "Times New Roman",
-          color: "#000000"
+          color: "#000000",
         }}
       >
         Description {"\n"}
       </Text>
-      {/* <TouchableOpacity
-        onPress={() => navigation.navigate("UpdatePlace")}
-      ></TouchableOpacity> */}
       <ScrollView>
-        {(search === "" ? place : filterPlace).map((place, index) => (
-          <View key={event + index}>
-            <View style={styles.rect1}>
-              <Text
-                style={{
-                  marginLeft: 20,
-                  fontSize: 20,
-                  fontFamily: "Times New Roman",
-                  color: "#0C090A",
-                  fontWeight: "bold",
-                  marginTop: 15
-                }}
-              >
-                {place.name}
-              </Text>
-              <Image
-                style={styles.tinyLogo6}
-                source={{
-                  uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679471650/2838912_zdihvz.png"
-                }}
-              />
-              <Text
-                style={{
-                  marginLeft: 40,
-                  fontSize: 15,
-                  marginTop: 3,
-                  fontFamily: "Times New Roman",
-                  color: "#52595D",
-                  fontWeight: "bold"
-                }}
-              >
-                {place.city}
-                {"\n"}
-              </Text>
-              <Text
-                style={{
-                  marginLeft: 20,
-                  fontSize: 15,
-                  marginTop: 5,
-                  fontFamily: "Times New Roman",
-                  color: "#52595D",
-                  textAlign: "justify",
-                  fontWeight: "bold",
-                  marginRight: 20
-                }}
-              >
-                {place.description}
-              </Text>
-            </View>
-          </View>
-        ))}
+        <View style={styles.rect1}>
+          <Text
+            style={{
+              marginLeft: 20,
+              fontSize: 20,
+              fontFamily: "Times New Roman",
+              color: "#0C090A",
+              fontWeight: "bold",
+              marginTop: 15,
+            }}
+          >
+            Araliya Beach Resort Unawatuna {/* {hotel.name} */}
+          </Text>
+          <Image
+            style={styles.tinyLogo6}
+            source={{
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679471650/2838912_zdihvz.png",
+            }}
+          />
+          <Text
+            style={{
+              marginLeft: 40,
+              fontSize: 15,
+              marginTop: 3,
+              fontFamily: "Times New Roman",
+              color: "#52595D",
+              fontWeight: "bold",
+            }}
+          >
+            Unawatuna, Southern Province, Sri Lanka {/* {hotel.name} */}
+            {"\n"}
+          </Text>
+          <Text
+            style={{
+              marginLeft: 20,
+              fontSize: 15,
+              marginTop: 5,
+              fontFamily: "Times New Roman",
+              color: "#52595D",
+              textAlign: "justify",
+              fontWeight: "bold",
+              marginRight: 20,
+            }}
+          >
+            {/* {hotel.description} */}
+            Take advantage of a free breakfast buffet, a rooftop terrace, and a
+            coffee shop/cafe at Araliya Beach Resort and Spa. This resort is a
+            great place to bask in the sun with a white sand beach. Treat
+            yourself to a Thai massage at the onsite spa. Be sure to enjoy a
+            meal at any of the 4 onsite restaurants, which feature a poolside
+            location and garden views. In addition to a garden and dry
+            cleaning/laundry services, guests can connect to free in-room WiFi,
+            with speed of 50+ Mbps.
+          </Text>
+        </View>
       </ScrollView>
     </View>
   );
@@ -237,13 +250,13 @@ export default function SpecificPlace({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   homelogo: {
     width: 400,
     height: 20,
     marginTop: -5,
-    marginLeft: 0
+    marginLeft: 0,
   },
   rect: {
     width: 357,
@@ -253,13 +266,13 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(208,194,194,1)",
     shadowOffset: {
       width: 5,
-      height: 5
+      height: 5,
     },
     elevation: 39,
     shadowOpacity: 1,
     marginTop: 20,
     marginLeft: 14,
-    shadowRadius: 13
+    shadowRadius: 13,
   },
   rect1: {
     width: 370,
@@ -268,14 +281,14 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(208,194,194,1)",
     shadowOffset: {
       width: 5,
-      height: 5
+      height: 5,
     },
     elevation: 39,
     shadowOpacity: 1,
     marginTop: -15,
     marginLeft: 10,
     marginRight: 20,
-    shadowRadius: 13
+    shadowRadius: 13,
   },
   tinyLogo: {
     width: 357,
@@ -283,7 +296,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: -1,
     borderRadius: 5,
-    marginLeft: 1
+    marginLeft: 1,
   },
   tinyLogo2: {
     width: 46,
@@ -291,7 +304,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: 15,
     borderRadius: 100,
-    marginLeft: 30
+    marginLeft: 20,
   },
   tinyLogo3: {
     width: 50,
@@ -299,15 +312,15 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: 15,
     borderRadius: 100,
-    marginLeft: 33
+    marginLeft: 33,
   },
   tinyLogo4: {
-    width: 70,
-    height: 70,
+    width: 50,
+    height: 50,
     marginBottom: -20,
-    marginTop: 6,
+    marginTop: 15,
     borderRadius: 100,
-    marginLeft: 20
+    marginLeft: 20,
   },
   tinyLogo5: {
     width: 50,
@@ -315,7 +328,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: 15,
     borderRadius: 100,
-    marginLeft: 35
+    marginLeft: 28,
   },
   tinyLogo6: {
     width: 15,
@@ -323,7 +336,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: 10,
     borderRadius: 100,
-    marginLeft: 18
+    marginLeft: 18,
   },
   icon: {
     color: "#8B0000",
@@ -331,6 +344,6 @@ const styles = StyleSheet.create({
     height: 60,
     width: 40,
     marginLeft: 330,
-    marginTop: -45
-  }
+    marginTop: -45,
+  },
 });

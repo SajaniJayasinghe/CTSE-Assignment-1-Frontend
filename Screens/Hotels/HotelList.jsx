@@ -1,5 +1,4 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -7,30 +6,29 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  ScrollView
+  ScrollView,
 } from "react-native";
+import axios from "axios";
 
-export default function PlaceList({ navigation }) {
-  const [place, setPlace] = useState([]);
-  const [filterPlace, setfilterPlace] = useState([]);
+export default function HotelList({ navigation }) {
+  const [hotel, sethotel] = useState([]);
+  const [filterEvent, setfilterEvent] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/places/getplace").then((res) => {
+    axios.get("http://localhost:8080/api/hotels/gethotel").then((res) => {
       if (res.data.success) {
-        setPlace(res.data.Place);
+        sethotel(res.data.existinghotels);
       }
     });
   }, []);
 
-  const searchPlace = (text) => {
-    return place.filter((item) => {
-      place.name.toLowerCase().includes(text.toLowerCase());
-    });
+  const searchFunc = (text) => {
+    return hotel.filter((hotel) => hotel.hotel_name === text);
   };
 
   useEffect(() => {
-    setfilterPlace(searchPlace(search));
+    setfilterEvent(searchFunc(search));
   }, [search]);
 
   return (
@@ -38,27 +36,28 @@ export default function PlaceList({ navigation }) {
       <Image
         style={styles.homelogo}
         source={{
-          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png"
+          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
         }}
       />
       <TextInput
         style={styles.inputserach}
-        placeholder="Search for Place name"
+        placeholder="Search for Hotel name"
         value={search}
         onChangeText={(text) => setSearch(text)}
       />
-      <Text style={styles.Text1}> Places to Teavel in Sri Lanka</Text>
+      <Text style={styles.Text1}>Hotel List</Text>
+
       <ScrollView style={{ display: "flex", flexDirection: "column" }}>
-        {(search === "" ? place : filterPlace).map((place, index) => (
-          <View key={place + index}>
-            <View style={styles.beach}>
+        {(search === "" ? hotel : filterEvent).map((hotel, index) => (
+          <View key={hotel + index}>
+            <View style={styles.hotel}>
               <TouchableOpacity
-                onPress={() => navigation.navigate("SpecificPlace")}
+                onPress={() => navigation.navigate("SpecificHotel")}
               >
                 <Image
                   style={styles.tinyLogo1}
                   source={{
-                    uri: place.picture
+                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679427404/araliya_nuopxg.jpg",
                   }}
                 />
                 <Text
@@ -69,10 +68,10 @@ export default function PlaceList({ navigation }) {
                     marginBottom: 10,
                     fontSize: 18,
                     fontWeight: "bold",
-                    fontFamily: "Times New Roman"
+                    fontFamily: "Times New Roman",
                   }}
                 >
-                  {place.name}
+                  {hotel.hotel_name}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -85,7 +84,7 @@ export default function PlaceList({ navigation }) {
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   inputserach: {
     backgroundColor: "white",
@@ -101,24 +100,24 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     marginLeft: 20,
     height: 40,
-    borderWidth: 1
+    borderWidth: 1,
   },
   homelogo: {
     width: 400,
     height: 20,
     marginTop: 0,
-    marginLeft: 0
+    marginLeft: 0,
   },
   Text1: {
     color: "#000000",
     textAlign: "center",
     marginTop: 20,
-    marginLeft: -190,
+    marginLeft: -250,
     fontSize: 20,
     fontWeight: "bold",
-    fontFamily: "Times New Roman"
+    fontFamily: "Times New Roman",
   },
-  beach: {
+  hotel: {
     width: 350,
     height: 200,
     backgroundColor: "rgba(255,255,255,1)",
@@ -126,13 +125,13 @@ export const styles = StyleSheet.create({
     shadowColor: "rgba(208,194,194,1)",
     shadowOffset: {
       width: 5,
-      height: 5
+      height: 5,
     },
     elevation: 39,
     shadowOpacity: 1,
     marginTop: 30,
     marginLeft: 19,
-    shadowRadius: 13
+    shadowRadius: 13,
   },
   tinyLogo1: {
     width: 330,
@@ -140,6 +139,6 @@ export const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: 7,
     borderRadius: 25,
-    marginLeft: 10
-  }
+    marginLeft: 10,
+  },
 });
