@@ -11,11 +11,12 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-export default function PlaceDetails({ navigation }) {
+export default function PlaceDetails({ route, navigation }) {
   const [place, setPlace] = useState([]);
-  const [facilityurl, setFacilityurl] = useState("");
-  const [facilityname, setFacilityname] = useState("");
-  const route = useRoute();
+  const [WifiAvailable, setWifiAvailable] = useState(false);
+  const [FoodsAvailable, setFoodsAvailable] = useState(false);
+  const [ParkingAvailable, setParkingAvailable] = useState(false);
+  const [NoSmokingAvailable, setNoSmokingAvailable] = useState(false);
 
   useEffect(() => {
     const data = {
@@ -30,11 +31,14 @@ export default function PlaceDetails({ navigation }) {
     setPlace(data);
 
     const setData = (facilityData) => {
-      if (facilityData.includes("wifi")) {
-        setFacilityurl(
-          "https://res.cloudinary.com/nibmsa/image/upload/v1679468287/1-removebg-preview_okhsn3.png"
-        );
-        setFacilityname("Wifi");
+      if (facilityData.includes("Wifi")) {
+        setWifiAvailable(true);
+      } else if (facilityData.includes("Food")) {
+        setFoodsAvailable(true);
+      } else if (facilityData.includes("Parking")) {
+        setParkingAvailable(true);
+      } else if (facilityData.includes("NoSmoking")) {
+        setNoSmokingAvailable(true);
       }
     };
     setData(data.facilities);
@@ -101,108 +105,95 @@ export default function PlaceDetails({ navigation }) {
           Amenities
         </Text>
 
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          scrollEventThrottle={200}
-          decelerationRate="fast"
-          pagingEnabled
-          borderWidth={1}
-          width={369}
-          height={100}
-          marginLeft={10}
-          borderRadius={30}
-          borderColor="#A9A9A9"
-          marginTop={10}
-        >
-          {/* {place.facilities.filter("wifi") ? (
-            <View>
-              <Image
-                style={styles.tinyLogo3}
-                source={{
-                  uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679468938/download-removebg-preview_xreebs.png",
-                }}
-              />
-              <Text>Wifi</Text>
-            </View>
-          ) : (
-            "null"
-          )} */}
-
-          <Image
-            style={styles.tinyLogo3}
-            source={{
-              uri: facilityurl,
-            }}
-          />
-          <Text
-            style={{
-              marginLeft: -45,
-              marginTop: 70,
-              fontSize: 18,
-              fontWeight: "bold",
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-            }}
+        <View>
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            scrollEventThrottle={200}
+            decelerationRate="fast"
+            pagingEnabled
+            borderWidth={1}
+            width={369}
+            height={100}
+            marginLeft={10}
+            borderRadius={30}
+            borderColor="#A9A9A9"
+            marginTop={10}
           >
-            {facilityname}
-          </Text>
-
-          {/* <Image
-            style={styles.tinyLogo3}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679468938/download-removebg-preview_xreebs.png",
-            }}
-          />
-          <Text
-            style={{
-              marginLeft: -45,
-              marginTop: 70,
-              fontSize: 18,
-              fontWeight: "bold",
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-            }}
-          >
-            Foods
-          </Text>
-          <Image
-            style={styles.tinyLogo5}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679469394/p-removebg-preview_lzlkak.png",
-            }}
-          />
-          <Text
-            style={{
-              marginLeft: -53,
-              marginTop: 70,
-              fontSize: 18,
-              fontWeight: "bold",
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-            }}
-          >
-            Parking
-          </Text>
-          <Image
-            style={styles.tinyLogo4}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679495155/tvectoricons180806148-removebg-preview_t0ngho.png",
-            }}
-          />
-          <Text
-            style={{
-              marginLeft: -75,
-              marginTop: 70,
-              fontSize: 18,
-              fontWeight: "bold",
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-            }}
-          >
-            No Smoking
-          </Text> */}
-        </ScrollView>
+            <Image
+              style={styles.tinyLogo2}
+              source={{
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679468287/1-removebg-preview_okhsn3.png",
+              }}
+            />
+            <Text
+              style={{
+                marginLeft: -43,
+                marginTop: 70,
+                fontSize: 18,
+                fontWeight: "bold",
+                fontFamily: "Times New Roman",
+                color: "#52595D",
+              }}
+            >
+              Wifi
+            </Text>
+            <Image
+              style={styles.tinyLogo3}
+              source={{
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679468938/download-removebg-preview_xreebs.png",
+              }}
+            />
+            <Text
+              style={{
+                marginLeft: -45,
+                marginTop: 70,
+                fontSize: 18,
+                fontWeight: "bold",
+                fontFamily: "Times New Roman",
+                color: "#52595D",
+              }}
+            >
+              Foods
+            </Text>
+            <Image
+              style={styles.tinyLogo5}
+              source={{
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679469394/p-removebg-preview_lzlkak.png",
+              }}
+            />
+            <Text
+              style={{
+                marginLeft: -53,
+                marginTop: 70,
+                fontSize: 18,
+                fontWeight: "bold",
+                fontFamily: "Times New Roman",
+                color: "#52595D",
+              }}
+            >
+              Parking
+            </Text>
+            <Image
+              style={styles.tinyLogo4}
+              source={{
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679495155/tvectoricons180806148-removebg-preview_t0ngho.png",
+              }}
+            />
+            <Text
+              style={{
+                marginLeft: -75,
+                marginTop: 70,
+                fontSize: 18,
+                fontWeight: "bold",
+                fontFamily: "Times New Roman",
+                color: "#52595D",
+              }}
+            >
+              No Smoking
+            </Text>
+          </ScrollView>
+        </View>
       </View>
 
       <Text
