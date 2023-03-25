@@ -124,7 +124,7 @@ export default function AddPlaces({ navigation }) {
             textAlign: "center",
             fontSize: 36,
             marginLeft: -10,
-            marginTop: 15,
+            marginTop: 45,
             color: "#3F000F",
             fontFamily: "Times New Roman"
           }}
@@ -375,6 +375,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     minWidth: 88,
     paddingLeft: 26,
+    marginTop: 10,
     paddingRight: 16
   },
   materialButtonDark1: {
@@ -385,7 +386,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     elevation: 5,
     shadowOpacity: 0,
-    marginTop: -10,
+    marginTop: 0,
     marginBottom: 10,
     marginLeft: 90
   },

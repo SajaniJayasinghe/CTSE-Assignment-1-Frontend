@@ -67,6 +67,7 @@ export default function AdminEventDetails({ route, navigation }) {
           fontFamily: "Times New Roman"
         }}
       >
+        {" "}
         {event.event_name}
       </Text>
       <View style={styles.rect}>

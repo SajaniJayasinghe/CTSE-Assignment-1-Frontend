@@ -1,4 +1,3 @@
-import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -7,61 +6,50 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  Alert
+  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import axios from "axios";
+import { useRoute } from "@react-navigation/native";
 
-export default function PlaceDetails({ navigation }) {
-  const [place, setPlace] = useState([]);
-  const [facilityurl, setFacilityurl] = useState("");
-  const [facilityname, setFacilityname] = useState("");
-  const route = useRoute();
+export default function BlogDetails({ route, navigation }) {
+  const [blog, setblog] = useState("");
 
+  const getBlog = async () => {
+    await axios
+      .get(`http://localhost:8080/api/blog/getBlog/${route.params}`)
+      .then((res) => {
+        if (res.data.success) {
+          setblog(res.data.existingblog);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   useEffect(() => {
-    const data = {
-      placeid: route.params.placeID,
-      type: route.params.type,
-      name: route.params.name,
-      description: route.params.description,
-      picture: route.params.picture,
-      city: route.params.city,
-      facilities: route.params.facilities
-    };
-    setPlace(data);
-
-    const setData = (facilityData) => {
-      if (facilityData.includes("wifi")) {
-        setFacilityurl(
-          "https://res.cloudinary.com/nibmsa/image/upload/v1679468287/1-removebg-preview_okhsn3.png"
-        );
-        setFacilityname("Wifi");
-      }
-    };
-    setData(data.facilities);
+    getBlog();
   }, []);
 
-  const deletePlace = async () => {
-    const placeID = route.params.placeID;
-    Alert.alert("Are you sure you want to delete this place?", [
+  const deleteblog = async (id) => {
+    Alert.alert("Are you sure?", "This will permanently delete Blog!", [
       {
         text: "OK",
         onPress: async () => {
-          console.log(placeID);
-          await axios
-            .delete(`http://localhost:8080/api/places/delete/${placeID}`)
+          axios
+            .delete(`http://localhost:8080/api/blog/delete/${id}`)
             .then((res) => {
-              navigation.navigate("PlacesList");
+              navigation.push("BlogsHome");
             })
-            .catch((err) => {
-              console.log(err);
+            .catch((e) => {
+              console.error(e);
             });
-        }
+        },
       },
       {
         text: "Cancel",
         onPress: () => console.log("Cancel Pressed"),
-        style: "cancel"
-      }
+      },
     ]);
   };
 
@@ -74,33 +62,29 @@ export default function PlaceDetails({ navigation }) {
           fontSize: 36,
           marginLeft: -10,
           marginTop: 15,
-          color: "#3F000F"
+          color: "#3F000F",
+          fontFamily: "Times New Roman",
         }}
       >
-        {place.name}
+        {" "}
+        {blog.blogName}
       </Text>
       <View style={styles.rect}>
-        <Image
-          style={styles.tinyLogo}
-          source={{
-            uri: place.picture
-          }}
-        />
+        <Image style={styles.tinyLogo} source={{ uri: blog.picture }} />
       </View>
       <View>
         <Text
           style={{
             marginLeft: 20,
-            marginTop: 27,
+            marginTop: 40,
             fontSize: 19,
             fontWeight: "bold",
             fontFamily: "Times New Roman",
-            color: "#000000"
+            color: "#000000",
           }}
         >
           Amenities
         </Text>
-
         <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={false}
@@ -109,117 +93,100 @@ export default function PlaceDetails({ navigation }) {
           pagingEnabled
           borderWidth={1}
           width={369}
-          height={100}
+          height={80}
           marginLeft={10}
           borderRadius={30}
           borderColor="#A9A9A9"
           marginTop={10}
         >
-          {/* {place.facilities.filter("wifi") ? (
-            <View>
-              <Image
-                style={styles.tinyLogo3}
-                source={{
-                  uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679468938/download-removebg-preview_xreebs.png",
-                }}
-              />
-              <Text>Wifi</Text>
-            </View>
-          ) : (
-            "null"
-          )} */}
-
+          <Image
+            style={styles.tinyLogo2}
+            source={{
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483250/music-removebg-preview_deu4xd.png",
+            }}
+          />
+          <Text
+            style={{
+              marginLeft: -48,
+              marginTop: 55,
+              fontSize: 18,
+              fontWeight: "bold",
+              fontFamily: "Times New Roman",
+              color: "#52595D",
+            }}
+          >
+            Music
+          </Text>
           <Image
             style={styles.tinyLogo3}
             source={{
-              uri: facilityurl
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/pho-removebg-preview_kijiez.png",
             }}
           />
           <Text
             style={{
-              marginLeft: -45,
-              marginTop: 70,
+              marginLeft: -90,
+              marginTop: 55,
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
-              color: "#52595D"
+              color: "#52595D",
             }}
           >
-            {facilityname}
-          </Text>
-
-          {/* <Image
-            style={styles.tinyLogo3}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679468938/download-removebg-preview_xreebs.png"
-            }}
-          />
-          <Text
-            style={{
-              marginLeft: -45,
-              marginTop: 70,
-              fontSize: 18,
-              fontWeight: "bold",
-              fontFamily: "Times New Roman",
-              color: "#52595D"
-            }}
-          >
-            Foods
-          </Text>
-          <Image
-            style={styles.tinyLogo5}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679469394/p-removebg-preview_lzlkak.png"
-            }}
-          />
-          <Text
-            style={{
-              marginLeft: -53,
-              marginTop: 70,
-              fontSize: 18,
-              fontWeight: "bold",
-              fontFamily: "Times New Roman",
-              color: "#52595D"
-            }}
-          >
-            Parking
+            Photography
           </Text>
           <Image
             style={styles.tinyLogo4}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679495155/tvectoricons180806148-removebg-preview_t0ngho.png"
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/Screenshot_2023-03-22_at_16.35.13-removebg-preview_m7iojm.png",
             }}
           />
           <Text
             style={{
-              marginLeft: -75,
-              marginTop: 70,
+              marginLeft: -48,
+              marginTop: 55,
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
-              color: "#52595D"
+              color: "#52595D",
             }}
           >
-            No Smoking
-          </Text> */}
+            Dance
+          </Text>
+          <Image
+            style={styles.tinyLogo5}
+            source={{
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/ga-removebg-preview_xtsstk.png",
+            }}
+          />
+          <Text
+            style={{
+              marginLeft: -50,
+              marginTop: 55,
+              fontSize: 18,
+              fontWeight: "bold",
+              fontFamily: "Times New Roman",
+              color: "#52595D",
+            }}
+          >
+            Games
+          </Text>
         </ScrollView>
       </View>
-
       <Text
         style={{
-          marginLeft: 20,
-          fontSize: 18,
-          marginTop: 20,
+          marginLeft: 30,
+          fontSize: 20,
+          marginTop: 25,
           fontWeight: "bold",
           fontFamily: "Times New Roman",
-          color: "#000000"
+          color: "grey",
         }}
       >
         Description {"\n"}
       </Text>
-
       <TouchableOpacity
-        onPress={() => navigation.navigate("UpdatePlace", place)}
+        onPress={() => navigation.navigate("UpdateBlog", blog._id)}
       >
         <Icon
           name="edit"
@@ -229,15 +196,17 @@ export default function PlaceDetails({ navigation }) {
             marginTop: -43,
             marginLeft: 270,
             marginBottom: -30,
-            borderRadius: 30
+            borderRadius: 30,
           }}
         />
       </TouchableOpacity>
-      <Icon
-        name="delete-forever"
-        style={styles.icon}
-        onPress={() => deletePlace(place._id)}
-      ></Icon>
+      <TouchableOpacity>
+        <Icon
+          name="delete-forever"
+          onPress={() => deleteblog(blog._id)}
+          style={styles.icon}
+        ></Icon>
+      </TouchableOpacity>
       <ScrollView>
         <View style={styles.rect1}>
           <Text
@@ -247,55 +216,43 @@ export default function PlaceDetails({ navigation }) {
               fontFamily: "Times New Roman",
               color: "#0C090A",
               fontWeight: "bold",
-              marginTop: 15
+              marginTop: 10,
             }}
           >
-            {/* {JSON.stringify(place)} */}
-          </Text>
-          <Text
-            style={{
-              marginLeft: 20,
-              fontSize: 20,
-              fontFamily: "Times New Roman",
-              color: "#0C090A",
-              fontWeight: "bold",
-              marginTop: 15
-            }}
-          >
-            {place.name}
+            {blog.blogName} - {blog.type}
           </Text>
           <Image
             style={styles.tinyLogo6}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679471650/2838912_zdihvz.png"
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679471650/2838912_zdihvz.png",
             }}
           />
           <Text
             style={{
               marginLeft: 40,
               fontSize: 15,
-              marginTop: 3,
+              marginTop: -13,
               fontFamily: "Times New Roman",
               color: "#52595D",
-              fontWeight: "bold"
+              fontWeight: "bold",
             }}
           >
-            {place.city}
+            {blog.date}
             {"\n"}
           </Text>
           <Text
             style={{
               marginLeft: 20,
               fontSize: 15,
-              marginTop: 5,
+              marginTop: 15,
               fontFamily: "Times New Roman",
               color: "#52595D",
               textAlign: "justify",
               fontWeight: "bold",
-              marginRight: 20
+              marginRight: 20,
             }}
           >
-            {place.description}
+            {blog.description}
           </Text>
         </View>
       </ScrollView>
@@ -305,7 +262,7 @@ export default function PlaceDetails({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   rect: {
     width: 357,
@@ -315,13 +272,13 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(208,194,194,1)",
     shadowOffset: {
       width: 5,
-      height: 5
+      height: 5,
     },
     elevation: 39,
     shadowOpacity: 1,
     marginTop: 20,
     marginLeft: 14,
-    shadowRadius: 13
+    shadowRadius: 13,
   },
   rect1: {
     width: 370,
@@ -330,62 +287,70 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(208,194,194,1)",
     shadowOffset: {
       width: 5,
-      height: 5
+      height: 5,
     },
     elevation: 39,
     shadowOpacity: 1,
     marginTop: -15,
     marginLeft: 10,
     marginRight: 20,
-    shadowRadius: 13
+    shadowRadius: 13,
   },
   tinyLogo: {
     width: 357,
-    height: 170,
+    height: 200,
     marginBottom: -20,
-    marginTop: -1,
+    marginTop: -10,
     borderRadius: 5,
-    marginLeft: 1
+    marginLeft: 1,
   },
   tinyLogo2: {
     width: 46,
     height: 46,
     marginBottom: -20,
-    marginTop: 15,
+    marginTop: 8,
     borderRadius: 100,
-    marginLeft: 30
+    marginLeft: 30,
   },
   tinyLogo3: {
-    width: 50,
-    height: 50,
+    width: 76,
+    height: 76,
     marginBottom: -20,
-    marginTop: 15,
+    marginTop: -8,
     borderRadius: 100,
-    marginLeft: 33
+    marginLeft: 28,
   },
   tinyLogo4: {
-    width: 70,
-    height: 70,
+    width: 46,
+    height: 46,
     marginBottom: -20,
-    marginTop: 6,
+    marginTop: 8,
     borderRadius: 100,
-    marginLeft: 20
+    marginLeft: 25,
   },
   tinyLogo5: {
-    width: 50,
-    height: 50,
+    width: 46,
+    height: 46,
     marginBottom: -20,
-    marginTop: 15,
+    marginTop: 8,
     borderRadius: 100,
-    marginLeft: 35
+    marginLeft: 35,
   },
   tinyLogo6: {
-    width: 15,
-    height: 15,
+    width: 18,
+    height: 18,
     marginBottom: -20,
-    marginTop: 10,
+    marginTop: 13,
     borderRadius: 100,
-    marginLeft: 18
+    marginLeft: 19,
+  },
+  tinyLogo7: {
+    width: 46,
+    height: 46,
+    marginBottom: -20,
+    marginTop: 8,
+    borderRadius: 100,
+    marginLeft: 32,
   },
   icon: {
     color: "#8B0000",
@@ -393,6 +358,6 @@ const styles = StyleSheet.create({
     height: 60,
     width: 40,
     marginLeft: 330,
-    marginTop: -45
-  }
+    marginTop: -45,
+  },
 });

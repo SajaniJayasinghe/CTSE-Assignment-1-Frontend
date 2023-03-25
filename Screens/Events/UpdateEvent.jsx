@@ -45,7 +45,7 @@ export default function UpdateEvent({ route, navigation }) {
       .get(`http://localhost:8080/api/events/${route.params}`)
       .then((res) => {
         if (res.data.success) {
-          settype(res.data.Event.type);
+          setSelectedItems(res.data.Event.type);
           setevent_name(res.data.Event.event_name);
           setdescription(res.data.Event.description);
           setpicture(res.data.Event.picture);
@@ -239,7 +239,7 @@ export default function UpdateEvent({ route, navigation }) {
             style={[styles.containerx, styles.materialButtonDark1]}
             onPress={updateEvent}
           >
-            <Text style={styles.loginButton}>Update Event</Text>
+            <Text style={styles.loginButton}>Update Blog</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>

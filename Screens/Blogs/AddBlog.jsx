@@ -1,38 +1,38 @@
 import React, { useState } from "react";
 import {
   View,
-  Alert,
-  StyleSheet,
   Text,
+  StyleSheet,
+  Image,
   TouchableOpacity,
-  TextInput,
   ScrollView,
+  TextInput,
+  Alert,
+  Button,
 } from "react-native";
+import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 import CustomLoading from "../../components/CustomLoading";
-import axios from "axios";
 import { responsiveWidth } from "react-native-responsive-dimensions";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { MultiSelect } from "react-native-element-dropdown";
 
-export default function AddHotels({ navigation }) {
+export default function AddBlog({ navigation }) {
   const data = [
-    { label: "Wifi", value: "Wifi" },
-    { label: "AC", value: "AC" },
-    { label: "Food", value: "Food" },
-    { label: "Pool", value: "Pool" },
-    { label: "Parking", value: "Parking" },
+    { label: "Beach", value: "Beach" },
+    { label: "Forest", value: "Forest" },
+    { label: "Ancient City", value: "Ancient City" },
+    { label: "Mountans", value: "Mountans" },
+    { label: "WaterFalls", value: "WaterFalls" },
   ];
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
-  const [name, setname] = useState("");
+  const [blogName, setblogName] = useState("");
   const [description, setdescription] = useState("");
-  const [address, setaddress] = useState("");
-  const [phone, setphone] = useState("");
+  const [date, setdate] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
-  const [imageUploadStatus, setImageUploadStatus] = useState(
-    "Choose Hotel Picture"
-  );
+  const [imageUploadStatus, setImageUploadStatus] =
+    useState("Choose Blog Image");
   const [validationErrors, setValidationErrors] = useState({});
 
   //For Multiple selection
@@ -44,25 +44,25 @@ export default function AddHotels({ navigation }) {
     );
   };
 
-  const addHotel = () => {
-    const URL = `http://localhost:8080/api/hotels/addhotel`;
+  const addblog = () => {
+    const URL = `http://localhost:8080/api/blog/addblog`;
 
     const payload = new FormData();
     setLoading(true);
-    payload.append("name", name);
+    payload.append("blogName", blogName);
     payload.append("description", description);
     payload.append("picture", {
       uri: image,
       type: "image/jpeg",
       name: "image.jpg",
     });
-    payload.append("address", address);
-    payload.append("phone", phone);
+    payload.append("date", date);
+    console.log(payload);
 
     //for multiple selection
     if (selectedItems.length > 0) {
       for (var i = 0; i < selectedItems.length; i++) {
-        payload.append(`facilities[${i}]`, selectedItems[i]);
+        payload.append(`type[${i}]`, selectedItems[i]);
       }
     }
 
@@ -73,22 +73,23 @@ export default function AddHotels({ navigation }) {
         },
       })
       .then((res) => {
-        Alert.alert("Success", "Hotel Added Successfully");
+        console.log(res);
+        Alert.alert("Success", "Blog Added Successfully");
         setLoading(false);
-        navigation.navigate("HotelHome");
+        navigation.navigate("BlogsHome");
       })
       .catch((error) => {
         console.log(error);
         setLoading(false);
         Alert.alert(
           "Error",
-          "Hotel adding Unsuccessful",
+          "Blog adding Unsuccessful",
           [{ text: "Check Again" }],
           { cancelable: false }
         );
       });
   };
-  console.log(image);
+
   //for Image upload
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -103,40 +104,38 @@ export default function AddHotels({ navigation }) {
       setImageUploadStatus("Image Uploaded");
     } else {
       setImage(null);
-      setImageUploadStatus("Choose Hotel Picture");
+      setImageUploadStatus("Choose Blog Image");
     }
   };
 
   return (
     <>
       <View style={styles.container}>
-        <View>
-          <Text
-            style={{
-              fontWeight: "800",
-              textAlign: "center",
-              fontSize: 36,
-              marginLeft: -10,
-              marginTop: 50,
-              color: "#3F000F",
-              fontFamily: "Times New Roman",
-            }}
-          >
-            Add New Hotel
-          </Text>
-          <ScrollView
-            vertical={true}
-            showsHorizontalScrollIndicator={false}
-            scrollEventThrottle={200}
-            decelerationRate="fast"
-            pagingEnabled
-          >
+        <Image
+          style={styles.dance}
+          source={{
+            uri: "https://res.cloudinary.com/dotz6cdgt/image/upload/v1679713666/pexels-fabian-wiktor-994605_qifbed.jpg",
+          }}
+        />
+        <Text
+          style={{
+            fontWeight: "800",
+            textAlign: "center",
+            fontSize: 30,
+            marginLeft: -10,
+            marginTop: 20,
+            color: "#0D084A",
+          }}
+        >
+          Add New Blog
+        </Text>
+        <ScrollView>
+          <View>
             <MultiSelect
               style={styles.textInputnew}
               placeholderStyle={{
                 fontSize: 17,
                 color: "#BCC6CC",
-                fontFamily: "Times New Roman",
                 marginTop: 10,
                 marginBottom: 10,
               }}
@@ -144,7 +143,7 @@ export default function AddHotels({ navigation }) {
               data={data}
               labelField="label"
               valueField="value"
-              placeholder="Select Facilities"
+              placeholder="Select Blogs"
               searchPlaceholder="Search..."
               value={selectedItems}
               onChange={(item) => {
@@ -179,36 +178,23 @@ export default function AddHotels({ navigation }) {
             ) : (
               ""
             )}
-            <Text style={styles.nameText}>Enter Hotel Name</Text>
+
+            <Text style={styles.nameText}>Enter Event Name</Text>
             <TextInput
-              placeholder="Enter Hotel Name here"
+              placeholder="Enter Blog Name "
               style={styles.textInput}
-              onChange={(e) => setname(e.nativeEvent.text)}
-              value={name}
-            />
-            <Text style={styles.nameText1}>Enter Hotel Address</Text>
-            <TextInput
-              placeholder="Enter Hotel Address here"
-              style={styles.textInput}
-              onChange={(e) => setaddress(e.nativeEvent.text)}
-              value={address}
+              onChange={(e) => setblogName(e.nativeEvent.text)}
+              value={blogName}
             />
 
-            <Text style={styles.nameText1}>Enter Contact Number</Text>
+            <Text style={styles.nameText2}>Enter Description</Text>
             <TextInput
-              placeholder="Enter Contact Number"
-              style={styles.textInput}
-              onChange={(e) => setphone(e.nativeEvent.text)}
-              value={phone}
-            />
-
-            <Text style={styles.nameText1}>Enter Description</Text>
-            <TextInput
-              placeholder="Enter Description here"
-              style={styles.nameText2}
-              onChange={(e) => setdescription(e.nativeEvent.text)}
+              placeholder="Enter Description"
+              style={styles.nameText3}
               value={description}
+              onChange={(e) => setdescription(e.nativeEvent.text)}
             />
+
             <View style={styles.imageUploadField}>
               <TextInput
                 style={styles.ImageTextInput}
@@ -221,18 +207,23 @@ export default function AddHotels({ navigation }) {
                 <Text style={styles.uploadTxt}>Upload</Text>
               </TouchableOpacity>
             </View>
-          </ScrollView>
-        </View>
-        <View>
+            <Text style={styles.nameText2}>Enter Date </Text>
+            <TextInput
+              placeholder="Enter Date"
+              style={styles.textInput}
+              onChange={(e) => setdate(e.nativeEvent.text)}
+              value={date}
+            />
+          </View>
           <TouchableOpacity
             style={[styles.containerx, styles.materialButtonDark1]}
             onPress={() => {
-              addHotel();
+              addblog();
             }}
           >
-            <Text style={styles.loginButton}>Add Hotel</Text>
+            <Text style={styles.loginButton}>Add Blog</Text>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
       </View>
       {loading ? <CustomLoading /> : null}
     </>
@@ -243,41 +234,34 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  nameText: {
-    color: "#6D7B8D",
-    fontSize: 16,
-    lineHeight: 18,
-    marginTop: 17,
-    marginLeft: 36,
-  },
-  nameText1: {
-    color: "#6D7B8D",
-    fontSize: 16,
-    lineHeight: 18,
-    marginTop: 5,
-    marginLeft: 36,
-  },
-  nameText2: {
-    height: 80,
-    width: 320,
-    textAlign: "center",
-    fontSize: 15,
-    borderRadius: 25,
-    marginTop: 7,
-    marginLeft: 36,
-    borderWidth: 1,
-    borderColor: "#560319",
-  },
-  textInput: {
-    height: 40,
-    width: 320,
-    textAlign: "center",
-    fontSize: 15,
-    borderRadius: 25,
+  rect: {
+    width: 360,
+    height: 200,
+    backgroundColor: "rgba(255,255,255,1)",
+    borderRadius: 22,
+    shadowColor: "rgba(208,194,194,1)",
+    shadowOffset: {
+      width: 5,
+      height: 5,
+    },
+    elevation: 39,
+    shadowOpacity: 1,
     marginTop: 10,
-    marginLeft: 36,
-    borderWidth: 1,
-    borderColor: "#560319",
+    marginLeft: 14,
+    shadowRadius: 13,
+  },
+  tinyLogo: {
+    width: 400,
+    height: 70,
+    marginTop: 0,
+    marginLeft: 0,
+  },
+
+  dance: {
+    width: 470,
+    height: 200,
+    marginTop: -5,
+    marginLeft: -10,
   },
   dropdown: {
     margin: 16,
@@ -299,41 +283,87 @@ const styles = StyleSheet.create({
     width: 320,
     marginLeft: 36,
   },
-  containerx: {
-    backgroundColor: "#FFFFFF",
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-    borderRadius: 2,
-    shadowColor: "#000",
-    shadowOffset: {
-      height: 1,
-    },
-
-    shadowOpacity: 0.35,
-    shadowRadius: 5,
-    elevation: 2,
-    minWidth: 88,
-    paddingLeft: 26,
-    paddingRight: 16,
-  },
-  materialButtonDark1: {
-    height: 40,
-    width: 210,
-    backgroundColor: "#560319",
+  textInput: {
+    height: 35,
+    width: 320,
+    textAlign: "center",
+    fontSize: 15,
+    borderRadius: 25,
+    marginTop: 7,
+    marginLeft: 36,
     borderWidth: 1,
-    borderRadius: 100,
-    elevation: 5,
-    shadowOpacity: 0,
-    marginTop: 15,
-    marginBottom: 10,
-    marginLeft: 90,
+    borderColor: "#560319",
   },
-  loginButton: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 18,
+  nameText: {
+    color: "#6D7B8D",
+    fontSize: 16,
     lineHeight: 18,
+    marginTop: 10,
+    marginLeft: 36,
+  },
+  nameText1: {
+    color: "#6D7B8D",
+    fontSize: 16,
+    lineHeight: 18,
+    marginTop: 10,
+    marginLeft: 36,
+  },
+  nameText2: {
+    color: "#6D7B8D",
+    fontSize: 16,
+    lineHeight: 18,
+    marginTop: -5,
+    marginLeft: 36,
+  },
+  nameText2: {
+    color: "#6D7B8D",
+    fontSize: 16,
+    lineHeight: 18,
+    marginTop: 5,
+    marginLeft: 36,
+  },
+  nameText3: {
+    height: 80,
+    width: 320,
+    textAlign: "center",
+    fontSize: 15,
+    borderRadius: 25,
+    marginTop: 7,
+    marginLeft: 36,
+    borderWidth: 1,
+    borderColor: "#560319",
+  },
+  imageUploadField: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: "5%",
+  },
+
+  ImageTextInput: {
+    width: "50%",
+    height: 50,
+    borderColor: "grey",
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingLeft: 10,
+    color: "gray",
+    marginLeft: "10%",
+    marginTop: "5%",
+  },
+
+  uploadButton: {
+    width: "30%",
+    height: "30%",
+    marginRight: "20%",
+    backgroundColor: "#E8A317",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 50,
+    marginTop: "5%",
+    marginLeft: responsiveWidth(2),
   },
   textInputnew: {
     width: "80%",
@@ -346,47 +376,72 @@ const styles = StyleSheet.create({
     borderColor: "grey",
     borderWidth: 1,
   },
-  imageUploadField: {
-    display: "flex",
+  containerx: {
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+    alignItems: "center",
     flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    marginBottom: "5%",
+    borderRadius: 2,
+    shadowColor: "#000",
+    shadowOffset: {
+      height: 1,
+    },
+    shadowOpacity: 0.35,
+    shadowRadius: 5,
+    elevation: 2,
+    minWidth: 88,
+    paddingLeft: 26,
+    paddingRight: 16,
   },
-  ImageTextInput: {
-    width: "50%",
-    height: 50,
-    borderColor: "grey",
-    borderWidth: 1,
+  materialButtonDark1: {
+    height: 45,
+    width: 210,
+    backgroundColor: "#B0BBD5",
+    borderRadius: 100,
+    elevation: 5,
+    shadowOpacity: 0,
+    marginTop: -10,
+    marginBottom: 10,
+    marginLeft: 90,
+  },
+  rect: {
+    width: 250,
+    height: 200,
+    backgroundColor: "rgba(255,255,255,1)",
+    borderRadius: 22,
+    shadowColor: "rgba(208,194,194,1)",
+    shadowOffset: {
+      width: 5,
+      height: 5,
+    },
+    elevation: 39,
+    shadowOpacity: 1,
+    marginTop: 0,
+    marginLeft: 14,
+    shadowRadius: 13,
+  },
+
+  tinyLogo: {
+    width: 250,
+    height: 200,
+    marginBottom: -10,
+    borderRadius: 15,
+  },
+  loginButton: {
+    color: "black",
+    fontWeight: "bold",
+    fontSize: 22,
+    lineHeight: 20,
+  },
+  textInputnew: {
+    width: "80%",
+    height: 40,
+    backgroundColor: "white",
     borderRadius: 10,
     paddingLeft: 10,
-    color: "gray",
     marginLeft: "10%",
     marginTop: "5%",
-  },
-  uploadButton: {
-    width: "30%",
-    height: "30%",
-    marginRight: "20%",
-    backgroundColor: "#E8A317",
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: 50,
-    marginTop: "5%",
-    marginLeft: responsiveWidth(2),
-    fontFamily: "Times New Roman",
-  },
-  item: {
-    padding: 17,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  arrowHeader: {
-    paddingHorizontal: "5%",
-    marginTop: "12%",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    borderColor: "grey",
+    borderWidth: 1,
   },
 });

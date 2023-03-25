@@ -12,21 +12,24 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
 import { useRoute } from "@react-navigation/native";
 
-export default function HotelDetails({ navigation }) {
+export default function HotelDetails({ route, navigation }) {
   const [hotel, sethotel] = useState([]);
-  const route = useRoute();
 
+  const getHotel = async () => {
+    await axios
+      .get(`http://localhost:8080/api/hotels/${route.params}`)
+      .then((res) => {
+        if (res.data.success) {
+          sethotel(res.data.existinghotel);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   useEffect(() => {
-    const data = {
-      hid: route.params.hID,
-      name: route.params.name,
-      description: route.params.description,
-      address: route.params.address,
-      picture: route.params.picture,
-      facilities: route.params.facilities,
-      phone: route.params.phone,
-    };
-    sethotel(data);
+    getHotel();
+    console.log(route.params);
   }, []);
 
   const deletehotel = async () => {
@@ -66,9 +69,7 @@ export default function HotelDetails({ navigation }) {
           fontFamily: "Times New Roman",
         }}
       >
-        {" "}
-        Hotel Galadari
-        {/* {hotel.name} */}
+        {hotel.name}
       </Text>
       <View style={styles.rect}>
         <Image style={styles.tinyLogo} source={{ uri: hotel.picture }} />
@@ -194,11 +195,7 @@ export default function HotelDetails({ navigation }) {
       </View>
       <View>
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("UpdateHotelDetails", {
-              // donationID: donations._id,
-            })
-          }
+          onPress={() => navigation.navigate("UpdateHotelDetails", hotel._id)}
         >
           <Icon
             name="edit"
@@ -230,9 +227,7 @@ export default function HotelDetails({ navigation }) {
               marginTop: 10,
             }}
           >
-            {" "}
-            Hotel Galadari
-            {/* {hotel.name} */}
+            {hotel.name}
           </Text>
           <Image
             style={styles.tinyLogo6}
@@ -250,8 +245,6 @@ export default function HotelDetails({ navigation }) {
               fontWeight: "bold",
             }}
           >
-            {" "}
-            Galleface Road , Colombo
             {hotel.address}
             {"\n"}
           </Text>
@@ -271,9 +264,7 @@ export default function HotelDetails({ navigation }) {
               fontWeight: "bold",
             }}
           >
-            {" "}
-            0114322558
-            {/* {hotel.phone} */}
+            {hotel.phone}
             {"\n"}
           </Text>
           <Text
@@ -288,15 +279,7 @@ export default function HotelDetails({ navigation }) {
               marginRight: 20,
             }}
           >
-            Take advantage of a free breakfast buffet, a rooftop terrace, and a
-            coffee shop/cafe at Araliya Beach Resort and Spa. This resort is a
-            great place to bask in the sun with a white sand beach. Treat
-            yourself to a Thai massage at the onsite spa. Be sure to enjoy a
-            meal at any of the 4 onsite restaurants, which feature a poolside
-            location and garden views. In addition to a garden and dry
-            cleaning/laundry services, guests can connect to free in-room WiFi,
-            with speed of 50+ Mbps.
-            {/* {hotel.description} */}
+            {hotel.description}
           </Text>
         </View>
       </ScrollView>
