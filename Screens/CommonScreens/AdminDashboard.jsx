@@ -122,7 +122,7 @@ export default function AdminDashboard({route,navigation}) {
                 </Text>
               
                 <TouchableOpacity
-                    // onPress={() => navigation.navigate("AllOrganizations")}
+                    onPress={() => navigation.navigate("PlacesHome")}
                  >
                     <Image
                     style={styles.tinyLogo3}
