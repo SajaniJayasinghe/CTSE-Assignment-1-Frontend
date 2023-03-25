@@ -49,16 +49,7 @@ export default function EventsHome({ navigation }) {
                 <View style={styles.event}>
                   <TouchableOpacity
                     onPress={() =>
-                      navigation.navigate("EventDetails", {
-                        id: event.event_id,
-                        type: event.type,
-                        event_name: event.event_name,
-                        description: event.description,
-                        date: event.date,
-                        picture: event.picture,
-                        location: event.location,
-                        ticket_price: event.ticket_price
-                      })
+                      navigation.navigate("EventDetails", event._id)
                     }
                   >
                     <Image
