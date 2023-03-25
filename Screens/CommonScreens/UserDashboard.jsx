@@ -343,9 +343,7 @@ export default function UserDashBoard({ route, navigation }) {
             Events
           </Text>
 
-          <TouchableOpacity
-          // onPress={() => navigation.navigate("AddEvents")}
-          >
+          <TouchableOpacity onPress={() => navigation.navigate("BlogList")}>
             <Image
               style={styles.tinyLogo5}
               source={{

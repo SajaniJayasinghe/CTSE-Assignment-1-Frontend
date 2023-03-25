@@ -49,15 +49,7 @@ export default function HotelHome({ navigation }) {
                 <View style={styles.hotel}>
                   <TouchableOpacity
                     onPress={() =>
-                      navigation.navigate("HotelDetails", {
-                        id: hotel.hotel_id,
-                        facilities: hotel.facilities,
-                        name: hotel.name,
-                        description: hotel.description,
-                        address: hotel.address,
-                        picture: hotel.picture,
-                        phone: hotel.phone,
-                      })
+                      navigation.navigate("HotelDetails", hotel._id)
                     }
                   >
                     <Image

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   View,
   Image,
@@ -8,14 +7,15 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
-import { Dropdown } from "react-native-element-dropdown";
+import React, { useState, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { MultiSelect } from "react-native-element-dropdown";
 import { responsiveWidth } from "react-native-responsive-dimensions";
 import CustomLoading from "../../components/CustomLoading";
+import axios from "axios";
 
-export default function UpdateHotelDetails({ navigation }) {
+export default function UpdateHotelDetails({ route, navigation }) {
   const data = [
     { label: "Wifi", value: "Wifi" },
     { label: "AC", value: "AC" },
@@ -24,12 +24,12 @@ export default function UpdateHotelDetails({ navigation }) {
     { label: "Parking", value: "Parking" },
   ];
 
-  const [hotel_name, sethotel_name] = useState("");
+  const [name, setname] = useState("");
   const [description, setdescription] = useState("");
   const [picture, setpicture] = useState("");
   const [address, setaddress] = useState("");
   const [phone, setphone] = useState("");
-  const [facilities, setfacilities] = useState("");
+  const [facilities, setfacilities] = useState();
   const [hotelID, sethotelID] = useState("");
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
@@ -40,16 +40,25 @@ export default function UpdateHotelDetails({ navigation }) {
   const [validationErrors, setValidationErrors] = useState({});
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    sethotelID(route.params.hotelID);
-    settype(route.params.type);
-    sethotel_name(route.params.hotel_name);
-    setdescription(route.params.description);
-    setpicture(route.params.picture);
-    setaddress(route.params.address);
-    setphone(route.params.phone);
-    setfacilities(route.params.facilities);
-  }, []);
+  const getHotel = async () => {
+    await axios
+      .get(`http://localhost:8080/api/hotels/${route.params}`)
+      .then((res) => {
+        if (res.data.success) {
+          setname(res.data.existinghotel.name);
+          setdescription(res.data.existinghotel.description);
+          setpicture(res.data.existinghotel.picture);
+          setaddress(res.data.existinghotel.address);
+          setphone(res.data.existinghotel.phone);
+          setSelectedItems(res.data.existinghotel.facilities);
+        }
+        console.log(res.data.existinghotel);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   //For Multiple selection
   const renderItem = (item) => {
     return (
@@ -59,62 +68,39 @@ export default function UpdateHotelDetails({ navigation }) {
     );
   };
 
-  console.log(hotelID);
-
-  const updateHotel = () => {
-    const URL = `https://travel-go.herokuapp.com/api/hotels/update/${hotelID}`;
-
+  const updateHotel = async () => {
+    const URL = `http://localhost:8080/api/hotels/update/${hotelID}`;
     const payload = new FormData();
     setLoading(true);
-    payload.append("hotel_name", hotel_name);
-    payload.append("description", description);
-    payload.append("picture", {
-      uri: image,
-      type: "image/jpeg",
-      name: "image.jpg",
-    });
-    payload.append("address", address);
-    payload.append("phone", phone);
-    payload.append("facilities", facilities);
 
-    //for multiple selection
-    if (selectedItems.length > 0) {
-      for (var i = 0; i < selectedItems.length; i++) {
-        payload.append(`type[${i}]`, selectedItems[i]);
-      }
-    }
+    const updatedData = {
+      name: name,
+      description: description,
+      address: address,
+      phone: phone,
+      facilities: setselectedItems,
+    };
 
-    axios
-      .put(URL, payload, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        Alert.alert(
-          "Hotel Updated",
-          "Your Hotel has updated successfully!!",
-          [
-            {
-              text: "OK",
-              onPress: () => navigation.navigate("AdminDashboard"),
-            },
-          ],
-          { cancelable: false }
-        );
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        setLoading(false);
-        Alert.alert(
-          "Error",
-          "Updating Unsuccessful",
-          [{ text: "Check Again" }],
-          { cancelable: false }
-        );
+    try {
+      await axios.put(URL, updatedData).then((res) => {
+        if (res.data) {
+          console.log(res.data);
+          setLoading(false);
+          Alert.alert("Hotel Updated Successfully");
+          navigation.push("HotelDetails", hotelID);
+        } else {
+          setError(res.data.error);
+          setLoading(false);
+        }
       });
+    } catch (error) {
+      console.log(JSON.stringify(error.response));
+    }
   };
+  useEffect(() => {
+    getHotel();
+    console.log(facilities);
+  }, []);
 
   //for Image upload
   const pickImage = async () => {
@@ -130,184 +116,153 @@ export default function UpdateHotelDetails({ navigation }) {
       setImageUploadStatus("Image Uploaded");
     } else {
       setImage(null);
-      setImageUploadStatus("Choose Event Picture");
+      setImageUploadStatus("Choose Hotel Picture");
     }
   };
 
   return (
-    <View style={styles.container}>
-      <View>
-        <Image
-          style={styles.homelogo}
-          source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-          }}
-        />
-        <Text
-          style={{
-            fontWeight: "800",
-            textAlign: "center",
-            fontSize: 36,
-            marginLeft: -10,
-            marginTop: 15,
-            color: "#3F000F",
-            fontFamily: "Times New Roman",
-          }}
-        >
-          Update Hotel Details
-        </Text>
-        <View style={styles.rect}>
-          <Image
-            style={styles.tinyLogo}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679427495/cinnamon_jmlgpz.webp",
-            }}
-          />
-        </View>
-        <ScrollView
-          vertical={true}
-          showsHorizontalScrollIndicator={false}
-          scrollEventThrottle={200}
-          decelerationRate="fast"
-          pagingEnabled
-        >
-          <Text style={styles.nameText}>Enter Hotel Name</Text>
-          <TextInput
-            placeholder="Enter Hotel Name here"
-            style={styles.textInput}
-            value={hotel_name}
-            onChange={(e) => sethotel_name(e.nativeEvent.text)}
-          />
-          <Text style={styles.nameText1}>Select Facilities</Text>
-          <MultiSelect
-            style={styles.textInput}
-            placeholderStyle={{
-              fontSize: 14,
-              color: "grey",
-            }}
-            search
-            data={data}
-            labelField="label"
-            valueField="value"
-            placeholder="Select Facilities"
-            searchPlaceholder="Search..."
-            value={selectedItems}
-            onChange={(item) => {
-              setSelectedItems(item);
-            }}
-            renderItem={renderItem}
-            renderSelectedItem={(item, unSelect) => (
-              <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    padding: 10,
-                    backgroundColor: "white",
-                    borderRadius: 5,
-                    gap: 10,
-                    marginBottom: "9%",
-                    marginLeft: "8%",
-                  }}
-                >
-                  <Text style={styles.textSelectedStyle}>{item.label}</Text>
-                  <Icon name="delete" size={20} color="red" />
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-          {validationErrors.type ? (
-            <Text style={styles.errorTextSelection}>
-              {validationErrors.type}
-            </Text>
-          ) : (
-            ""
-          )}
-
-          <Text style={styles.nameText1}>Enter Hotel Address</Text>
-          <TextInput
-            placeholder="Enter Hotel Address here"
-            style={styles.textInput}
-            value={address}
-            onChange={(e) => setaddress(e.nativeEvent.text)}
-          />
-
-          <Text style={styles.nameText1}>Enter Contact Number</Text>
-          <TextInput
-            placeholder="Enter Contact Number"
-            style={styles.textInput}
-            value={phone}
-            onChange={(e) => setphone(e.nativeEvent.text)}
-          />
-
-          <Text style={styles.nameText1}>Enter Description</Text>
-          <TextInput
-            placeholder="Enter Description here"
-            style={styles.nameText2}
-            value={description}
-            onChange={(e) => setdescription(e.nativeEvent.text)}
-          />
-          <Text style={styles.nameText2}>Upload Hotel Image</Text>
-          <TextInput
-            placeholder="Upload Hotel Image"
-            style={styles.textInput}
-            value={picture}
-            onChange={(e) => setpicture(e.nativeEvent.text)}
-          />
-          <TouchableOpacity
-            style={[styles.containerx, styles.materialButtonDark1]}
-            onPress={() => {
-              updateHotel();
+    <>
+      <View style={styles.container}>
+        <View>
+          <Text
+            style={{
+              fontWeight: "800",
+              textAlign: "center",
+              fontSize: 36,
+              marginLeft: -10,
+              marginTop: 15,
+              color: "#3F000F",
+              marginBottom: 10,
+              fontFamily: "Times New Roman",
             }}
           >
-            <Text style={styles.loginButton}>Update Hotel</Text>
-          </TouchableOpacity>
-        </ScrollView>
+            Update Hotel Details
+          </Text>
+          <View style={styles.rect}>
+            <Image
+              style={styles.tinyLogo}
+              source={{
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679427495/cinnamon_jmlgpz.webp",
+              }}
+            />
+          </View>
+          <ScrollView
+            vertical={true}
+            showsHorizontalScrollIndicator={false}
+            scrollEventThrottle={200}
+            decelerationRate="fast"
+            pagingEnabled
+          >
+            <Text style={styles.nameText1}>Select Facilities</Text>
+            <MultiSelect
+              style={styles.textInputnew}
+              placeholderStyle={{
+                fontSize: 14,
+                color: "grey",
+              }}
+              search
+              data={data}
+              labelField="label"
+              valueField="value"
+              placeholder="Select Facilities"
+              searchPlaceholder="Search..."
+              value={selectedItems}
+              onChange={(item) => {
+                setSelectedItems(item);
+              }}
+              renderItem={renderItem}
+              renderSelectedItem={(item, unSelect) => (
+                <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      padding: 10,
+                      backgroundColor: "white",
+                      borderRadius: 5,
+                      gap: 15,
+                      marginTop: "5%",
+                      marginBottom: "9%",
+                      marginLeft: "22%",
+                    }}
+                  >
+                    <Text style={styles.textSelectedStyle}>{item.label}</Text>
+                    <Icon name="delete" size={20} color="red" />
+                  </View>
+                </TouchableOpacity>
+              )}
+            />
+            {validationErrors.type ? (
+              <Text style={styles.errorTextSelection}>
+                {validationErrors.type}
+              </Text>
+            ) : (
+              ""
+            )}
+            <Text style={styles.nameText}>Enter Hotel Name</Text>
+            <TextInput
+              placeholder="Enter Hotel Name here"
+              style={styles.textInput}
+              value={name}
+              onChange={(e) => setname(e.nativeEvent.text)}
+            />
+            <Text style={styles.nameText1}>Enter Hotel Address</Text>
+            <TextInput
+              placeholder="Enter Hotel Address here"
+              style={styles.address}
+              value={address}
+              onChange={(e) => setaddress(e.nativeEvent.text)}
+            />
+
+            <Text style={styles.nameText1}>Enter Contact Number</Text>
+            <TextInput
+              placeholder="Enter Contact Number"
+              style={styles.textInput}
+              value={phone}
+              onChange={(e) => setphone(e.nativeEvent.text)}
+            />
+
+            <Text style={styles.nameText1}>Enter Description</Text>
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            >
+              <TextInput
+                placeholder="Enter Description here"
+                style={styles.description}
+                value={description}
+                onChange={(e) => setdescription(e.nativeEvent.text)}
+              />
+            </ScrollView>
+            <View style={styles.imageUploadField}>
+              <TextInput
+                style={styles.ImageTextInput}
+                placeholder="Choose File"
+                editable={false}
+                selectTextOnFocus={false}
+                value={imageUploadStatus}
+              />
+              <TouchableOpacity onPress={pickImage} style={styles.uploadButton}>
+                <Text style={styles.uploadTxt}>Upload</Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              style={[styles.containerx, styles.materialButtonDark1]}
+              onPress={updateHotel}
+            >
+              <Text style={styles.loginButton}>Update Hotel</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
       </View>
-      <Image
-        style={styles.logo1}
-        source={{
-          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-        }}
-      />
-    </View>
+      {loading ? <CustomLoading /> : null}
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  homelogo: {
-    width: 400,
-    height: 20,
-    marginTop: -5,
-    marginLeft: 0,
-  },
-  rect: {
-    width: 360,
-    height: 150,
-    backgroundColor: "rgba(255,255,255,1)",
-    borderRadius: 22,
-    shadowColor: "rgba(208,194,194,1)",
-    shadowOffset: {
-      width: 5,
-      height: 5,
-    },
-    elevation: 39,
-    shadowOpacity: 1,
-    marginTop: 20,
-    marginLeft: 14,
-    shadowRadius: 13,
-  },
-
-  tinyLogo: {
-    width: 357,
-    height: 170,
-    marginBottom: -20,
-    marginTop: -15,
-    borderRadius: 25,
-    marginLeft: 1,
   },
   nameText: {
     color: "#6D7B8D",
@@ -335,14 +290,38 @@ const styles = StyleSheet.create({
     borderColor: "#560319",
   },
   textInput: {
-    height: 40,
+    height: 50,
     width: 320,
     textAlign: "center",
     fontSize: 15,
-    borderRadius: 25,
+    borderRadius: 15,
     marginTop: 10,
     marginLeft: 36,
     borderWidth: 1,
+    borderColor: "#560319",
+  },
+  address: {
+    height: 55,
+    width: 320,
+    textAlign: "center",
+    fontSize: 15,
+    borderRadius: 15,
+    marginTop: 10,
+    marginLeft: 36,
+    borderWidth: 1,
+    marginBottom: 10,
+    borderColor: "#560319",
+  },
+  description: {
+    height: 75,
+    width: 320,
+    textAlign: "center",
+    fontSize: 15,
+    borderRadius: 15,
+    marginTop: 10,
+    marginLeft: 36,
+    borderWidth: 1,
+    marginBottom: 10,
     borderColor: "#560319",
   },
   dropdown: {
@@ -406,5 +385,71 @@ const styles = StyleSheet.create({
     height: 50,
     marginTop: -1,
     marginLeft: 0,
+  },
+  ImageTextInput: {
+    width: "50%",
+    height: 50,
+    borderColor: "grey",
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingLeft: 10,
+    color: "gray",
+    marginLeft: "10%",
+    marginTop: "5%",
+  },
+  imageUploadField: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: "5%",
+  },
+
+  ImageTextInput: {
+    width: "50%",
+    height: 50,
+    borderColor: "grey",
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingLeft: 10,
+    color: "gray",
+    marginLeft: "10%",
+    marginTop: "5%",
+  },
+  uploadButton: {
+    width: "30%",
+    height: "30%",
+    marginRight: "20%",
+    backgroundColor: "#E8A317",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 50,
+    marginTop: "5%",
+    marginLeft: responsiveWidth(2),
+    fontFamily: "Times New Roman",
+  },
+  textInputnew: {
+    width: "80%",
+    height: 40,
+    backgroundColor: "white",
+    borderRadius: 10,
+    paddingLeft: 10,
+    marginLeft: "10%",
+    marginTop: "5%",
+    borderColor: "grey",
+    borderWidth: 1,
+  },
+  item: {
+    padding: 17,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  arrowHeader: {
+    paddingHorizontal: "5%",
+    marginTop: "12%",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });

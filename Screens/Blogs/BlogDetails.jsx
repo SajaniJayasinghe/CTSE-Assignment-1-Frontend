@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Image,
@@ -12,15 +12,15 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
 import { useRoute } from "@react-navigation/native";
 
-export default function HotelDetails({ route, navigation }) {
-  const [hotel, sethotel] = useState([]);
+export default function BlogDetails({ route, navigation }) {
+  const [blog, setblog] = useState("");
 
-  const getHotel = async () => {
+  const getBlog = async () => {
     await axios
-      .get(`http://localhost:8080/api/hotels/${route.params}`)
+      .get(`http://localhost:8080/api/blog/getBlog/${route.params}`)
       .then((res) => {
         if (res.data.success) {
-          sethotel(res.data.existinghotel);
+          setblog(res.data.existingblog);
         }
       })
       .catch((err) => {
@@ -28,21 +28,18 @@ export default function HotelDetails({ route, navigation }) {
       });
   };
   useEffect(() => {
-    getHotel();
-    console.log(route.params);
+    getBlog();
   }, []);
 
-  const deletehotel = async () => {
-    const hID = route.params.hID;
-    Alert.alert("Are you sure?", "This will permanently delete Hotel!", [
+  const deleteblog = async (id) => {
+    Alert.alert("Are you sure?", "This will permanently delete Blog!", [
       {
         text: "OK",
         onPress: async () => {
-          console.log(id);
           axios
-            .delete(`http://localhost:8080/api/hotels/delete/${hID}`)
+            .delete(`http://localhost:8080/api/blog/delete/${id}`)
             .then((res) => {
-              navigation.push("HotelHome");
+              navigation.push("BlogsHome");
             })
             .catch((e) => {
               console.error(e);
@@ -69,16 +66,17 @@ export default function HotelDetails({ route, navigation }) {
           fontFamily: "Times New Roman",
         }}
       >
-        {hotel.name}
+        {" "}
+        {blog.blogName}
       </Text>
       <View style={styles.rect}>
-        <Image style={styles.tinyLogo} source={{ uri: hotel.picture }} />
+        <Image style={styles.tinyLogo} source={{ uri: blog.picture }} />
       </View>
       <View>
         <Text
           style={{
             marginLeft: 20,
-            marginTop: 27,
+            marginTop: 40,
             fontSize: 19,
             fontWeight: "bold",
             fontFamily: "Times New Roman",
@@ -95,7 +93,7 @@ export default function HotelDetails({ route, navigation }) {
           pagingEnabled
           borderWidth={1}
           width={369}
-          height={100}
+          height={80}
           marginLeft={10}
           borderRadius={30}
           borderColor="#A9A9A9"
@@ -104,117 +102,111 @@ export default function HotelDetails({ route, navigation }) {
           <Image
             style={styles.tinyLogo2}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679468287/1-removebg-preview_okhsn3.png",
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483250/music-removebg-preview_deu4xd.png",
             }}
           />
           <Text
             style={{
-              marginLeft: -43,
-              marginTop: 70,
+              marginLeft: -48,
+              marginTop: 55,
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
               color: "#52595D",
             }}
           >
-            Wifi
+            Music
           </Text>
           <Image
             style={styles.tinyLogo3}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679468938/download-removebg-preview_xreebs.png",
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/pho-removebg-preview_kijiez.png",
             }}
           />
           <Text
             style={{
-              marginLeft: -45,
-              marginTop: 70,
+              marginLeft: -90,
+              marginTop: 55,
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
               color: "#52595D",
             }}
           >
-            Foods
+            Photography
           </Text>
           <Image
             style={styles.tinyLogo4}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679469173/2_kxc3wg.png",
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/Screenshot_2023-03-22_at_16.35.13-removebg-preview_m7iojm.png",
             }}
           />
           <Text
             style={{
-              marginLeft: -40,
-              marginTop: 70,
+              marginLeft: -48,
+              marginTop: 55,
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
               color: "#52595D",
             }}
           >
-            A/C
+            Dance
           </Text>
           <Image
             style={styles.tinyLogo5}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679469394/p-removebg-preview_lzlkak.png",
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/ga-removebg-preview_xtsstk.png",
             }}
           />
           <Text
             style={{
-              marginLeft: -60,
-              marginTop: 70,
+              marginLeft: -50,
+              marginTop: 55,
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
               color: "#52595D",
             }}
           >
-            Parking
-          </Text>
-          <Image
-            style={styles.tinyLogo4}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679469557/pool-removebg-preview_zputhg.png",
-            }}
-          />
-          <Text
-            style={{
-              marginLeft: -45,
-              marginTop: 70,
-              fontSize: 18,
-              fontWeight: "bold",
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-            }}
-          >
-            Pool
+            Games
           </Text>
         </ScrollView>
       </View>
-      <View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("UpdateHotelDetails", hotel._id)}
-        >
-          <Icon
-            name="edit"
-            size={23}
-            color="black"
-            style={{
-              marginTop: 10,
-              marginLeft: 270,
-              marginBottom: -30,
-              borderRadius: 30,
-            }}
-          />
-        </TouchableOpacity>
+      <Text
+        style={{
+          marginLeft: 30,
+          fontSize: 20,
+          marginTop: 25,
+          fontWeight: "bold",
+          fontFamily: "Times New Roman",
+          color: "grey",
+        }}
+      >
+        Description {"\n"}
+      </Text>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("UpdateBlog", blog._id)}
+      >
+        <Icon
+          name="edit"
+          size={23}
+          color="black"
+          style={{
+            marginTop: -43,
+            marginLeft: 270,
+            marginBottom: -30,
+            borderRadius: 30,
+          }}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity>
         <Icon
           name="delete-forever"
-          onPress={() => deletehotel(hotel._id)}
+          onPress={() => deleteblog(blog._id)}
           style={styles.icon}
         ></Icon>
-      </View>
+      </TouchableOpacity>
       <ScrollView>
         <View style={styles.rect1}>
           <Text
@@ -227,7 +219,7 @@ export default function HotelDetails({ route, navigation }) {
               marginTop: 10,
             }}
           >
-            {hotel.name}
+            {blog.blogName} - {blog.type}
           </Text>
           <Image
             style={styles.tinyLogo6}
@@ -239,39 +231,20 @@ export default function HotelDetails({ route, navigation }) {
             style={{
               marginLeft: 40,
               fontSize: 15,
-              marginTop: 3,
+              marginTop: -13,
               fontFamily: "Times New Roman",
               color: "#52595D",
               fontWeight: "bold",
             }}
           >
-            {hotel.address}
-            {"\n"}
-          </Text>
-          <Image
-            style={styles.tinyLogo7}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679730544/pngtree-phone-icon-png-image_5065646-removebg-preview_htdi2u.png",
-            }}
-          />
-          <Text
-            style={{
-              marginLeft: 40,
-              fontSize: 15,
-              marginTop: 2,
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-              fontWeight: "bold",
-            }}
-          >
-            {hotel.phone}
+            {blog.date}
             {"\n"}
           </Text>
           <Text
             style={{
               marginLeft: 20,
               fontSize: 15,
-              marginTop: 10,
+              marginTop: 15,
               fontFamily: "Times New Roman",
               color: "#52595D",
               textAlign: "justify",
@@ -279,7 +252,7 @@ export default function HotelDetails({ route, navigation }) {
               marginRight: 20,
             }}
           >
-            {hotel.description}
+            {blog.description}
           </Text>
         </View>
       </ScrollView>
@@ -291,7 +264,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-
   rect: {
     width: 357,
     height: 167,
@@ -305,7 +277,7 @@ const styles = StyleSheet.create({
     elevation: 39,
     shadowOpacity: 1,
     marginTop: 20,
-    marginLeft: 15,
+    marginLeft: 14,
     shadowRadius: 13,
   },
   rect1: {
@@ -326,9 +298,9 @@ const styles = StyleSheet.create({
   },
   tinyLogo: {
     width: 357,
-    height: 170,
+    height: 200,
     marginBottom: -20,
-    marginTop: -1,
+    marginTop: -10,
     borderRadius: 5,
     marginLeft: 1,
   },
@@ -336,49 +308,49 @@ const styles = StyleSheet.create({
     width: 46,
     height: 46,
     marginBottom: -20,
-    marginTop: 15,
+    marginTop: 8,
     borderRadius: 100,
-    marginLeft: 20,
+    marginLeft: 30,
   },
   tinyLogo3: {
-    width: 50,
-    height: 50,
+    width: 76,
+    height: 76,
     marginBottom: -20,
-    marginTop: 15,
-    borderRadius: 100,
-    marginLeft: 33,
-  },
-  tinyLogo4: {
-    width: 50,
-    height: 50,
-    marginBottom: -20,
-    marginTop: 15,
-    borderRadius: 100,
-    marginLeft: 20,
-  },
-  tinyLogo5: {
-    width: 50,
-    height: 50,
-    marginBottom: -20,
-    marginTop: 15,
+    marginTop: -8,
     borderRadius: 100,
     marginLeft: 28,
   },
-  tinyLogo6: {
-    width: 15,
-    height: 15,
+  tinyLogo4: {
+    width: 46,
+    height: 46,
     marginBottom: -20,
-    marginTop: 10,
+    marginTop: 8,
     borderRadius: 100,
-    marginLeft: 18,
+    marginLeft: 25,
+  },
+  tinyLogo5: {
+    width: 46,
+    height: 46,
+    marginBottom: -20,
+    marginTop: 8,
+    borderRadius: 100,
+    marginLeft: 35,
+  },
+  tinyLogo6: {
+    width: 18,
+    height: 18,
+    marginBottom: -20,
+    marginTop: 13,
+    borderRadius: 100,
+    marginLeft: 19,
   },
   tinyLogo7: {
-    width: 15,
-    height: 15,
+    width: 46,
+    height: 46,
     marginBottom: -20,
-    marginTop: 0,
+    marginTop: 8,
     borderRadius: 100,
-    marginLeft: 18,
+    marginLeft: 32,
   },
   icon: {
     color: "#8B0000",
@@ -386,6 +358,6 @@ const styles = StyleSheet.create({
     height: 60,
     width: 40,
     marginLeft: 330,
-    marginTop: 5,
+    marginTop: -45,
   },
 });

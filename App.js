@@ -33,6 +33,14 @@ import UpdateHotelDetails from "./Screens/Hotels/UpdateHotelDetails";
 import HotelList from "./Screens/Hotels/HotelList";
 import SpecificHotel from "./Screens/Hotels/SpecificHotel";
 
+//Randy
+import AddBlog from "./Screens/Blogs/AddBlog";
+import BlogsHome from "./Screens/Blogs/BlogsHome";
+import SpecificBlog from "./Screens/Blogs/SpecificBlog";
+import BlogDetails from "./Screens/Blogs/BlogDetails";
+import UpdateBlog from "./Screens/Blogs/UpdateBlog";
+import BlogList from "./Screens/Blogs/BlogList";
+
 export default function App() {
   const Stack = createNativeStackNavigator();
 
@@ -75,6 +83,15 @@ export default function App() {
         />
         <Stack.Screen name="HotelList" component={HotelList} />
         <Stack.Screen name="SpecificHotel" component={SpecificHotel} />
+
+        {/* Randy */}
+
+        <Stack.Screen name="AddBlog" component={AddBlog} />
+        <Stack.Screen name="BlogsHome" component={BlogsHome} />
+        <Stack.Screen name="SpecificBlog" component={SpecificBlog} />
+        <Stack.Screen name="BlogDetails" component={BlogDetails} />
+        <Stack.Screen name="UpdateBlog" component={UpdateBlog} />
+        <Stack.Screen name="BlogList" component={BlogList} />
       </Stack.Navigator>
     </NavigationContainer>
   );
