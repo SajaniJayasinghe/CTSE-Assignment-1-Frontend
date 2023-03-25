@@ -23,7 +23,7 @@ export default function HotelDetails({ navigation }) {
       address: route.params.address,
       picture: route.params.picture,
       facilities: route.params.facilities,
-      mobile: route.params.mobile,
+      phone: route.params.phone,
     };
     sethotel(data);
   }, []);

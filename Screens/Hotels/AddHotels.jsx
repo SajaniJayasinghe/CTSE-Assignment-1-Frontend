@@ -31,10 +31,10 @@ export default function AddHotels({ navigation }) {
   const [hotel_name, sethotel_name] = useState("");
   const [description, setdescription] = useState("");
   const [address, setaddress] = useState("");
-  const [mobile, setmobile] = useState("");
+  const [phone, setphone] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageUploadStatus, setImageUploadStatus] = useState(
-    "Choose Event Picture"
+    "Choose Hotel Picture"
   );
   const [validationErrors, setValidationErrors] = useState({});
 
@@ -54,14 +54,14 @@ export default function AddHotels({ navigation }) {
     setLoading(true);
     payload.append("hotel_name", hotel_name);
     payload.append("description", description);
-    payload.append("image", {
+    payload.append("picture", {
       uri: image,
       type: "image/jpeg",
       name: "image.jpg",
     });
     payload.append("address", address);
 
-    payload.append("mobile", mobile);
+    payload.append("phone", phone);
 
     //for multiple selection
     if (selectedItems.length > 0) {
@@ -217,8 +217,8 @@ export default function AddHotels({ navigation }) {
             <TextInput
               placeholder="Enter Contact Number"
               style={styles.textInput}
-              onChange={(e) => setmobile(e.nativeEvent.text)}
-              value={mobile}
+              onChange={(e) => setphone(e.nativeEvent.text)}
+              value={phone}
             />
 
             <Text style={styles.nameText1}>Enter Description</Text>

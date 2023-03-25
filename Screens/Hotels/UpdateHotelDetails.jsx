@@ -9,6 +9,11 @@ import {
   ScrollView,
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
+import * as ImagePicker from "expo-image-picker";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { MultiSelect } from "react-native-element-dropdown";
+import { responsiveWidth } from "react-native-responsive-dimensions";
+import CustomLoading from "../../components/CustomLoading";
 
 export default function UpdateHotelDetails({ navigation }) {
   const data = [
@@ -18,6 +23,116 @@ export default function UpdateHotelDetails({ navigation }) {
     { label: "Pool", value: "Pool" },
     { label: "Parking", value: "Parking" },
   ];
+
+  const [hotel_name, sethotel_name] = useState("");
+  const [description, setdescription] = useState("");
+  const [picture, setpicture] = useState("");
+  const [address, setaddress] = useState("");
+  const [phone, setphone] = useState("");
+  const [facilities, setfacilities] = useState("");
+  const [hotelID, sethotelID] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [imageUploadStatus, setImageUploadStatus] = useState(
+    "Choose Event Picture"
+  );
+  const [validationErrors, setValidationErrors] = useState({});
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    sethotelID(route.params.hotelID);
+    settype(route.params.type);
+    sethotel_name(route.params.hotel_name);
+    setdescription(route.params.description);
+    setpicture(route.params.picture);
+    setaddress(route.params.address);
+    setphone(route.params.phone);
+    setfacilities(route.params.facilities);
+  }, []);
+  //For Multiple selection
+  const renderItem = (item) => {
+    return (
+      <View style={styles.item}>
+        <Text style={styles.selectedTextStyle}>{item.label}</Text>
+      </View>
+    );
+  };
+
+  console.log(hotelID);
+
+  const updateHotel = () => {
+    const URL = `https://travel-go.herokuapp.com/api/hotels/update/${hotelID}`;
+
+    const payload = new FormData();
+    setLoading(true);
+    payload.append("hotel_name", hotel_name);
+    payload.append("description", description);
+    payload.append("picture", {
+      uri: image,
+      type: "image/jpeg",
+      name: "image.jpg",
+    });
+    payload.append("address", address);
+    payload.append("phone", phone);
+    payload.append("facilities", facilities);
+
+    //for multiple selection
+    if (selectedItems.length > 0) {
+      for (var i = 0; i < selectedItems.length; i++) {
+        payload.append(`type[${i}]`, selectedItems[i]);
+      }
+    }
+
+    axios
+      .put(URL, payload, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        Alert.alert(
+          "Hotel Updated",
+          "Your Hotel has updated successfully!!",
+          [
+            {
+              text: "OK",
+              onPress: () => navigation.navigate("AdminDashboard"),
+            },
+          ],
+          { cancelable: false }
+        );
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoading(false);
+        Alert.alert(
+          "Error",
+          "Updating Unsuccessful",
+          [{ text: "Check Again" }],
+          { cancelable: false }
+        );
+      });
+  };
+
+  //for Image upload
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      setImageUploadStatus("Image Uploaded");
+    } else {
+      setImage(null);
+      setImageUploadStatus("Choose Event Picture");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -60,61 +175,94 @@ export default function UpdateHotelDetails({ navigation }) {
           <TextInput
             placeholder="Enter Hotel Name here"
             style={styles.textInput}
-            // value={donatorName}
-            // onChange={(e) => setdonatorName(e.nativeEvent.text)}
+            value={hotel_name}
+            onChange={(e) => sethotel_name(e.nativeEvent.text)}
           />
           <Text style={styles.nameText1}>Select Facilities</Text>
-          <Dropdown
-            style={styles.dropdown}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={data}
+          <MultiSelect
+            style={styles.textInput}
+            placeholderStyle={{
+              fontSize: 14,
+              color: "grey",
+            }}
             search
-            maxHeight={300}
+            data={data}
             labelField="label"
             valueField="value"
             placeholder="Select Facilities"
             searchPlaceholder="Search..."
-            statusBarIsTranslucent={true}
-            // value={value}
-            // onChange={(item) => {
-            //     setrole(item.value);
-            // }}
-            // renderLeftIcon={() => (
-            // )}
+            value={selectedItems}
+            onChange={(item) => {
+              setSelectedItems(item);
+            }}
+            renderItem={renderItem}
+            renderSelectedItem={(item, unSelect) => (
+              <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    padding: 10,
+                    backgroundColor: "white",
+                    borderRadius: 5,
+                    gap: 10,
+                    marginBottom: "9%",
+                    marginLeft: "8%",
+                  }}
+                >
+                  <Text style={styles.textSelectedStyle}>{item.label}</Text>
+                  <Icon name="delete" size={20} color="red" />
+                </View>
+              </TouchableOpacity>
+            )}
           />
+          {validationErrors.type ? (
+            <Text style={styles.errorTextSelection}>
+              {validationErrors.type}
+            </Text>
+          ) : (
+            ""
+          )}
+
           <Text style={styles.nameText1}>Enter Hotel Address</Text>
           <TextInput
             placeholder="Enter Hotel Address here"
             style={styles.textInput}
-            // value={donatorName}
-            // onChange={(e) => setdonatorName(e.nativeEvent.text)}
+            value={address}
+            onChange={(e) => setaddress(e.nativeEvent.text)}
           />
 
           <Text style={styles.nameText1}>Enter Contact Number</Text>
           <TextInput
             placeholder="Enter Contact Number"
             style={styles.textInput}
-            // value={donatorName}
-            // onChange={(e) => setdonatorName(e.nativeEvent.text)}
+            value={phone}
+            onChange={(e) => setphone(e.nativeEvent.text)}
           />
 
           <Text style={styles.nameText1}>Enter Description</Text>
           <TextInput
             placeholder="Enter Description here"
             style={styles.nameText2}
-            // value={donatorName}
-            // onChange={(e) => setdonatorName(e.nativeEvent.text)}
+            value={description}
+            onChange={(e) => setdescription(e.nativeEvent.text)}
           />
+          <Text style={styles.nameText2}>Upload Hotel Image</Text>
+          <TextInput
+            placeholder="Upload Hotel Image"
+            style={styles.textInput}
+            value={picture}
+            onChange={(e) => setpicture(e.nativeEvent.text)}
+          />
+          <TouchableOpacity
+            style={[styles.containerx, styles.materialButtonDark1]}
+            onPress={() => {
+              updateHotel();
+            }}
+          >
+            <Text style={styles.loginButton}>Update Hotel</Text>
+          </TouchableOpacity>
         </ScrollView>
-        <TouchableOpacity
-          style={[styles.containerx, styles.materialButtonDark1]}
-          onPress={() => navigation.navigate("HotelDetails")}
-        >
-          <Text style={styles.loginButton}>Update Hotel</Text>
-        </TouchableOpacity>
       </View>
       <Image
         style={styles.logo1}

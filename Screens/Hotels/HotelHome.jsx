@@ -192,7 +192,7 @@ export default function HotelHome({ navigation }) {
                     description: hotel.description,
                     address: hotel.address,
                     picture: hotel.picture,
-                    mobile: hotel.mobile,
+                    phone: hotel.phone,
                   })
                 }
               >

@@ -8,8 +8,29 @@ import {
   ScrollView,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import axios from "axios";
 
 export default function SpecificHotel({ navigation }) {
+  const [hotel, sethotel] = useState([]);
+  const [filterEvent, setfilterEvent] = useState([]);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    axios.get("http://localhost:8080/api/hotels/gethotel").then((res) => {
+      if (res.data.success) {
+        sethotel(res.data.existinghotels);
+      }
+    });
+  }, []);
+
+  const searchFunc = (text) => {
+    return hotel.filter((hotel) => hotel.hotel_name === text);
+  };
+
+  useEffect(() => {
+    setfilterEvent(searchFunc(search));
+  }, [search]);
+
   return (
     <View style={styles.container}>
       <Image
