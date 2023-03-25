@@ -33,19 +33,8 @@ export default function SpecificBlog({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.homelogo}
-        source={{
-          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-        }}
-      />
       <View style={styles.rect}>
-        <Image
-          style={styles.tinyLogo}
-          source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481372/3_vgqveh.jpg",
-          }}
-        />
+        <Image style={styles.tinyLogo} source={{ uri: blog.picture }} />
       </View>
       <View>
         <Text

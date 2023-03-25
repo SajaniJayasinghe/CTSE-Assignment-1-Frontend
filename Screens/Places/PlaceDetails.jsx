@@ -259,7 +259,7 @@ export default function PlaceDetails({ navigation }) {
               fontFamily: "Times New Roman",
               color: "#0C090A",
               fontWeight: "bold",
-              marginTop: 15,
+              marginTop: -15,
             }}
           >
             {place.name}

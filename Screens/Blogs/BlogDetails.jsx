@@ -85,93 +85,8 @@ export default function BlogDetails({ route, navigation }) {
         >
           Amenities
         </Text>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          scrollEventThrottle={200}
-          decelerationRate="fast"
-          pagingEnabled
-          borderWidth={1}
-          width={369}
-          height={80}
-          marginLeft={10}
-          borderRadius={30}
-          borderColor="#A9A9A9"
-          marginTop={10}
-        >
-          <Image
-            style={styles.tinyLogo2}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483250/music-removebg-preview_deu4xd.png",
-            }}
-          />
-          <Text
-            style={{
-              marginLeft: -48,
-              marginTop: 55,
-              fontSize: 18,
-              fontWeight: "bold",
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-            }}
-          >
-            Music
-          </Text>
-          <Image
-            style={styles.tinyLogo3}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/pho-removebg-preview_kijiez.png",
-            }}
-          />
-          <Text
-            style={{
-              marginLeft: -90,
-              marginTop: 55,
-              fontSize: 18,
-              fontWeight: "bold",
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-            }}
-          >
-            Photography
-          </Text>
-          <Image
-            style={styles.tinyLogo4}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/Screenshot_2023-03-22_at_16.35.13-removebg-preview_m7iojm.png",
-            }}
-          />
-          <Text
-            style={{
-              marginLeft: -48,
-              marginTop: 55,
-              fontSize: 18,
-              fontWeight: "bold",
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-            }}
-          >
-            Dance
-          </Text>
-          <Image
-            style={styles.tinyLogo5}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/ga-removebg-preview_xtsstk.png",
-            }}
-          />
-          <Text
-            style={{
-              marginLeft: -50,
-              marginTop: 55,
-              fontSize: 18,
-              fontWeight: "bold",
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-            }}
-          >
-            Games
-          </Text>
-        </ScrollView>
+
+        {/* ScrollView  */}
       </View>
       <Text
         style={{
@@ -221,17 +136,12 @@ export default function BlogDetails({ route, navigation }) {
           >
             {blog.blogName} - {blog.type}
           </Text>
-          <Image
-            style={styles.tinyLogo6}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679471650/2838912_zdihvz.png",
-            }}
-          />
+
           <Text
             style={{
-              marginLeft: 40,
+              marginLeft: 20,
               fontSize: 15,
-              marginTop: -13,
+              marginTop: 13,
               fontFamily: "Times New Roman",
               color: "#52595D",
               fontWeight: "bold",

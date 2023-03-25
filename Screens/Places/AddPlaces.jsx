@@ -195,13 +195,13 @@ export default function AddPlaces({ navigation }) {
                   style={{
                     flexDirection: "row",
                     justifyContent: "space-between",
-                    padding: 20,
+                    padding: 10,
                     backgroundColor: "white",
                     borderRadius: 5,
-                    gap: 20,
-                    marginTop: "10%",
-                    marginBottom: "10%",
-                    marginLeft: "8%",
+                    gap: 15,
+                    marginTop: "5%",
+                    marginBottom: "9%",
+                    marginLeft: "18%",
                   }}
                 >
                   <Text style={styles.textSelectedStyle}>{item.label}</Text>

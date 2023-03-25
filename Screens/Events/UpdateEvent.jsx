@@ -129,12 +129,12 @@ export default function UpdateEvent({ route, navigation }) {
             textAlign: "center",
             fontSize: 36,
             marginLeft: -10,
-            marginTop: 15,
+            marginTop: 35,
             color: "#3F000F",
             fontFamily: "Times New Roman",
           }}
         >
-          Update Blog
+          Update Event
         </Text>
 
         <ScrollView>
@@ -191,13 +191,6 @@ export default function UpdateEvent({ route, navigation }) {
               value={event_name}
               onChange={(e) => setevent_name(e.nativeEvent.text)}
             />
-            {/* <Text style={styles.nameText2}>Enter Location</Text>
-            <TextInput
-              placeholder="Enter Location"
-              value={location}
-              onChange={(e) => setlocation(e.nativeEvent.text)}
-              style={styles.textInput}
-            /> */}
             <Text style={styles.nameText2}>Enter Date </Text>
             <TextInput
               placeholder="Enter Date"
@@ -205,13 +198,6 @@ export default function UpdateEvent({ route, navigation }) {
               value={date}
               onChange={(e) => setdate(e.nativeEvent.text)}
             />
-            {/* <Text style={styles.nameText2}>Enter Ticket Price </Text>
-            <TextInput
-              placeholder="Enter Ticket Price "
-              style={styles.textInput}
-              value={ticket_price}
-              onChange={(e) => setticket_price(e.nativeEvent.text)}
-            /> */}
 
             <Text style={styles.decsription}>Enter Description</Text>
             <ScrollView>

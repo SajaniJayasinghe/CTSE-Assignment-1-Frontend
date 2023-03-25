@@ -273,6 +273,8 @@ export default function AdminDashboard({ route, navigation }) {
                 >
                   <Image
                     style={styles.tinyLogo}
+                    delay={0}
+                    duration={6000}
                     source={{ uri: event.picture }}
                   />
                   <Text

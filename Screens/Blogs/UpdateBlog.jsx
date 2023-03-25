@@ -44,12 +44,11 @@ export default function UpdateBlog({ route, navigation }) {
       .get(`http://localhost:8080/api/blog/getBlog/${route.params}`)
       .then((res) => {
         if (res.data.success) {
-          settype(res.data.existingblog.type);
+          setSelectedItems(res.data.existingblog.type);
           setblogName(res.data.existingblog.blogName);
           setdescription(res.data.existingblog.description);
           setpicture(res.data.existingblog.picture);
           setdate(res.data.existingblog.date);
-          settype(res.data.existingblog.type);
         }
       })
       .catch((err) => {
