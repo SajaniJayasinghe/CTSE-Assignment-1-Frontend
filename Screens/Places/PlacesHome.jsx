@@ -192,16 +192,14 @@ export default function PlacesHome({ navigation }) {
         </View>
       </View>
       <View>
-        {/* <TouchableOpacity
-              onPress={() => navigation.navigate("AddPlaces")}
-                >
-                 <Image
-                    style={styles.addbutton}
-                    source={{
-                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679429885/11-removebg-preview_l55wvj.png",
-                    }}
-                />
-            </TouchableOpacity>   */}
+        <TouchableOpacity onPress={() => navigation.navigate("AddPlaces")}>
+          <Image
+            style={styles.addbutton}
+            source={{
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679429885/11-removebg-preview_l55wvj.png",
+            }}
+          />
+        </TouchableOpacity>
       </View>
     </>
   );

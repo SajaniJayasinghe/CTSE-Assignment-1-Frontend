@@ -8,7 +8,6 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
-import { Dropdown } from "react-native-element-dropdown";
 import * as ImagePicker from "expo-image-picker";
 import CustomLoading from "../../components/CustomLoading";
 import axios from "axios";

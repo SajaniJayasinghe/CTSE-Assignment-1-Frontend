@@ -13,6 +13,8 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 
 export default function PlaceDetails({ navigation }) {
   const [place, setPlace] = useState([]);
+  const [facilityurl, setFacilityurl] = useState("");
+  const [facilityname, setFacilityname] = useState("");
   const route = useRoute();
 
   useEffect(() => {
@@ -29,20 +31,10 @@ export default function PlaceDetails({ navigation }) {
 
     const setData = (facilityData) => {
       if (facilityData.includes("wifi")) {
-        return (
-          <View>
-            <Image
-              style={styles.tinyLogo3}
-              source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679468938/download-removebg-preview_xreebs.png",
-              }}
-            />
-            <Text>Wifi</Text>
-          </View>
-          // console.log("wifi")
+        setFacilityurl(
+          "https://res.cloudinary.com/nibmsa/image/upload/v1679468287/1-removebg-preview_okhsn3.png"
         );
-      } else {
-        return null;
+        setFacilityname("Wifi");
       }
     };
     setData(data.facilities);
@@ -140,7 +132,7 @@ export default function PlaceDetails({ navigation }) {
           <Image
             style={styles.tinyLogo3}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679468287/1-removebg-preview_okhsn3.png",
+              uri: facilityurl,
             }}
           />
           <Text
@@ -153,10 +145,10 @@ export default function PlaceDetails({ navigation }) {
               color: "#52595D",
             }}
           >
-            Wifi
+            {facilityname}
           </Text>
 
-          <Image
+          {/* <Image
             style={styles.tinyLogo3}
             source={{
               uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679468938/download-removebg-preview_xreebs.png",
@@ -209,7 +201,7 @@ export default function PlaceDetails({ navigation }) {
             }}
           >
             No Smoking
-          </Text>
+          </Text> */}
         </ScrollView>
       </View>
 
