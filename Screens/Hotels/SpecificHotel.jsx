@@ -33,12 +33,6 @@ export default function SpecificHotel({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.homelogo}
-        source={{
-          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-        }}
-      />
       <Text
         style={{
           fontWeight: "800",
@@ -205,7 +199,7 @@ export default function SpecificHotel({ navigation }) {
               marginTop: 15,
             }}
           >
-            {hotel.name}
+            Araliya Beach Resort Unawatuna {/* {hotel.name} */}
           </Text>
           <Image
             style={styles.tinyLogo6}
@@ -223,7 +217,7 @@ export default function SpecificHotel({ navigation }) {
               fontWeight: "bold",
             }}
           >
-            {hotel.address}
+            Unawatuna, Southern Province, Sri Lanka {/* {hotel.name} */}
             {"\n"}
           </Text>
           <Text
@@ -238,7 +232,15 @@ export default function SpecificHotel({ navigation }) {
               marginRight: 20,
             }}
           >
-            {hotel.description}
+            {/* {hotel.description} */}
+            Take advantage of a free breakfast buffet, a rooftop terrace, and a
+            coffee shop/cafe at Araliya Beach Resort and Spa. This resort is a
+            great place to bask in the sun with a white sand beach. Treat
+            yourself to a Thai massage at the onsite spa. Be sure to enjoy a
+            meal at any of the 4 onsite restaurants, which feature a poolside
+            location and garden views. In addition to a garden and dry
+            cleaning/laundry services, guests can connect to free in-room WiFi,
+            with speed of 50+ Mbps.
           </Text>
         </View>
       </ScrollView>

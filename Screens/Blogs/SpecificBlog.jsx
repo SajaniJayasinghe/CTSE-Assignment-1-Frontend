@@ -8,79 +8,52 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
 import { useRoute } from "@react-navigation/native";
 
-export default function AdminEventDetails({ route, navigation }) {
-  const [event, setevent] = useState("");
-  console.log(event);
+export default function SpecificBlog({ navigation }) {
+  const [blog, setblog] = useState([]);
+  const [filterBlog, setfilterBlog] = useState([]);
+  const [search, setSearch] = useState("");
 
-  const getEvent = async () => {
-    await axios
-      .get(`http://localhost:8080/api/events/${route.params}`)
-      .then((res) => {
-        if (res.data.success) {
-          setevent(res.data.Event);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
   useEffect(() => {
-    getEvent();
+    axios.get("http://localhost:8080/api/blog/getblog").then((res) => {
+      if (res.data.success) {
+        setblog(res.data.existingblogs);
+      }
+    });
   }, []);
 
-  const deleteevent = async (id) => {
-    Alert.alert("Are you sure?", "This will permanently delete Event!", [
-      {
-        text: "OK",
-        onPress: async () => {
-          axios
-            .delete(`http://localhost:8080/api/events/delete/${id}`)
-            .then((res) => {
-              navigation.push("EventsHome");
-            })
-            .catch((e) => {
-              console.error(e);
-            });
-        },
-      },
-      {
-        text: "Cancel",
-        onPress: () => console.log("Cancel Pressed"),
-      },
-    ]);
+  const searchFunc = (text) => {
+    return blog.filter((blog) => blog.blogName === text);
   };
+  useEffect(() => {
+    setfilterBlog(searchFunc(search));
+  }, [search]);
 
   return (
     <View style={styles.container}>
-      <Text
-        style={{
-          fontWeight: "800",
-          textAlign: "center",
-          fontSize: 36,
-          marginLeft: -10,
-          marginTop: 15,
-          color: "#3F000F",
-          fontFamily: "Times New Roman",
+      <Image
+        style={styles.homelogo}
+        source={{
+          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
         }}
-      >
-        {" "}
-        {event.event_name}
-      </Text>
+      />
       <View style={styles.rect}>
-        <Image style={styles.tinyLogo} source={{ uri: event.picture }} />
+        <Image
+          style={styles.tinyLogo}
+          source={{
+            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481372/3_vgqveh.jpg",
+          }}
+        />
       </View>
       <View>
         <Text
           style={{
             marginLeft: 20,
-            marginTop: 40,
+            marginTop: 27,
             fontSize: 19,
             fontWeight: "bold",
-            fontFamily: "Times New Roman",
             color: "#000000",
           }}
         >
@@ -112,7 +85,6 @@ export default function AdminEventDetails({ route, navigation }) {
               marginTop: 55,
               fontSize: 18,
               fontWeight: "bold",
-              fontFamily: "Times New Roman",
               color: "#52595D",
             }}
           >
@@ -130,7 +102,6 @@ export default function AdminEventDetails({ route, navigation }) {
               marginTop: 55,
               fontSize: 18,
               fontWeight: "bold",
-              fontFamily: "Times New Roman",
               color: "#52595D",
             }}
           >
@@ -148,7 +119,6 @@ export default function AdminEventDetails({ route, navigation }) {
               marginTop: 55,
               fontSize: 18,
               fontWeight: "bold",
-              fontFamily: "Times New Roman",
               color: "#52595D",
             }}
           >
@@ -166,7 +136,6 @@ export default function AdminEventDetails({ route, navigation }) {
               marginTop: 55,
               fontSize: 18,
               fontWeight: "bold",
-              fontFamily: "Times New Roman",
               color: "#52595D",
             }}
           >
@@ -176,111 +145,68 @@ export default function AdminEventDetails({ route, navigation }) {
       </View>
       <Text
         style={{
-          marginLeft: 30,
-          fontSize: 20,
-          marginTop: 25,
+          marginLeft: 20,
+          fontSize: 18,
+          marginTop: 20,
           fontWeight: "bold",
-          fontFamily: "Times New Roman",
-          color: "grey",
+          color: "#000000",
         }}
       >
         Description {"\n"}
       </Text>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("UpdateEvent", event._id)}
-      >
-        <Icon
-          name="edit"
-          size={23}
-          color="black"
-          style={{
-            marginTop: -43,
-            marginLeft: 270,
-            marginBottom: -30,
-            borderRadius: 30,
-          }}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity>
-        <Icon
-          name="delete-forever"
-          onPress={() => deleteevent(event._id)}
-          style={styles.icon}
-        ></Icon>
-      </TouchableOpacity>
       <ScrollView>
-        <View style={styles.rect1}>
-          <Text
-            style={{
-              marginLeft: 20,
-              fontSize: 20,
-              fontFamily: "Times New Roman",
-              color: "#0C090A",
-              fontWeight: "bold",
-              marginTop: 10,
-            }}
-          >
-            {event.event_name} - {event.type}
-          </Text>
-          <Image
-            style={styles.tinyLogo6}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679471650/2838912_zdihvz.png",
-            }}
-          />
-          <Text
-            style={{
-              marginLeft: 40,
-              fontSize: 15,
-              marginTop: 0,
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-              fontWeight: "bold",
-            }}
-          >
-            {event.location}
-            {"\n"}
-          </Text>
-          <Text
-            style={{
-              marginLeft: 40,
-              fontSize: 15,
-              marginTop: -13,
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-              fontWeight: "bold",
-            }}
-          >
-            {event.date}
-            {"\n"}
-          </Text>
-          <Text
-            style={{
-              marginLeft: 40,
-              fontSize: 15,
-              marginTop: -13,
-              fontFamily: "Times New Roman",
-              color: "#000000",
-              fontWeight: "bold",
-            }}
-          >
-            Tickect Prices : {event.ticket_price}
-          </Text>
-          <Text
-            style={{
-              marginLeft: 20,
-              fontSize: 15,
-              marginTop: 15,
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-              textAlign: "justify",
-              fontWeight: "bold",
-              marginRight: 20,
-            }}
-          >
-            {event.description}
-          </Text>
-        </View>
+        {(search === "" ? blog : filterBlog).map((blog, index) => (
+          <View key={blog + index}>
+            <View style={styles.rect1}>
+              <Text
+                style={{
+                  marginLeft: 20,
+                  fontSize: 20,
+                  fontFamily: "Times New Roman",
+                  color: "#0C090A",
+                  fontWeight: "bold",
+                  marginTop: 10,
+                }}
+              >
+                {blog.blogName} - {blog.type}
+              </Text>
+              <Image
+                style={styles.tinyLogo8}
+                source={{
+                  uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679471650/2838912_zdihvz.png",
+                }}
+              />
+              <Text
+                style={{
+                  marginLeft: 40,
+                  fontSize: 15,
+                  marginTop: -13,
+                  fontFamily: "Times New Roman",
+                  color: "#52595D",
+                  fontWeight: "bold",
+                }}
+              >
+                {blog.date}
+                {"\n"}
+              </Text>
+              <Text
+                style={{
+                  marginLeft: 20,
+                  fontSize: 15,
+                  marginTop: 15,
+                  fontFamily: "Times New Roman",
+                  color: "#52595D",
+                  textAlign: "justify",
+                  fontWeight: "bold",
+                  marginRight: 20,
+                }}
+              >
+                {" "}
+                {blog.description}
+              </Text>
+            </View>
+          </View>
+        ))}
       </ScrollView>
     </View>
   );
@@ -289,6 +215,12 @@ export default function AdminEventDetails({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  homelogo: {
+    width: 400,
+    height: 20,
+    marginTop: -5,
+    marginLeft: 0,
   },
   rect: {
     width: 357,
@@ -363,13 +295,14 @@ const styles = StyleSheet.create({
     marginLeft: 35,
   },
   tinyLogo6: {
-    width: 18,
-    height: 18,
+    width: 46,
+    height: 46,
     marginBottom: -20,
-    marginTop: 13,
+    marginTop: 8,
     borderRadius: 100,
-    marginLeft: 19,
+    marginLeft: 35,
   },
+
   tinyLogo7: {
     width: 46,
     height: 46,
@@ -377,6 +310,14 @@ const styles = StyleSheet.create({
     marginTop: 8,
     borderRadius: 100,
     marginLeft: 32,
+  },
+  tinyLogo8: {
+    width: 18,
+    height: 18,
+    marginBottom: -20,
+    marginTop: 13,
+    borderRadius: 100,
+    marginLeft: 19,
   },
   icon: {
     color: "#8B0000",

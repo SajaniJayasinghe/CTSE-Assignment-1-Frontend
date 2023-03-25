@@ -55,6 +55,7 @@ export default function AddEvent({ navigation }) {
       payload.append("date", date);
       payload.append("ticket_price", ticket_price);
 
+      console.log(payload);
       //for multiple selection
       if (selectedItems.length > 0) {
         for (var i = 0; i < selectedItems.length; i++) {
@@ -126,7 +127,7 @@ export default function AddEvent({ navigation }) {
             marginLeft: -10,
             marginTop: 0,
             color:"#3F000F",
-            fontFamily: "Times New Roman",
+
           }}
         >
        Add New Event
@@ -136,9 +137,8 @@ export default function AddEvent({ navigation }) {
           <MultiSelect
                style={styles.textInputnew}
                placeholderStyle={{
-                  fontSize: 17,
+                  fontSize: 15,
                   color: "#BCC6CC",
-                  fontFamily: "Times New Roman",
                   marginTop: 10,
                   marginBottom: 10,
                }}
@@ -157,15 +157,15 @@ export default function AddEvent({ navigation }) {
                  <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
                    <View
                      style={{
-                       flexDirection: "row",
-                       justifyContent: "space-between",
-                       padding: 20,
-                       backgroundColor: "white",
-                       borderRadius: 5,
-                       gap:20,
-                        marginTop: "10%",
-                       marginBottom: "10%",
-                       marginLeft: "8%",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      padding: 10,
+                      backgroundColor: "white",
+                      borderRadius: 5,
+                      gap: 15,
+                      marginTop: "5%",
+                      marginBottom: "9%",
+                      marginLeft: "18%",
                      }}
                    >
                      <Text style={styles.textSelectedStyle}>{item.label}</Text>
@@ -210,15 +210,13 @@ export default function AddEvent({ navigation }) {
                     onChange={(e) => setticket_price(e.nativeEvent.text)}
                     value={ticket_price}
              />
-             <Text style={styles.nameText2}>Enter Description</Text>
+             <Text style={styles.nameText}>Enter Description</Text>
                 <TextInput
                     placeholder="Enter Description"
                     style={styles.nameText3}
                     value={description}
                     onChange={(e) => setdescription(e.nativeEvent.text)}
                 />
-
-
               <View style={styles.imageUploadField}>
                <TextInput
                  style={styles.ImageTextInput}
@@ -244,9 +242,6 @@ export default function AddEvent({ navigation }) {
                 <Text style={styles.loginButton} >Add Event</Text>
             </TouchableOpacity>
           </ScrollView>
-
-
-
         </View>
       {loading ? < CustomLoading/> : null}
         </>
@@ -286,26 +281,7 @@ const styles = StyleSheet.create({
         marginLeft:150,
         borderRadius:25
       },
-      dropdown: {
-        margin: 16,
-        height: 40,
-        backgroundColor: "white",
-        borderRadius: 25,
-        padding: 12,
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 1,
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 1.41,
-        elevation: 2,
-        borderColor: "#560319",
-        borderWidth: 1,
-        marginTop: 10,
-        width: 320,
-        marginLeft: 36,
-      },
+
       nameText:{
         color: "#6D7B8D",
         fontSize: 16,
@@ -325,40 +301,36 @@ const styles = StyleSheet.create({
         fontSize: 16,
         lineHeight: 18,
         marginTop: -5,
-        marginLeft: 36,
-        fontFamily: "Times New Roman",
+        marginLeft: 36
     },
     nameText2:{
         color: "#6D7B8D",
         fontSize: 16,
         lineHeight: 18,
         marginTop: 5,
-        marginLeft: 36,
-        fontFamily: "Times New Roman",
+        marginLeft: 36
     },
     nameText3:{
         height: 80,
         width: 320,
         textAlign: "center",
         fontSize: 15,
-        borderRadius: 25,
+        borderRadius: 20,
         marginTop:7,
         marginLeft: 36,
         borderWidth: 1,
-        borderColor:"#560319",
-        fontFamily: "Times New Roman",
+        borderColor:"#560319"
     },
     textInput: {
-        height: 35,
+        height: 45,
         width: 320,
         textAlign: "center",
         fontSize: 15,
-        borderRadius: 25,
+        borderRadius: 15,
         marginTop: 7,
         marginLeft: 36,
         borderWidth: 1,
-        borderColor:"#560319",
-        fontFamily: "Times New Roman",
+        borderColor:"#560319"
       },
       containerx: {
         backgroundColor: "#FFFFFF",
@@ -394,7 +366,6 @@ loginButton:{
     fontWeight: "bold",
     fontSize: 18,
     lineHeight: 18,
-    fontFamily: "Times New Roman",
     
   },
   imageUploadField: {
@@ -416,12 +387,6 @@ loginButton:{
     marginLeft:"10%",
     marginTop:"5%"
   },
-  uploadTxt: {
-    color: "black",
-    fontSize: "20px",
-    fontWeight: "bold",
-    fontFamily: "Times New Roman",
-  },
   uploadButton: {
     width: "30%",
     height: "30%",
@@ -433,7 +398,7 @@ loginButton:{
     minHeight: 50,
     marginTop:"5%",
     marginLeft: responsiveWidth(2),
-    fontFamily: "Times New Roman",
+
   },
   textInputnew: {
     width: "80%",
@@ -446,5 +411,17 @@ loginButton:{
     borderColor: "grey",  
     borderWidth: 1,
   },
-
+  item: {
+    padding: 17,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  arrowHeader: {
+    paddingHorizontal: "5%",
+    marginTop: "12%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+ 
 })

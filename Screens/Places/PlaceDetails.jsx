@@ -1,3 +1,4 @@
+import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -9,47 +10,57 @@ import {
   Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import axios from "axios";
-import { useRoute } from "@react-navigation/native";
 
-export default function AdminEventDetails({ route, navigation }) {
-  const [event, setevent] = useState("");
-  console.log(event);
+export default function PlaceDetails({ navigation }) {
+  const [place, setPlace] = useState([]);
+  const [facilityurl, setFacilityurl] = useState("");
+  const [facilityname, setFacilityname] = useState("");
+  const route = useRoute();
 
-  const getEvent = async () => {
-    await axios
-      .get(`http://localhost:8080/api/events/${route.params}`)
-      .then((res) => {
-        if (res.data.success) {
-          setevent(res.data.Event);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
   useEffect(() => {
-    getEvent();
+    const data = {
+      placeid: route.params.placeID,
+      type: route.params.type,
+      name: route.params.name,
+      description: route.params.description,
+      picture: route.params.picture,
+      city: route.params.city,
+      facilities: route.params.facilities,
+    };
+    setPlace(data);
+
+    const setData = (facilityData) => {
+      if (facilityData.includes("wifi")) {
+        setFacilityurl(
+          "https://res.cloudinary.com/nibmsa/image/upload/v1679468287/1-removebg-preview_okhsn3.png"
+        );
+        setFacilityname("Wifi");
+      }
+    };
+    setData(data.facilities);
   }, []);
 
-  const deleteevent = async (id) => {
-    Alert.alert("Are you sure?", "This will permanently delete Event!", [
+  const deletePlace = async () => {
+    const placeID = route.params.placeID;
+    Alert.alert("Are you sure you want to delete this place?", [
       {
         text: "OK",
         onPress: async () => {
-          axios
-            .delete(`http://localhost:8080/api/events/delete/${id}`)
+          console.log(placeID);
+          await axios
+            .delete(`http://localhost:8080/api/places/delete/${placeID}`)
             .then((res) => {
-              navigation.push("EventsHome");
+              navigation.navigate("PlacesList");
             })
-            .catch((e) => {
-              console.error(e);
+            .catch((err) => {
+              console.log(err);
             });
         },
       },
       {
         text: "Cancel",
         onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
       },
     ]);
   };
@@ -64,20 +75,23 @@ export default function AdminEventDetails({ route, navigation }) {
           marginLeft: -10,
           marginTop: 15,
           color: "#3F000F",
-          fontFamily: "Times New Roman",
         }}
       >
-        {" "}
-        {event.event_name}
+        {place.name}
       </Text>
       <View style={styles.rect}>
-        <Image style={styles.tinyLogo} source={{ uri: event.picture }} />
+        <Image
+          style={styles.tinyLogo}
+          source={{
+            uri: place.picture,
+          }}
+        />
       </View>
       <View>
         <Text
           style={{
             marginLeft: 20,
-            marginTop: 40,
+            marginTop: 27,
             fontSize: 19,
             fontWeight: "bold",
             fontFamily: "Times New Roman",
@@ -86,6 +100,7 @@ export default function AdminEventDetails({ route, navigation }) {
         >
           Amenities
         </Text>
+
         <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={false}
@@ -94,100 +109,117 @@ export default function AdminEventDetails({ route, navigation }) {
           pagingEnabled
           borderWidth={1}
           width={369}
-          height={80}
+          height={100}
           marginLeft={10}
           borderRadius={30}
           borderColor="#A9A9A9"
           marginTop={10}
         >
-          <Image
-            style={styles.tinyLogo2}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483250/music-removebg-preview_deu4xd.png",
-            }}
-          />
-          <Text
-            style={{
-              marginLeft: -48,
-              marginTop: 55,
-              fontSize: 18,
-              fontWeight: "bold",
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-            }}
-          >
-            Music
-          </Text>
+          {/* {place.facilities.filter("wifi") ? (
+            <View>
+              <Image
+                style={styles.tinyLogo3}
+                source={{
+                  uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679468938/download-removebg-preview_xreebs.png",
+                }}
+              />
+              <Text>Wifi</Text>
+            </View>
+          ) : (
+            "null"
+          )} */}
+
           <Image
             style={styles.tinyLogo3}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/pho-removebg-preview_kijiez.png",
+              uri: facilityurl,
             }}
           />
           <Text
             style={{
-              marginLeft: -90,
-              marginTop: 55,
+              marginLeft: -45,
+              marginTop: 70,
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
               color: "#52595D",
             }}
           >
-            Photography
+            {facilityname}
           </Text>
-          <Image
-            style={styles.tinyLogo4}
+
+          {/* <Image
+            style={styles.tinyLogo3}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/Screenshot_2023-03-22_at_16.35.13-removebg-preview_m7iojm.png",
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679468938/download-removebg-preview_xreebs.png",
             }}
           />
           <Text
             style={{
-              marginLeft: -48,
-              marginTop: 55,
+              marginLeft: -45,
+              marginTop: 70,
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
               color: "#52595D",
             }}
           >
-            Dance
+            Foods
           </Text>
           <Image
             style={styles.tinyLogo5}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/ga-removebg-preview_xtsstk.png",
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679469394/p-removebg-preview_lzlkak.png",
             }}
           />
           <Text
             style={{
-              marginLeft: -50,
-              marginTop: 55,
+              marginLeft: -53,
+              marginTop: 70,
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
               color: "#52595D",
             }}
           >
-            Games
+            Parking
           </Text>
+          <Image
+            style={styles.tinyLogo4}
+            source={{
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679495155/tvectoricons180806148-removebg-preview_t0ngho.png",
+            }}
+          />
+          <Text
+            style={{
+              marginLeft: -75,
+              marginTop: 70,
+              fontSize: 18,
+              fontWeight: "bold",
+              fontFamily: "Times New Roman",
+              color: "#52595D",
+            }}
+          >
+            No Smoking
+          </Text> */}
         </ScrollView>
       </View>
+
       <Text
         style={{
-          marginLeft: 30,
-          fontSize: 20,
-          marginTop: 25,
+          marginLeft: 20,
+          fontSize: 18,
+          marginTop: 20,
           fontWeight: "bold",
           fontFamily: "Times New Roman",
-          color: "grey",
+          color: "#000000",
         }}
       >
         Description {"\n"}
       </Text>
+
       <TouchableOpacity
-        onPress={() => navigation.navigate("UpdateEvent", event._id)}
+        onPress={() => navigation.navigate("UpdatePlace", place)}
       >
         <Icon
           name="edit"
@@ -201,13 +233,11 @@ export default function AdminEventDetails({ route, navigation }) {
           }}
         />
       </TouchableOpacity>
-      <TouchableOpacity>
-        <Icon
-          name="delete-forever"
-          onPress={() => deleteevent(event._id)}
-          style={styles.icon}
-        ></Icon>
-      </TouchableOpacity>
+      <Icon
+        name="delete-forever"
+        style={styles.icon}
+        onPress={() => deletePlace(place._id)}
+      ></Icon>
       <ScrollView>
         <View style={styles.rect1}>
           <Text
@@ -217,10 +247,22 @@ export default function AdminEventDetails({ route, navigation }) {
               fontFamily: "Times New Roman",
               color: "#0C090A",
               fontWeight: "bold",
-              marginTop: 10,
+              marginTop: 15,
             }}
           >
-            {event.event_name} - {event.type}
+            {/* {JSON.stringify(place)} */}
+          </Text>
+          <Text
+            style={{
+              marginLeft: 20,
+              fontSize: 20,
+              fontFamily: "Times New Roman",
+              color: "#0C090A",
+              fontWeight: "bold",
+              marginTop: 15,
+            }}
+          >
+            {place.name}
           </Text>
           <Image
             style={styles.tinyLogo6}
@@ -232,45 +274,20 @@ export default function AdminEventDetails({ route, navigation }) {
             style={{
               marginLeft: 40,
               fontSize: 15,
-              marginTop: 0,
+              marginTop: 3,
               fontFamily: "Times New Roman",
               color: "#52595D",
               fontWeight: "bold",
             }}
           >
-            {event.location}
+            {place.city}
             {"\n"}
-          </Text>
-          <Text
-            style={{
-              marginLeft: 40,
-              fontSize: 15,
-              marginTop: -13,
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-              fontWeight: "bold",
-            }}
-          >
-            {event.date}
-            {"\n"}
-          </Text>
-          <Text
-            style={{
-              marginLeft: 40,
-              fontSize: 15,
-              marginTop: -13,
-              fontFamily: "Times New Roman",
-              color: "#000000",
-              fontWeight: "bold",
-            }}
-          >
-            Tickect Prices : {event.ticket_price}
           </Text>
           <Text
             style={{
               marginLeft: 20,
               fontSize: 15,
-              marginTop: 15,
+              marginTop: 5,
               fontFamily: "Times New Roman",
               color: "#52595D",
               textAlign: "justify",
@@ -278,7 +295,7 @@ export default function AdminEventDetails({ route, navigation }) {
               marginRight: 20,
             }}
           >
-            {event.description}
+            {place.description}
           </Text>
         </View>
       </ScrollView>
@@ -324,9 +341,9 @@ const styles = StyleSheet.create({
   },
   tinyLogo: {
     width: 357,
-    height: 200,
+    height: 170,
     marginBottom: -20,
-    marginTop: -10,
+    marginTop: -1,
     borderRadius: 5,
     marginLeft: 1,
   },
@@ -334,49 +351,41 @@ const styles = StyleSheet.create({
     width: 46,
     height: 46,
     marginBottom: -20,
-    marginTop: 8,
+    marginTop: 15,
     borderRadius: 100,
     marginLeft: 30,
   },
   tinyLogo3: {
-    width: 76,
-    height: 76,
+    width: 50,
+    height: 50,
     marginBottom: -20,
-    marginTop: -8,
+    marginTop: 15,
     borderRadius: 100,
-    marginLeft: 28,
+    marginLeft: 33,
   },
   tinyLogo4: {
-    width: 46,
-    height: 46,
+    width: 70,
+    height: 70,
     marginBottom: -20,
-    marginTop: 8,
+    marginTop: 6,
     borderRadius: 100,
-    marginLeft: 25,
+    marginLeft: 20,
   },
   tinyLogo5: {
-    width: 46,
-    height: 46,
+    width: 50,
+    height: 50,
     marginBottom: -20,
-    marginTop: 8,
+    marginTop: 15,
     borderRadius: 100,
     marginLeft: 35,
   },
   tinyLogo6: {
-    width: 18,
-    height: 18,
+    width: 15,
+    height: 15,
     marginBottom: -20,
-    marginTop: 13,
+    marginTop: 10,
     borderRadius: 100,
-    marginLeft: 19,
-  },
-  tinyLogo7: {
-    width: 46,
-    height: 46,
-    marginBottom: -20,
-    marginTop: 8,
-    borderRadius: 100,
-    marginLeft: 32,
+    marginLeft: 18,
   },
   icon: {
     color: "#8B0000",

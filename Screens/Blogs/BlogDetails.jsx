@@ -12,16 +12,15 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
 import { useRoute } from "@react-navigation/native";
 
-export default function AdminEventDetails({ route, navigation }) {
-  const [event, setevent] = useState("");
-  console.log(event);
+export default function BlogDetails({ route, navigation }) {
+  const [blog, setblog] = useState("");
 
-  const getEvent = async () => {
+  const getBlog = async () => {
     await axios
-      .get(`http://localhost:8080/api/events/${route.params}`)
+      .get(`http://localhost:8080/api/blog/getBlog/${route.params}`)
       .then((res) => {
         if (res.data.success) {
-          setevent(res.data.Event);
+          setblog(res.data.existingblog);
         }
       })
       .catch((err) => {
@@ -29,18 +28,18 @@ export default function AdminEventDetails({ route, navigation }) {
       });
   };
   useEffect(() => {
-    getEvent();
+    getBlog();
   }, []);
 
-  const deleteevent = async (id) => {
-    Alert.alert("Are you sure?", "This will permanently delete Event!", [
+  const deleteblog = async (id) => {
+    Alert.alert("Are you sure?", "This will permanently delete Blog!", [
       {
         text: "OK",
         onPress: async () => {
           axios
-            .delete(`http://localhost:8080/api/events/delete/${id}`)
+            .delete(`http://localhost:8080/api/blog/delete/${id}`)
             .then((res) => {
-              navigation.push("EventsHome");
+              navigation.push("BlogsHome");
             })
             .catch((e) => {
               console.error(e);
@@ -68,10 +67,10 @@ export default function AdminEventDetails({ route, navigation }) {
         }}
       >
         {" "}
-        {event.event_name}
+        {blog.blogName}
       </Text>
       <View style={styles.rect}>
-        <Image style={styles.tinyLogo} source={{ uri: event.picture }} />
+        <Image style={styles.tinyLogo} source={{ uri: blog.picture }} />
       </View>
       <View>
         <Text
@@ -187,7 +186,7 @@ export default function AdminEventDetails({ route, navigation }) {
         Description {"\n"}
       </Text>
       <TouchableOpacity
-        onPress={() => navigation.navigate("UpdateEvent", event._id)}
+        onPress={() => navigation.navigate("UpdateBlog", blog._id)}
       >
         <Icon
           name="edit"
@@ -204,7 +203,7 @@ export default function AdminEventDetails({ route, navigation }) {
       <TouchableOpacity>
         <Icon
           name="delete-forever"
-          onPress={() => deleteevent(event._id)}
+          onPress={() => deleteblog(blog._id)}
           style={styles.icon}
         ></Icon>
       </TouchableOpacity>
@@ -220,7 +219,7 @@ export default function AdminEventDetails({ route, navigation }) {
               marginTop: 10,
             }}
           >
-            {event.event_name} - {event.type}
+            {blog.blogName} - {blog.type}
           </Text>
           <Image
             style={styles.tinyLogo6}
@@ -232,39 +231,14 @@ export default function AdminEventDetails({ route, navigation }) {
             style={{
               marginLeft: 40,
               fontSize: 15,
-              marginTop: 0,
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-              fontWeight: "bold",
-            }}
-          >
-            {event.location}
-            {"\n"}
-          </Text>
-          <Text
-            style={{
-              marginLeft: 40,
-              fontSize: 15,
               marginTop: -13,
               fontFamily: "Times New Roman",
               color: "#52595D",
               fontWeight: "bold",
             }}
           >
-            {event.date}
+            {blog.date}
             {"\n"}
-          </Text>
-          <Text
-            style={{
-              marginLeft: 40,
-              fontSize: 15,
-              marginTop: -13,
-              fontFamily: "Times New Roman",
-              color: "#000000",
-              fontWeight: "bold",
-            }}
-          >
-            Tickect Prices : {event.ticket_price}
           </Text>
           <Text
             style={{
@@ -278,7 +252,7 @@ export default function AdminEventDetails({ route, navigation }) {
               marginRight: 20,
             }}
           >
-            {event.description}
+            {blog.description}
           </Text>
         </View>
       </ScrollView>

@@ -10,51 +10,48 @@ import {
 } from "react-native";
 import axios from "axios";
 
-export default function EventsHome({ navigation }) {
-  const [event, setevent] = useState([]);
-  const [filterEvent, setfilterEvent] = useState([]);
+export default function BlogsHome({ navigation }) {
+  const [blog, setblog] = useState([]);
+  const [filterBlog, setfilterBlog] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/events/getevent").then((res) => {
+    axios.get("http://localhost:8080/api/blog/getblog").then((res) => {
       if (res.data.success) {
-        setevent(res.data.Event);
+        setblog(res.data.existingblogs);
       }
     });
   }, []);
 
   const searchFunc = (text) => {
-    return event.filter((event) => event.event_name === text);
+    return blog.filter((blog) => blog.blogName === text);
   };
 
   useEffect(() => {
-    setfilterEvent(searchFunc(search));
+    setfilterBlog(searchFunc(search));
   }, [search]);
 
   return (
     <>
       <View style={styles.container}>
         <View>
-          <Text style={styles.Text1}>All Events</Text>
+          <Text style={styles.BlogText1}>All Blogs</Text>
           <TextInput
             style={styles.inputserach}
-            placeholder="Search for Event name"
+            placeholder="Search for Blog Name"
             value={search}
             onChangeText={(text) => setSearch(text)}
           />
-
           <ScrollView style={{ display: "flex", flexDirection: "column" }}>
-            {(search === "" ? event : filterEvent).map((event, index) => (
-              <View key={event + index}>
-                <View style={styles.event}>
+            {(search === "" ? blog : filterBlog).map((blog, index) => (
+              <View key={blog + index}>
+                <View style={styles.blog}>
                   <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("EventDetails", event._id)
-                    }
+                    onPress={() => navigation.navigate("BlogDetails", blog._id)}
                   >
                     <Image
                       style={styles.tinyLogo1}
-                      source={{ uri: event.picture }}
+                      source={{ uri: blog.picture }}
                     />
                     <Text
                       style={{
@@ -66,7 +63,7 @@ export default function EventsHome({ navigation }) {
                         fontFamily: "Times New Roman",
                       }}
                     >
-                      {event.event_name}
+                      {blog.blogName}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -75,9 +72,9 @@ export default function EventsHome({ navigation }) {
           </ScrollView>
         </View>
       </View>
-      <TouchableOpacity onPress={() => navigation.navigate("AddEvent")}>
+      <TouchableOpacity onPress={() => navigation.navigate("AddBlog")}>
         <Image
-          style={styles.addevent}
+          style={styles.addblog}
           source={{
             uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679429885/11-removebg-preview_l55wvj.png",
           }}
@@ -91,6 +88,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+
   inputserach: {
     backgroundColor: "white",
     shadowColor: "black",
@@ -99,7 +97,7 @@ const styles = StyleSheet.create({
     elevation: 3,
     borderRadius: 40,
     padding: 10,
-    marginTop: 20,
+    marginTop: 5,
     width: 350,
     justifyContent: "center",
     alignItems: "center",
@@ -107,25 +105,90 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 1,
   },
-
-  Text1: {
+  BlogText1: {
     color: "#000000",
     textAlign: "center",
-    marginTop: 20,
-    fontSize: 30,
-    marginBottom: 10,
+    marginTop: 25,
+    fontSize: 35,
+    marginBottom: 20,
     fontWeight: "bold",
-    fontFamily: "Times New Roman",
   },
-  tinyLogo1: {
-    width: 350,
+
+  BlogText2: {
+    color: "#000000",
+    marginLeft: 15,
+    marginTop: 15,
+    fontSize: 20,
+    marginBottom: 20,
+    fontWeight: "bold",
+  },
+
+  BlogText3: {
+    color: "#000000",
+    marginLeft: 15,
+    marginTop: 20,
+    fontSize: 20,
+    marginBottom: 20,
+    fontWeight: "bold",
+  },
+
+  rect: {
+    width: 225,
     height: 200,
-    marginBottom: -20,
+    backgroundColor: "rgba(255,255,255,1)",
+    borderRadius: 22,
+    shadowColor: "rgba(208,194,194,1)",
+    shadowOffset: {
+      width: 5,
+      height: 5,
+    },
+    elevation: 39,
+    shadowOpacity: 1,
     marginTop: 0,
-    marginLeft: 0,
+    marginLeft: 14,
+    shadowRadius: 13,
+  },
+
+  tinyLogo: {
+    width: 225,
+    height: 200,
+    marginBottom: -10,
     borderRadius: 25,
   },
-  event: {
+
+  rect1: {
+    width: 225,
+    height: 200,
+    backgroundColor: "rgba(255,255,255,1)",
+    borderRadius: 22,
+    shadowColor: "rgba(208,194,194,1)",
+    shadowOffset: {
+      width: 5,
+      height: 5,
+    },
+    elevation: 39,
+    shadowOpacity: 1,
+    marginTop: 0,
+    marginLeft: 10,
+    shadowRadius: 13,
+  },
+
+  tinyLogo1: {
+    width: 225,
+    height: 200,
+    marginBottom: -20,
+    borderRadius: 25,
+  },
+
+  addblog: {
+    width: 120,
+    height: 120,
+    marginLeft: 270,
+    borderRadius: 25,
+    marginTop: 0,
+    borderColor: "black",
+  },
+  blog: {
     width: 350,
     height: 200,
     backgroundColor: "rgba(255,255,255,1)",
@@ -141,13 +204,5 @@ const styles = StyleSheet.create({
     marginLeft: 22,
     marginBottom: 30,
     shadowRadius: 13,
-  },
-  addevent: {
-    width: 120,
-    height: 120,
-    marginLeft: 270,
-    borderRadius: 25,
-    marginTop: 0,
-    borderColor: "black",
   },
 });

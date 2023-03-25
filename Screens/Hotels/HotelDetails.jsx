@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Image,
@@ -6,39 +6,43 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
 import { useRoute } from "@react-navigation/native";
 
-export default function HotelDetails({ navigation }) {
+export default function HotelDetails({ route, navigation }) {
   const [hotel, sethotel] = useState([]);
-  const route = useRoute();
 
+  const getHotel = async () => {
+    await axios
+      .get(`http://localhost:8080/api/hotels/${route.params}`)
+      .then((res) => {
+        if (res.data.success) {
+          sethotel(res.data.existinghotel);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   useEffect(() => {
-    const data = {
-      hid: route.params.hID,
-      hotel_name: route.params.hotel_name,
-      description: route.params.description,
-      address: route.params.address,
-      picture: route.params.picture,
-      facilities: route.params.facilities,
-      phone: route.params.phone,
-    };
-    sethotel(data);
+    getHotel();
+    console.log(route.params);
   }, []);
 
   const deletehotel = async () => {
-    const { id } = route.params;
+    const hID = route.params.hID;
     Alert.alert("Are you sure?", "This will permanently delete Hotel!", [
       {
         text: "OK",
         onPress: async () => {
           console.log(id);
           axios
-            .delete(`https://travel-go.herokuapp.com/api/hotels/delete/${id}`)
+            .delete(`http://localhost:8080/api/hotels/delete/${hID}`)
             .then((res) => {
-              navigation.push("ReceivedDonations");
+              navigation.push("HotelHome");
             })
             .catch((e) => {
               console.error(e);
@@ -54,12 +58,6 @@ export default function HotelDetails({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.homelogo}
-        source={{
-          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-        }}
-      />
       <Text
         style={{
           fontWeight: "800",
@@ -71,17 +69,10 @@ export default function HotelDetails({ navigation }) {
           fontFamily: "Times New Roman",
         }}
       >
-        {" "}
-        Hotel Name
         {hotel.name}
       </Text>
       <View style={styles.rect}>
-        <Image
-          style={styles.tinyLogo}
-          source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679427495/cinnamon_jmlgpz.webp",
-          }}
-        />
+        <Image style={styles.tinyLogo} source={{ uri: hotel.picture }} />
       </View>
       <View>
         <Text
@@ -202,38 +193,28 @@ export default function HotelDetails({ navigation }) {
           </Text>
         </ScrollView>
       </View>
-      <Text
-        style={{
-          marginLeft: 20,
-          fontSize: 18,
-          marginTop: 20,
-          fontWeight: "bold",
-          fontFamily: "Times New Roman",
-          color: "#000000",
-        }}
-      >
-        Description {"\n"}
-      </Text>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("UpdateHotelDetails")}
-      >
+      <View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("UpdateHotelDetails", hotel._id)}
+        >
+          <Icon
+            name="edit"
+            size={23}
+            color="black"
+            style={{
+              marginTop: 10,
+              marginLeft: 270,
+              marginBottom: -30,
+              borderRadius: 30,
+            }}
+          />
+        </TouchableOpacity>
         <Icon
-          name="edit"
-          size={23}
-          color="black"
-          style={{
-            marginTop: -43,
-            marginLeft: 270,
-            marginBottom: -30,
-            borderRadius: 30,
-          }}
-        />
-      </TouchableOpacity>
-      <Icon
-        name="delete-forever"
-        onPress={() => deletehotel(hotel._id)}
-        style={styles.icon}
-      ></Icon>
+          name="delete-forever"
+          onPress={() => deletehotel(hotel._id)}
+          style={styles.icon}
+        ></Icon>
+      </View>
       <ScrollView>
         <View style={styles.rect1}>
           <Text
@@ -243,7 +224,7 @@ export default function HotelDetails({ navigation }) {
               fontFamily: "Times New Roman",
               color: "#0C090A",
               fontWeight: "bold",
-              marginTop: 15,
+              marginTop: 10,
             }}
           >
             {hotel.name}
@@ -267,11 +248,30 @@ export default function HotelDetails({ navigation }) {
             {hotel.address}
             {"\n"}
           </Text>
+          <Image
+            style={styles.tinyLogo7}
+            source={{
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679730544/pngtree-phone-icon-png-image_5065646-removebg-preview_htdi2u.png",
+            }}
+          />
+          <Text
+            style={{
+              marginLeft: 40,
+              fontSize: 15,
+              marginTop: 2,
+              fontFamily: "Times New Roman",
+              color: "#52595D",
+              fontWeight: "bold",
+            }}
+          >
+            {hotel.phone}
+            {"\n"}
+          </Text>
           <Text
             style={{
               marginLeft: 20,
               fontSize: 15,
-              marginTop: 5,
+              marginTop: 10,
               fontFamily: "Times New Roman",
               color: "#52595D",
               textAlign: "justify",
@@ -291,12 +291,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  homelogo: {
-    width: 400,
-    height: 20,
-    marginTop: -5,
-    marginLeft: 0,
-  },
+
   rect: {
     width: 357,
     height: 167,
@@ -310,7 +305,7 @@ const styles = StyleSheet.create({
     elevation: 39,
     shadowOpacity: 1,
     marginTop: 20,
-    marginLeft: 14,
+    marginLeft: 15,
     shadowRadius: 13,
   },
   rect1: {
@@ -377,12 +372,20 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     marginLeft: 18,
   },
+  tinyLogo7: {
+    width: 15,
+    height: 15,
+    marginBottom: -20,
+    marginTop: 0,
+    borderRadius: 100,
+    marginLeft: 18,
+  },
   icon: {
     color: "#8B0000",
     fontSize: 28,
     height: 60,
     width: 40,
     marginLeft: 330,
-    marginTop: -45,
+    marginTop: 5,
   },
 });

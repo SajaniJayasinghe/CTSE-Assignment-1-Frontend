@@ -1,40 +1,61 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
-  Alert,
-  StyleSheet,
   Text,
+  StyleSheet,
+  Image,
   TouchableOpacity,
-  TextInput,
   ScrollView,
+  TextInput,
 } from "react-native";
+import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 import CustomLoading from "../../components/CustomLoading";
-import axios from "axios";
-import { responsiveWidth } from "react-native-responsive-dimensions";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { MultiSelect } from "react-native-element-dropdown";
+import { responsiveWidth } from "react-native-responsive-dimensions";
 
-export default function AddHotels({ navigation }) {
+export default function UpdateBlog({ route, navigation }) {
   const data = [
-    { label: "Wifi", value: "Wifi" },
-    { label: "AC", value: "AC" },
-    { label: "Food", value: "Food" },
-    { label: "Pool", value: "Pool" },
-    { label: "Parking", value: "Parking" },
+    { label: "Beach", value: "Beach" },
+    { label: "Forest", value: "Forest" },
+    { label: "Ancient City", value: "Ancient City" },
+    { label: "Mountans", value: "Mountans" },
+    { label: "WaterFalls", value: "WaterFalls" },
   ];
+
+  const [type, settype] = useState("");
+  const [blogName, setblogName] = useState("");
+  const [description, setdescription] = useState("");
+  const [picture, setpicture] = useState("");
+  const [date, setdate] = useState("");
+  const [blogID, setblogID] = useState("");
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
-  const [name, setname] = useState("");
-  const [description, setdescription] = useState("");
-  const [address, setaddress] = useState("");
-  const [phone, setphone] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageUploadStatus, setImageUploadStatus] = useState(
-    "Choose Hotel Picture"
+    "Choose Event Picture"
   );
   const [validationErrors, setValidationErrors] = useState({});
+  const [error, setError] = useState("");
 
+  const getBlog = async () => {
+    await axios
+      .get(`http://localhost:8080/api/blog/getBlog/${route.params}`)
+      .then((res) => {
+        if (res.data.success) {
+          settype(res.data.existingblog.type);
+          setblogName(res.data.existingblog.blogName);
+          setdescription(res.data.existingblog.description);
+          setpicture(res.data.existingblog.picture);
+          setdate(res.data.existingblog.date);
+          settype(res.data.existingblog.type);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   //For Multiple selection
   const renderItem = (item) => {
     return (
@@ -44,51 +65,40 @@ export default function AddHotels({ navigation }) {
     );
   };
 
-  const addHotel = () => {
-    const URL = `http://localhost:8080/api/hotels/addhotel`;
+  const updateBlog = async () => {
+    const URL = `http://localhost:8080/api/blog/update/${blogID}`;
 
     const payload = new FormData();
-    setLoading(true);
-    payload.append("name", name);
-    payload.append("description", description);
-    payload.append("picture", {
-      uri: image,
-      type: "image/jpeg",
-      name: "image.jpg",
-    });
-    payload.append("address", address);
-    payload.append("phone", phone);
 
-    //for multiple selection
-    if (selectedItems.length > 0) {
-      for (var i = 0; i < selectedItems.length; i++) {
-        payload.append(`facilities[${i}]`, selectedItems[i]);
-      }
-    }
+    const updatedData = {
+      blogName: blogName,
+      description: description,
+      date: date,
+      type: selectedItems,
+    };
+    console.log(updatedData);
 
-    axios
-      .post(URL, payload, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        Alert.alert("Success", "Hotel Added Successfully");
-        setLoading(false);
-        navigation.navigate("HotelHome");
-      })
-      .catch((error) => {
-        console.log(error);
-        setLoading(false);
-        Alert.alert(
-          "Error",
-          "Hotel adding Unsuccessful",
-          [{ text: "Check Again" }],
-          { cancelable: false }
-        );
+    try {
+      await axios.put(URL, updatedData).then((res) => {
+        if (res.data) {
+          console.log(res.data);
+          setLoading(false);
+          Alert.alert("Blog Updated Successfully");
+          navigation.push("BLOGDetails", blogID);
+        } else {
+          setError(res.data.error);
+          setLoading(false);
+        }
       });
+    } catch (error) {
+      console.log(JSON.stringify(error.response));
+    }
   };
-  console.log(image);
+
+  useEffect(() => {
+    getBlog();
+  }, []);
+
   //for Image upload
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -103,48 +113,39 @@ export default function AddHotels({ navigation }) {
       setImageUploadStatus("Image Uploaded");
     } else {
       setImage(null);
-      setImageUploadStatus("Choose Hotel Picture");
+      setImageUploadStatus("Choose Blog Image");
     }
   };
-
   return (
     <>
       <View style={styles.container}>
-        <View>
-          <Text
-            style={{
-              fontWeight: "800",
-              textAlign: "center",
-              fontSize: 36,
-              marginLeft: -10,
-              marginTop: 50,
-              color: "#3F000F",
-              fontFamily: "Times New Roman",
-            }}
-          >
-            Add New Hotel
-          </Text>
-          <ScrollView
-            vertical={true}
-            showsHorizontalScrollIndicator={false}
-            scrollEventThrottle={200}
-            decelerationRate="fast"
-            pagingEnabled
-          >
+        <Text
+          style={{
+            fontWeight: "800",
+            textAlign: "center",
+            fontSize: 36,
+            marginLeft: -10,
+            marginTop: 15,
+            color: "#3F000F",
+            fontFamily: "Times New Roman",
+          }}
+        >
+          Update Blog
+        </Text>
+
+        <ScrollView>
+          <View>
             <MultiSelect
               style={styles.textInputnew}
               placeholderStyle={{
-                fontSize: 17,
-                color: "#BCC6CC",
-                fontFamily: "Times New Roman",
-                marginTop: 10,
-                marginBottom: 10,
+                fontSize: 14,
+                color: "grey",
               }}
               search
               data={data}
               labelField="label"
               valueField="value"
-              placeholder="Select Facilities"
+              placeholder="Select Events"
               searchPlaceholder="Search..."
               value={selectedItems}
               onChange={(item) => {
@@ -157,13 +158,13 @@ export default function AddHotels({ navigation }) {
                     style={{
                       flexDirection: "row",
                       justifyContent: "space-between",
-                      padding: 20,
+                      padding: 10,
                       backgroundColor: "white",
                       borderRadius: 5,
-                      gap: 20,
-                      marginTop: "10%",
-                      marginBottom: "10%",
-                      marginLeft: "8%",
+                      gap: 15,
+                      marginTop: "5%",
+                      marginBottom: "9%",
+                      marginLeft: "18%",
                     }}
                   >
                     <Text style={styles.textSelectedStyle}>{item.label}</Text>
@@ -179,36 +180,44 @@ export default function AddHotels({ navigation }) {
             ) : (
               ""
             )}
-            <Text style={styles.nameText}>Enter Hotel Name</Text>
+            <Text style={styles.nameText}>Enter Blog Name</Text>
             <TextInput
-              placeholder="Enter Hotel Name here"
+              placeholder="Enter Blog Name"
               style={styles.textInput}
-              onChange={(e) => setname(e.nativeEvent.text)}
-              value={name}
+              value={blogName}
+              onChange={(e) => setblogName(e.nativeEvent.text)}
             />
-            <Text style={styles.nameText1}>Enter Hotel Address</Text>
+            {/* <Text style={styles.nameText2}>Enter Location</Text>
             <TextInput
-              placeholder="Enter Hotel Address here"
+              placeholder="Enter Location"
+              value={location}
+              onChange={(e) => setlocation(e.nativeEvent.text)}
               style={styles.textInput}
-              onChange={(e) => setaddress(e.nativeEvent.text)}
-              value={address}
+            /> */}
+            <Text style={styles.nameText2}>Enter Date </Text>
+            <TextInput
+              placeholder="Enter Date"
+              style={styles.textInput}
+              value={date}
+              onChange={(e) => setdate(e.nativeEvent.text)}
             />
+            {/* <Text style={styles.nameText2}>Enter Ticket Price </Text>
+            <TextInput
+              placeholder="Enter Ticket Price "
+              style={styles.textInput}
+              value={ticket_price}
+              onChange={(e) => setticket_price(e.nativeEvent.text)}
+            /> */}
 
-            <Text style={styles.nameText1}>Enter Contact Number</Text>
-            <TextInput
-              placeholder="Enter Contact Number"
-              style={styles.textInput}
-              onChange={(e) => setphone(e.nativeEvent.text)}
-              value={phone}
-            />
-
-            <Text style={styles.nameText1}>Enter Description</Text>
-            <TextInput
-              placeholder="Enter Description here"
-              style={styles.nameText2}
-              onChange={(e) => setdescription(e.nativeEvent.text)}
-              value={description}
-            />
+            <Text style={styles.decsription}>Enter Description</Text>
+            <ScrollView>
+              <TextInput
+                placeholder="Enter Description here"
+                style={styles.nameText3}
+                value={description}
+                onChange={(e) => setdescription(e.nativeEvent.text)}
+              ></TextInput>
+            </ScrollView>
             <View style={styles.imageUploadField}>
               <TextInput
                 style={styles.ImageTextInput}
@@ -221,18 +230,14 @@ export default function AddHotels({ navigation }) {
                 <Text style={styles.uploadTxt}>Upload</Text>
               </TouchableOpacity>
             </View>
-          </ScrollView>
-        </View>
-        <View>
+          </View>
           <TouchableOpacity
             style={[styles.containerx, styles.materialButtonDark1]}
-            onPress={() => {
-              addHotel();
-            }}
+            onPress={updateBlog}
           >
-            <Text style={styles.loginButton}>Add Hotel</Text>
+            <Text style={styles.loginButton}>Update Blog</Text>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
       </View>
       {loading ? <CustomLoading /> : null}
     </>
@@ -243,41 +248,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  nameText: {
-    color: "#6D7B8D",
-    fontSize: 16,
-    lineHeight: 18,
-    marginTop: 17,
-    marginLeft: 36,
-  },
-  nameText1: {
-    color: "#6D7B8D",
-    fontSize: 16,
-    lineHeight: 18,
-    marginTop: 5,
-    marginLeft: 36,
-  },
-  nameText2: {
-    height: 80,
-    width: 320,
-    textAlign: "center",
-    fontSize: 15,
+  tinyLogo: {
+    width: 360,
+    height: 180,
+    marginBottom: -20,
+    marginTop: 0,
     borderRadius: 25,
-    marginTop: 7,
-    marginLeft: 36,
-    borderWidth: 1,
-    borderColor: "#560319",
-  },
-  textInput: {
-    height: 40,
-    width: 320,
-    textAlign: "center",
-    fontSize: 15,
-    borderRadius: 25,
-    marginTop: 10,
-    marginLeft: 36,
-    borderWidth: 1,
-    borderColor: "#560319",
+    marginLeft: 0,
   },
   dropdown: {
     margin: 16,
@@ -298,6 +275,63 @@ const styles = StyleSheet.create({
     marginTop: 10,
     width: 320,
     marginLeft: 36,
+  },
+  nameText: {
+    color: "#6D7B8D",
+    fontSize: 16,
+    lineHeight: 18,
+    marginTop: 10,
+    marginLeft: 36,
+  },
+  nameText1: {
+    color: "#6D7B8D",
+    fontSize: 16,
+    lineHeight: 18,
+    marginTop: 10,
+    marginLeft: 36,
+  },
+  nameText2: {
+    color: "#6D7B8D",
+    fontSize: 16,
+    lineHeight: 18,
+    marginTop: -5,
+    marginLeft: 36,
+  },
+  nameText2: {
+    color: "#6D7B8D",
+    fontSize: 16,
+    lineHeight: 18,
+    marginTop: 5,
+    marginLeft: 36,
+  },
+  nameText3: {
+    height: 100,
+    width: 320,
+    textAlign: "center",
+    fontSize: 15,
+    borderRadius: 15,
+    marginTop: 7,
+    marginLeft: 36,
+    borderWidth: 1,
+    borderColor: "#560319",
+  },
+  decsription: {
+    color: "#6D7B8D",
+    fontSize: 16,
+    lineHeight: 18,
+    marginTop: 5,
+    marginLeft: 36,
+  },
+  textInput: {
+    height: 70,
+    width: 320,
+    textAlign: "center",
+    fontSize: 15,
+    borderRadius: 10,
+    marginTop: 7,
+    marginLeft: 36,
+    borderWidth: 1,
+    borderColor: "#560319",
   },
   containerx: {
     backgroundColor: "#FFFFFF",
@@ -325,7 +359,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     elevation: 5,
     shadowOpacity: 0,
-    marginTop: 15,
+    marginTop: 25,
     marginBottom: 10,
     marginLeft: 90,
   },
@@ -335,16 +369,25 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 18,
   },
-  textInputnew: {
-    width: "80%",
-    height: 40,
-    backgroundColor: "white",
-    borderRadius: 10,
-    paddingLeft: 10,
-    marginLeft: "10%",
-    marginTop: "5%",
+
+  imageUploadField: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: "5%",
+  },
+
+  ImageTextInput: {
+    width: "50%",
+    height: 50,
     borderColor: "grey",
     borderWidth: 1,
+    borderRadius: 10,
+    paddingLeft: 10,
+    color: "gray",
+    marginLeft: "10%",
+    marginTop: "5%",
   },
   imageUploadField: {
     display: "flex",
@@ -353,6 +396,7 @@ const styles = StyleSheet.create({
     width: "100%",
     marginBottom: "5%",
   },
+
   ImageTextInput: {
     width: "50%",
     height: 50,
@@ -376,6 +420,17 @@ const styles = StyleSheet.create({
     marginTop: "5%",
     marginLeft: responsiveWidth(2),
     fontFamily: "Times New Roman",
+  },
+  textInputnew: {
+    width: "80%",
+    height: 40,
+    backgroundColor: "white",
+    borderRadius: 10,
+    paddingLeft: 10,
+    marginLeft: "10%",
+    marginTop: "5%",
+    borderColor: "grey",
+    borderWidth: 1,
   },
   item: {
     padding: 17,

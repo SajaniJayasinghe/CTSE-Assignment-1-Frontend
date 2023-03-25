@@ -10,47 +10,52 @@ import {
 } from "react-native";
 import axios from "axios";
 
-export default function EventList({ navigation }) {
-  const [event, setevent] = useState([]);
-  const [filterEvent, setfilterEvent] = useState([]);
+export default function BlogList({ navigation }) {
+  const [blog, setblog] = useState([]);
+  const [filterBlog, setfilterBlog] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/events/getevent").then((res) => {
+    axios.get("http://localhost:8080/api/blog/getblog").then((res) => {
       if (res.data.success) {
-        setevent(res.data.Event);
+        setblog(res.data.existingblogs);
       }
     });
   }, []);
 
   const searchFunc = (text) => {
-    return event.filter((event) => event.event_name === text);
+    return blog.filter((blog) => blog.blogName === text);
   };
 
   useEffect(() => {
-    setfilterEvent(searchFunc(search));
+    setfilterBlog(searchFunc(search));
   }, [search]);
-
   return (
     <View style={styles.container}>
+      <Image
+        style={styles.homelogo}
+        source={{
+          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
+        }}
+      />
       <TextInput
         style={styles.inputserach}
-        placeholder="Search for Event name"
+        placeholder="Search for Blog name"
         value={search}
         onChangeText={(text) => setSearch(text)}
       />
-      <Text style={styles.Text1}>Event List</Text>
+      <Text style={styles.Text1}>Blog List</Text>
 
       <ScrollView style={{ display: "flex", flexDirection: "column" }}>
-        {(search === "" ? event : filterEvent).map((event, index) => (
-          <View key={event + index}>
+        {(search === "" ? blog : filterBlog).map((blog, index) => (
+          <View key={blog + index}>
             <View style={styles.hotel}>
               <TouchableOpacity
-                onPress={() => navigation.navigate("SpecificEvent")}
+                onPress={() => navigation.navigate("SpecificBlog")}
               >
                 <Image
                   style={styles.tinyLogo1}
-                  source={{ uri: event.picture }}
+                  source={{ uri: blog.picture }}
                 />
 
                 <Text
@@ -64,7 +69,7 @@ export default function EventList({ navigation }) {
                     fontFamily: "Times New Roman",
                   }}
                 >
-                  {event.event_name}
+                  {blog.blogName}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -75,7 +80,7 @@ export default function EventList({ navigation }) {
   );
 }
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
   },

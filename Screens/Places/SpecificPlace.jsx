@@ -5,40 +5,60 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  ScrollView,
-  Alert,
+  ScrollView
 } from "react-native";
-import axios from "axios";
-import { useRoute } from "@react-navigation/native";
 
-export default function SpecificEvent({ navigation }) {
-  const [event, setevent] = useState([]);
-  const [filterEvent, setfilterEvent] = useState([]);
+export default function SpecificPlace({ navigation }) {
+  const [place, setPlace] = useState([]);
+  const [filterPlace, setfilterPlace] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/events/getevent").then((res) => {
+    axios.get("http://localhost:8080/api/places/getplace").then((res) => {
       if (res.data.success) {
-        setevent(res.data.Event);
+        setPlace(res.data.Place);
       }
     });
   }, []);
 
-  const searchFunc = (text) => {
-    return event.filter((event) => event.event_name === text);
+  const searchPlace = (text) => {
+    return place.filter((place) => {
+      place.name.toLowerCase().includes(text.toLowerCase());
+    });
   };
 
   useEffect(() => {
-    setfilterEvent(searchFunc(search));
+    setfilterPlace(searchPlace(search));
   }, [search]);
 
   return (
     <View style={styles.container}>
+      <Image
+        style={styles.homelogo}
+        source={{
+          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png"
+        }}
+      />
+      <Text
+        style={{
+          fontWeight: "800",
+          textAlign: "center",
+          fontSize: 36,
+          marginLeft: -10,
+          marginTop: 15,
+          color: "#3F000F",
+          fontFamily: "Times New Roman"
+        }}
+      >
+        {" "}
+        Place Name
+        {/* {hotel.name} */}
+      </Text>
       <View style={styles.rect}>
         <Image
           style={styles.tinyLogo}
           source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481372/3_vgqveh.jpg",
+            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679378950/6_gm0xk4.webp"
           }}
         />
       </View>
@@ -50,7 +70,7 @@ export default function SpecificEvent({ navigation }) {
             fontSize: 19,
             fontWeight: "bold",
             fontFamily: "Times New Roman",
-            color: "#000000",
+            color: "#000000"
           }}
         >
           Amenities
@@ -63,7 +83,7 @@ export default function SpecificEvent({ navigation }) {
           pagingEnabled
           borderWidth={1}
           width={369}
-          height={80}
+          height={100}
           marginLeft={10}
           borderRadius={30}
           borderColor="#A9A9A9"
@@ -72,74 +92,74 @@ export default function SpecificEvent({ navigation }) {
           <Image
             style={styles.tinyLogo2}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483250/music-removebg-preview_deu4xd.png",
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679468287/1-removebg-preview_okhsn3.png"
             }}
           />
           <Text
             style={{
-              marginLeft: -48,
-              marginTop: 55,
+              marginLeft: -43,
+              marginTop: 70,
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
-              color: "#52595D",
+              color: "#52595D"
             }}
           >
-            Music
+            {place.facilities[0].wifi}
           </Text>
           <Image
             style={styles.tinyLogo3}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/pho-removebg-preview_kijiez.png",
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679468938/download-removebg-preview_xreebs.png"
             }}
           />
           <Text
             style={{
-              marginLeft: -90,
-              marginTop: 55,
+              marginLeft: -45,
+              marginTop: 70,
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
-              color: "#52595D",
+              color: "#52595D"
             }}
           >
-            Photography
-          </Text>
-          <Image
-            style={styles.tinyLogo4}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/Screenshot_2023-03-22_at_16.35.13-removebg-preview_m7iojm.png",
-            }}
-          />
-          <Text
-            style={{
-              marginLeft: -48,
-              marginTop: 55,
-              fontSize: 18,
-              fontWeight: "bold",
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-            }}
-          >
-            Dance
+            Foods
           </Text>
           <Image
             style={styles.tinyLogo5}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/ga-removebg-preview_xtsstk.png",
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679469394/p-removebg-preview_lzlkak.png"
             }}
           />
           <Text
             style={{
-              marginLeft: -50,
-              marginTop: 55,
+              marginLeft: -53,
+              marginTop: 70,
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
-              color: "#52595D",
+              color: "#52595D"
             }}
           >
-            Games
+            Parking
+          </Text>
+          <Image
+            style={styles.tinyLogo4}
+            source={{
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679495155/tvectoricons180806148-removebg-preview_t0ngho.png"
+            }}
+          />
+          <Text
+            style={{
+              marginLeft: -75,
+              marginTop: 70,
+              fontSize: 18,
+              fontWeight: "bold",
+              fontFamily: "Times New Roman",
+              color: "#52595D"
+            }}
+          >
+            No Smoking
           </Text>
         </ScrollView>
       </View>
@@ -150,13 +170,21 @@ export default function SpecificEvent({ navigation }) {
           marginTop: 20,
           fontWeight: "bold",
           fontFamily: "Times New Roman",
-          color: "#000000",
+          color: "#000000"
         }}
       >
         Description {"\n"}
       </Text>
+      <TouchableOpacity
+        // onPress={() =>
+        //   navigation.navigate("UpdateHotelDetails", {
+        //     donationID: donations._id,
+        //   })
+        // }
+        onPress={() => navigation.navigate("UpdatePlace")}
+      ></TouchableOpacity>
       <ScrollView>
-        {(search === "" ? event : filterEvent).map((event, index) => (
+        {(search === "" ? place : filterPlace).map((place, index) => (
           <View key={event + index}>
             <View style={styles.rect1}>
               <Text
@@ -166,15 +194,15 @@ export default function SpecificEvent({ navigation }) {
                   fontFamily: "Times New Roman",
                   color: "#0C090A",
                   fontWeight: "bold",
-                  marginTop: 10,
+                  marginTop: 15
                 }}
               >
-                {event.event_name} - {event.type}
+                {place.name}
               </Text>
               <Image
-                style={styles.tinyLogo8}
+                style={styles.tinyLogo6}
                 source={{
-                  uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679471650/2838912_zdihvz.png",
+                  uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679471650/2838912_zdihvz.png"
                 }}
               />
               <Text
@@ -184,54 +212,25 @@ export default function SpecificEvent({ navigation }) {
                   marginTop: 3,
                   fontFamily: "Times New Roman",
                   color: "#52595D",
-                  fontWeight: "bold",
+                  fontWeight: "bold"
                 }}
               >
-                {event.location} {/* {hotel.location} */}
-                {"\n"}
-              </Text>
-              <Text
-                style={{
-                  marginLeft: 40,
-                  fontSize: 15,
-                  marginTop: -13,
-                  fontFamily: "Times New Roman",
-                  color: "#52595D",
-                  fontWeight: "bold",
-                }}
-              >
-                {event.date}
-                {"\n"}
-              </Text>
-              <Text
-                style={{
-                  marginLeft: 38,
-                  fontSize: 15,
-                  marginTop: -10,
-                  fontFamily: "Times New Roman",
-                  color: "#000000",
-                  textAlign: "justify",
-                  fontWeight: "bold",
-                  marginRight: 20,
-                }}
-              >
-                Ticket Price : {event.ticket_price}
+                {place.city}
                 {"\n"}
               </Text>
               <Text
                 style={{
                   marginLeft: 20,
                   fontSize: 15,
-                  marginTop: 15,
+                  marginTop: 5,
                   fontFamily: "Times New Roman",
                   color: "#52595D",
                   textAlign: "justify",
                   fontWeight: "bold",
-                  marginRight: 20,
+                  marginRight: 20
                 }}
               >
-                {" "}
-                {event.description}
+                {place.description}
               </Text>
             </View>
           </View>
@@ -243,13 +242,13 @@ export default function SpecificEvent({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   homelogo: {
     width: 400,
     height: 20,
     marginTop: -5,
-    marginLeft: 0,
+    marginLeft: 0
   },
   rect: {
     width: 357,
@@ -259,13 +258,13 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(208,194,194,1)",
     shadowOffset: {
       width: 5,
-      height: 5,
+      height: 5
     },
     elevation: 39,
     shadowOpacity: 1,
     marginTop: 20,
     marginLeft: 14,
-    shadowRadius: 13,
+    shadowRadius: 13
   },
   rect1: {
     width: 370,
@@ -274,79 +273,62 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(208,194,194,1)",
     shadowOffset: {
       width: 5,
-      height: 5,
+      height: 5
     },
     elevation: 39,
     shadowOpacity: 1,
     marginTop: -15,
     marginLeft: 10,
     marginRight: 20,
-    shadowRadius: 13,
+    shadowRadius: 13
   },
   tinyLogo: {
     width: 357,
-    height: 200,
+    height: 170,
     marginBottom: -20,
-    marginTop: -10,
+    marginTop: -1,
     borderRadius: 5,
-    marginLeft: 1,
+    marginLeft: 1
   },
   tinyLogo2: {
     width: 46,
     height: 46,
     marginBottom: -20,
-    marginTop: 8,
+    marginTop: 15,
     borderRadius: 100,
-    marginLeft: 30,
+    marginLeft: 30
   },
   tinyLogo3: {
-    width: 76,
-    height: 76,
+    width: 50,
+    height: 50,
     marginBottom: -20,
-    marginTop: -8,
+    marginTop: 15,
     borderRadius: 100,
-    marginLeft: 28,
+    marginLeft: 33
   },
   tinyLogo4: {
-    width: 46,
-    height: 46,
+    width: 70,
+    height: 70,
     marginBottom: -20,
-    marginTop: 8,
+    marginTop: 6,
     borderRadius: 100,
-    marginLeft: 25,
+    marginLeft: 20
   },
   tinyLogo5: {
-    width: 46,
-    height: 46,
+    width: 50,
+    height: 50,
     marginBottom: -20,
-    marginTop: 8,
+    marginTop: 15,
     borderRadius: 100,
-    marginLeft: 35,
+    marginLeft: 35
   },
   tinyLogo6: {
-    width: 46,
-    height: 46,
+    width: 15,
+    height: 15,
     marginBottom: -20,
-    marginTop: 8,
+    marginTop: 10,
     borderRadius: 100,
-    marginLeft: 35,
-  },
-
-  tinyLogo7: {
-    width: 46,
-    height: 46,
-    marginBottom: -20,
-    marginTop: 8,
-    borderRadius: 100,
-    marginLeft: 32,
-  },
-  tinyLogo8: {
-    width: 18,
-    height: 18,
-    marginBottom: -20,
-    marginTop: 13,
-    borderRadius: 100,
-    marginLeft: 19,
+    marginLeft: 18
   },
   icon: {
     color: "#8B0000",
@@ -354,6 +336,6 @@ const styles = StyleSheet.create({
     height: 60,
     width: 40,
     marginLeft: 330,
-    marginTop: -45,
-  },
+    marginTop: -45
+  }
 });
