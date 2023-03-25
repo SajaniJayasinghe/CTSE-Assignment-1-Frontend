@@ -150,7 +150,7 @@ export default function PlacesHome({ navigation }) {
           </View>
           <TextInput
             style={styles.inputserach}
-            placeholder="Search for Place name"
+            placeholder="Search for Places"
             value={search}
             onChangeText={(text) => setSearch(text)}
           />
@@ -159,18 +159,7 @@ export default function PlacesHome({ navigation }) {
             {(search === "" ? place : filterEvent).map((place, index) => (
               <View key={place + index}>
                 <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate("PlaceDetails", {
-                      placeID: place._id,
-                      name: place.name,
-                      description: place.description,
-                      location: place.location,
-                      picture: place.picture,
-                      city: place.city,
-                      type: place.type,
-                      facilities: place.facilities,
-                    })
-                  }
+                  onPress={() => navigation.navigate("PlaceDetails", place._id)}
                 >
                   <Image
                     style={styles.addPlaces}

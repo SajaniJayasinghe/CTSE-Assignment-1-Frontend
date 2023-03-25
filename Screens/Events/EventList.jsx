@@ -35,7 +35,7 @@ export default function EventList({ navigation }) {
     <View style={styles.container}>
       <TextInput
         style={styles.inputserach}
-        placeholder="Search for Event name"
+        placeholder="Search for Events"
         value={search}
         onChangeText={(text) => setSearch(text)}
       />

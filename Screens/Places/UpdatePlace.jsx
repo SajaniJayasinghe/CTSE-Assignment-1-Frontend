@@ -5,6 +5,7 @@ import {
   Image,
   StyleSheet,
   Text,
+  Alert,
   TouchableOpacity,
   TextInput,
   ScrollView,
@@ -12,6 +13,7 @@ import {
 import { Dropdown } from "react-native-element-dropdown";
 import { MultiSelect } from "react-native-element-dropdown";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import CustomLoading from "../../components/CustomLoading";
 
 export default function UpdatePlace({ route, navigation }) {
   const data = [
@@ -33,26 +35,33 @@ export default function UpdatePlace({ route, navigation }) {
   const [picture, setpicture] = useState("");
   const [city, setcity] = useState("");
   const [facilities, setfacilities] = useState([]);
-  const [placeID, setplaceID] = useState("");
+  const [placeID, setplaceID] = useState(route.params);
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageUploadStatus, setImageUploadStatus] = useState(
-    "Choose Event Picture"
+    "Choose Place Picture"
   );
   const [validationErrors, setValidationErrors] = useState({});
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    setplaceID(route.params.placeID);
-    settype(route.params.type);
-    setname(route.params.name);
-    setdescription(route.params.description);
-    setpicture(route.params.picture);
-    setcity(route.params.city);
-    setfacilities(route.params.facilities);
-    setSelectedItems(route.params.facilities);
-  }, []);
+  const getPlace = async () => {
+    await axios
+      .get(`http://localhost:8080/api/places/${route.params}`)
+      .then((res) => {
+        if (res.data.success) {
+          setSelectedItems(res.data.Place.type);
+          setname(res.data.Place.name);
+          setdescription(res.data.Place.description);
+          setpicture(res.data.Place.picture);
+          setcity(res.data.Place.city);
+          setSelectedItems(res.data.Place.facilities);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   //For Multiple selection
   const renderItem = (item) => {
@@ -63,57 +72,37 @@ export default function UpdatePlace({ route, navigation }) {
     );
   };
 
-  const updatePlace = () => {
-    const URL = `"http://localhost:8080/api/places/update/${placeID}`;
+  const updatePlace = async () => {
+    const URL = `http://localhost:8080/api/places/update/${placeID}`;
     const payload = new FormData();
     setLoading(true);
-    payload.append("type", type);
-    payload.append("name", name);
-    payload.append("description", description);
-    payload.append("picture", {
-      uri: image,
-      type: "image/jpeg",
-      name: "image.jpg",
-    });
-    payload.append("city", city);
-    //for multiple selection
-    if (selectedItems.length > 0) {
-      for (var i = 0; i < selectedItems.length; i++) {
-        payload.append(`type[${i}]`, selectedItems[i]);
-      }
-    }
 
-    axios
-      .put(URL, payload, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        Alert.alert(
-          "Place Updated",
-          "Your Place has updated successfully!!",
-          [
-            {
-              text: "OK",
-              onPress: () => navigation.navigate("PlacesHome"),
-            },
-          ],
-          { cancelable: false }
-        );
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(JSON.stringify(error));
-        setLoading(false);
-        Alert.alert(
-          "Error",
-          "Updating Unsuccessful",
-          [{ text: "Check Again" }],
-          { cancelable: false }
-        );
+    const updatedData = {
+      type: type,
+      name: name,
+      description: description,
+      city: city,
+      facilities: selectedItems,
+    };
+    try {
+      await axios.put(URL, updatedData).then((res) => {
+        if (res.data) {
+          console.log(res.data);
+          setLoading(false);
+          Alert.alert("Place Updated Successfully");
+          navigation.push("PlaceDetails", placeID);
+        } else {
+          setError(res.data.error);
+          setLoading(false);
+        }
       });
+    } catch (error) {
+      console.log(JSON.stringify(error.response));
+    }
   };
+  useEffect(() => {
+    getPlace();
+  }, []);
 
   //for Image upload
   const pickImage = async () => {
@@ -150,14 +139,7 @@ export default function UpdatePlace({ route, navigation }) {
           >
             Update Places
           </Text>
-          {/* <View style={styles.rect}>
-          <Image
-            style={styles.tinyLogo}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679378950/6_gm0xk4.webp"
-            }}
-          />
-        </View> */}
+
           <ScrollView
             vertical={true}
             showsHorizontalScrollIndicator={false}
@@ -222,7 +204,7 @@ export default function UpdatePlace({ route, navigation }) {
                       gap: 15,
                       marginTop: "5%",
                       marginBottom: "9%",
-                      marginLeft: "18%",
+                      marginLeft: "22%",
                     }}
                   >
                     <Text style={styles.textSelectedStyle}>{item.label}</Text>
@@ -267,9 +249,7 @@ export default function UpdatePlace({ route, navigation }) {
           </View>
           <TouchableOpacity
             style={[styles.containerx, styles.materialButtonDark1]}
-            onPress={() => {
-              updatePlace();
-            }}
+            onPress={updatePlace}
           >
             <Text style={styles.loginButton}>Update Place</Text>
           </TouchableOpacity>
@@ -330,7 +310,7 @@ const styles = StyleSheet.create({
     marginLeft: 36,
   },
   nameText2: {
-    height: 80,
+    height: 100,
     width: 320,
     textAlign: "center",
     fontSize: 15,

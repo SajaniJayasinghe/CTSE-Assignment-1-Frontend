@@ -9,62 +9,74 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
+import axios from "axios";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 export default function PlaceDetails({ route, navigation }) {
-  const [place, setPlace] = useState([]);
+  const [place, setPlace] = useState("");
+  console.log(place);
   const [WifiAvailable, setWifiAvailable] = useState(false);
   const [FoodsAvailable, setFoodsAvailable] = useState(false);
   const [ParkingAvailable, setParkingAvailable] = useState(false);
   const [NoSmokingAvailable, setNoSmokingAvailable] = useState(false);
 
+  const getPlace = async () => {
+    await axios
+      .get(`http://localhost:8080/api/places/${route.params}`)
+      .then((res) => {
+        if (res.data.success) {
+          setPlace(res.data.Place);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   useEffect(() => {
-    const data = {
-      placeid: route.params.placeID,
-      type: route.params.type,
-      name: route.params.name,
-      description: route.params.description,
-      picture: route.params.picture,
-      city: route.params.city,
-      facilities: route.params.facilities,
-    };
-    setPlace(data);
-
-    const setData = (facilityData) => {
-      if (facilityData.includes("Wifi")) {
-        setWifiAvailable(true);
-      } else if (facilityData.includes("Food")) {
-        setFoodsAvailable(true);
-      } else if (facilityData.includes("Parking")) {
-        setParkingAvailable(true);
-      } else if (facilityData.includes("NoSmoking")) {
-        setNoSmokingAvailable(true);
-      }
-    };
-    setData(data.facilities);
+    getPlace();
   }, []);
 
-  const deletePlace = async () => {
-    const placeID = route.params.placeID;
-    Alert.alert("Are you sure you want to delete this place?", [
+  // const deletePlace = async (id) => {
+  //   console.log(id);
+  //   Alert.alert("Are you sure you want to delete this place?", [
+  //     {
+  //       text: "OK",
+  //       onPress: async () => {
+  //         axios
+  //           .delete(`http://localhost:8080/api/places/delete/${id}`)
+  //           .then((res) => {
+  //             navigation.push("PlacesHome");
+  //           })
+  //           .catch((err) => {
+  //             console.log(err);
+  //           });
+  //       },
+  //     },
+  //     {
+  //       text: "Cancel",
+  //       onPress: () => console.log("Cancel Pressed"),
+  //       style: "cancel",
+  //     },
+  //   ]);
+  // };
+  const deleteplace = async (id) => {
+    Alert.alert("Are you sure?", "This will permanently delete Place!", [
       {
         text: "OK",
         onPress: async () => {
-          console.log(placeID);
-          await axios
-            .delete(`http://localhost:8080/api/places/delete/${placeID}`)
+          axios
+            .delete(`http://localhost:8080/api/places/delete/${id}`)
             .then((res) => {
-              navigation.navigate("PlacesList");
+              navigation.push("PlacesHome");
             })
-            .catch((err) => {
-              console.log(err);
+            .catch((e) => {
+              console.error(e);
             });
         },
       },
       {
         text: "Cancel",
         onPress: () => console.log("Cancel Pressed"),
-        style: "cancel",
       },
     ]);
   };
@@ -81,6 +93,7 @@ export default function PlaceDetails({ route, navigation }) {
           color: "#3F000F",
         }}
       >
+        {" "}
         {place.name}
       </Text>
       <View style={styles.rect}>
@@ -210,7 +223,7 @@ export default function PlaceDetails({ route, navigation }) {
       </Text>
 
       <TouchableOpacity
-        onPress={() => navigation.navigate("UpdatePlace", place)}
+        onPress={() => navigation.navigate("UpdatePlace", place._id)}
       >
         <Icon
           name="edit"
@@ -224,11 +237,13 @@ export default function PlaceDetails({ route, navigation }) {
           }}
         />
       </TouchableOpacity>
-      <Icon
-        name="delete-forever"
-        style={styles.icon}
-        onPress={() => deletePlace(place._id)}
-      ></Icon>
+      <TouchableOpacity>
+        <Icon
+          name="delete-forever"
+          style={styles.icon}
+          onPress={() => deleteplace(place._id)}
+        ></Icon>
+      </TouchableOpacity>
       <ScrollView>
         <View style={styles.rect1}>
           <Text

@@ -184,7 +184,7 @@ export default function UpdateEvent({ route, navigation }) {
             ) : (
               ""
             )}
-            <Text style={styles.nameText}>Enter Blog Name</Text>
+            <Text style={styles.nameText}>Enter Event Name</Text>
             <TextInput
               placeholder="Enter Event Name"
               style={styles.textInput}
@@ -225,7 +225,7 @@ export default function UpdateEvent({ route, navigation }) {
             style={[styles.containerx, styles.materialButtonDark1]}
             onPress={updateEvent}
           >
-            <Text style={styles.loginButton}>Update Blog</Text>
+            <Text style={styles.loginButton}>Update Event</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>

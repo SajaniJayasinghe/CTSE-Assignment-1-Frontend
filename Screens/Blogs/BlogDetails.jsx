@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
-import { useRoute } from "@react-navigation/native";
 
 export default function BlogDetails({ route, navigation }) {
   const [blog, setblog] = useState("");
@@ -86,7 +85,75 @@ export default function BlogDetails({ route, navigation }) {
           Amenities
         </Text>
 
-        {/* ScrollView  */}
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          scrollEventThrottle={200}
+          decelerationRate="fast"
+          pagingEnabled
+          borderWidth={1}
+          width={369}
+          height={80}
+          marginLeft={10}
+          borderRadius={30}
+          borderColor="#A9A9A9"
+          marginTop={10}
+        >
+          <Image
+            style={styles.tinyLogo2}
+            source={{
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679771233/pngtree-book-icon-in-black-color-png-image_1713457_mfivfd.jpg",
+            }}
+          />
+          <Text
+            style={{
+              marginLeft: -48,
+              marginTop: 55,
+              fontSize: 18,
+              fontWeight: "bold",
+              fontFamily: "Times New Roman",
+              color: "#52595D",
+            }}
+          >
+            Book
+          </Text>
+          <Image
+            style={styles.tinyLogo3}
+            source={{
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679771390/png-transparent-video-production-freemake-video-er-video-icon-free-angle-text-rectangle-thumbnail_gdwo9m.png",
+            }}
+          />
+          <Text
+            style={{
+              marginLeft: -50,
+              marginTop: 55,
+              fontSize: 18,
+              fontWeight: "bold",
+              fontFamily: "Times New Roman",
+              color: "#52595D",
+            }}
+          >
+            Videos
+          </Text>
+          <Image
+            style={styles.tinyLogo3}
+            source={{
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679771499/png-clipart-blogger-computer-icons-social-media-marketing-blog-icon-service-logo-thumbnail_kjocxc.png",
+            }}
+          />
+          <Text
+            style={{
+              marginLeft: -50,
+              marginTop: 55,
+              fontSize: 18,
+              fontWeight: "bold",
+              fontFamily: "Times New Roman",
+              color: "#52595D",
+            }}
+          >
+            Images
+          </Text>
+        </ScrollView>
       </View>
       <Text
         style={{
@@ -218,17 +285,17 @@ const styles = StyleSheet.create({
     width: 46,
     height: 46,
     marginBottom: -20,
-    marginTop: 8,
+    marginTop: 5,
     borderRadius: 100,
-    marginLeft: 30,
+    marginLeft: 50,
   },
   tinyLogo3: {
-    width: 76,
-    height: 76,
+    width: 46,
+    height: 46,
     marginBottom: -20,
-    marginTop: -8,
+    marginTop: 5,
     borderRadius: 100,
-    marginLeft: 28,
+    marginLeft: 80,
   },
   tinyLogo4: {
     width: 46,

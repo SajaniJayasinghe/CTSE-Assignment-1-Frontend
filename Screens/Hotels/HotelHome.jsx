@@ -35,10 +35,10 @@ export default function HotelHome({ navigation }) {
     <>
       <View style={styles.container}>
         <View>
-          <Text style={styles.Text1}>All Hotels</Text>
+          <Text style={styles.Text1}>Hotels</Text>
           <TextInput
             style={styles.inputserach}
-            placeholder="Search for Event name"
+            placeholder="Search for Hotels"
             value={search}
             onChangeText={(text) => setSearch(text)}
           />

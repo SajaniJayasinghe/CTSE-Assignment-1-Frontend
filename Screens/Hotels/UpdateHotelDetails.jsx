@@ -3,6 +3,7 @@ import {
   Image,
   StyleSheet,
   Text,
+  Alert,
   TouchableOpacity,
   TextInput,
   ScrollView,
@@ -30,12 +31,12 @@ export default function UpdateHotelDetails({ route, navigation }) {
   const [address, setaddress] = useState("");
   const [phone, setphone] = useState("");
   const [facilities, setfacilities] = useState();
-  const [hotelID, sethotelID] = useState("");
+  const [hotelID, sethotelID] = useState(route.params);
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageUploadStatus, setImageUploadStatus] = useState(
-    "Choose Event Picture"
+    "Choose Hotel Picture"
   );
   const [validationErrors, setValidationErrors] = useState({});
   const [error, setError] = useState("");
@@ -78,7 +79,7 @@ export default function UpdateHotelDetails({ route, navigation }) {
       description: description,
       address: address,
       phone: phone,
-      facilities: setselectedItems,
+      facilities: selectedItems,
     };
 
     try {

@@ -124,7 +124,7 @@ export default function AddBlog({ navigation }) {
             fontSize: 30,
             marginLeft: -10,
             marginTop: 20,
-            color: "#0D084A",
+            color: "#3F000F",
           }}
         >
           Add New Blog
@@ -179,7 +179,7 @@ export default function AddBlog({ navigation }) {
               ""
             )}
 
-            <Text style={styles.nameText}>Enter Event Name</Text>
+            <Text style={styles.nameText}>Enter Blog Name</Text>
             <TextInput
               placeholder="Enter Blog Name "
               style={styles.textInput}
@@ -396,11 +396,11 @@ const styles = StyleSheet.create({
   materialButtonDark1: {
     height: 45,
     width: 210,
-    backgroundColor: "#B0BBD5",
+    backgroundColor: "#551606",
     borderRadius: 100,
     elevation: 5,
     shadowOpacity: 0,
-    marginTop: -10,
+    marginTop: 20,
     marginBottom: 10,
     marginLeft: 90,
   },
@@ -428,7 +428,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   loginButton: {
-    color: "black",
+    color: "white",
     fontWeight: "bold",
     fontSize: 22,
     lineHeight: 20,
@@ -443,5 +443,17 @@ const styles = StyleSheet.create({
     marginTop: "5%",
     borderColor: "grey",
     borderWidth: 1,
+  },
+  item: {
+    padding: 17,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  arrowHeader: {
+    paddingHorizontal: "5%",
+    marginTop: "12%",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });

@@ -3,7 +3,7 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
+  Alert,
   TouchableOpacity,
   ScrollView,
   TextInput,
@@ -29,13 +29,12 @@ export default function UpdateBlog({ route, navigation }) {
   const [description, setdescription] = useState("");
   const [picture, setpicture] = useState("");
   const [date, setdate] = useState("");
-  const [blogID, setblogID] = useState("");
+  const [blogID, setblogID] = useState(route.params);
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [imageUploadStatus, setImageUploadStatus] = useState(
-    "Choose Event Picture"
-  );
+  const [imageUploadStatus, setImageUploadStatus] =
+    useState("Choose Blog Image");
   const [validationErrors, setValidationErrors] = useState({});
   const [error, setError] = useState("");
 
@@ -66,8 +65,8 @@ export default function UpdateBlog({ route, navigation }) {
 
   const updateBlog = async () => {
     const URL = `http://localhost:8080/api/blog/update/${blogID}`;
-
     const payload = new FormData();
+    setLoading(true);
 
     const updatedData = {
       blogName: blogName,
@@ -83,7 +82,7 @@ export default function UpdateBlog({ route, navigation }) {
           console.log(res.data);
           setLoading(false);
           Alert.alert("Blog Updated Successfully");
-          navigation.push("BLOGDetails", blogID);
+          navigation.push("BlogDetails", blogID);
         } else {
           setError(res.data.error);
           setLoading(false);
@@ -144,7 +143,7 @@ export default function UpdateBlog({ route, navigation }) {
               data={data}
               labelField="label"
               valueField="value"
-              placeholder="Select Events"
+              placeholder="Select Blogs"
               searchPlaceholder="Search..."
               value={selectedItems}
               onChange={(item) => {
@@ -186,13 +185,6 @@ export default function UpdateBlog({ route, navigation }) {
               value={blogName}
               onChange={(e) => setblogName(e.nativeEvent.text)}
             />
-            {/* <Text style={styles.nameText2}>Enter Location</Text>
-            <TextInput
-              placeholder="Enter Location"
-              value={location}
-              onChange={(e) => setlocation(e.nativeEvent.text)}
-              style={styles.textInput}
-            /> */}
             <Text style={styles.nameText2}>Enter Date </Text>
             <TextInput
               placeholder="Enter Date"
@@ -200,14 +192,6 @@ export default function UpdateBlog({ route, navigation }) {
               value={date}
               onChange={(e) => setdate(e.nativeEvent.text)}
             />
-            {/* <Text style={styles.nameText2}>Enter Ticket Price </Text>
-            <TextInput
-              placeholder="Enter Ticket Price "
-              style={styles.textInput}
-              value={ticket_price}
-              onChange={(e) => setticket_price(e.nativeEvent.text)}
-            /> */}
-
             <Text style={styles.decsription}>Enter Description</Text>
             <ScrollView>
               <TextInput
