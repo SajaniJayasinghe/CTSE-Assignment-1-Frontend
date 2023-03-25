@@ -16,7 +16,7 @@ const LoadingScreen = ({navigation}) =>{
                 fontSize: 40,
                 marginBottom: 20,
                 fontWeight:"bold",
-                fontFamily: "Times New Roman",
+               
               }}>
              Explore Beauty of Journey
             </Text>
@@ -28,7 +28,7 @@ const LoadingScreen = ({navigation}) =>{
                 fontSize: 17,
                 marginBottom: 20,
                 fontWeight:"bold",
-                fontFamily: "Times New Roman",
+               
             }}
             > Everything you can imagine, is here</Text>
             
@@ -40,7 +40,7 @@ const LoadingScreen = ({navigation}) =>{
             
             <TouchableOpacity
                style={[style.containerx, style.materialButtonDark]}
-               onPress={() => navigation.navigate("HomeScreen")}
+               onPress={() => navigation.navigate("SpecificBlog")}
              >
                 <Text style={style.letsGetStarted} >Get Started</Text>
             </TouchableOpacity>

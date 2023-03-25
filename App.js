@@ -17,6 +17,13 @@ import UpdateEvent from "./Screens/Events/UpdateEvent";
 import EventList from "./Screens/Events/EventList";
 import SpecificEvent from "./Screens/Events/SpecificEvent";
 
+//Randy
+import BlogsHome from "./Screens/Blogs/BlogsHome";
+import AddBlog from "./Screens/Blogs/AddBlog";
+import BlogDetails from "./Screens/Blogs/BlogDetails";
+import SpecificBlog from "./Screens/Blogs/SpecificBlog";
+import UpdateBlog from "./Screens/Blogs/UpdateBlog";
+
 export default function App() {
   const Stack = createNativeStackNavigator();
 
@@ -38,7 +45,14 @@ export default function App() {
         <Stack.Screen name="AddEvent" component={AddEvent} />
         <Stack.Screen name="UpdateEvent" component={UpdateEvent} />
         <Stack.Screen name="EventList" component={EventList} />
-        <Stack.Screen name="SpecificEvent" component={SpecificEvent} />
+        <Stack.Screen name="SpecificBlog" component={SpecificEvent} />
+
+        {/* Randy */}
+        <Stack.Screen name="BlogsHome" component={BlogsHome} />
+        <Stack.Screen name="AddBlog" component={AddBlog} />
+        <Stack.Screen name="BlogDetails" component={BlogDetails} />
+        {/* <Stack.Screen name="SpecificBlog" component={SpecificBlog} /> */}
+        <Stack.Screen name="UpdateBlog" component={UpdateBlog} />
       </Stack.Navigator>
     </NavigationContainer>
   );

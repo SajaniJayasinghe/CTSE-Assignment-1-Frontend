@@ -3,32 +3,30 @@ import { View, Image, StyleSheet, Text, TouchableOpacity,ScrollView,Alert } from
 import axios from "axios";
 import { useRoute } from "@react-navigation/native";
 
+export default function SpecificBlog({navigation}) {
+    const [blog, setblog] = useState([]);
+    const [filterBlog, setfilterBlog] = useState([]);
+    const [search, setSearch] = useState("");
 
-export default function SpecificEvent({navigation}) {
-  const [event, setevent] = useState([]);
-  const [filterEvent, setfilterEvent] = useState([]);
-  const [search, setSearch] = useState("");
+    useEffect(() => {
+        axios
+          .get("http://localhost:8080/api/blog/getblog")
+          .then((res) => {
+            if (res.data.success) {
+                setblog(res.data.Blog);
+            }
+          });
+      }, []);
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:8080/api/events/getevent")
-      .then((res) => {
-        if (res.data.success) {
-            setevent(res.data.Event);
-        }
-      });
-  }, []);
+      const searchFunc = (text) => {
+        return blog.filter((blog) => blog.blogName === text);
+      };
+      useEffect(() => {
+        setfilterBlog(searchFunc(search));
+      }, [search]);
 
-  const searchFunc = (text) => {
-    return event.filter((event) => event.event_name === text);
-  };
-
-  useEffect(() => {
-    setfilterEvent(searchFunc(search));
-  }, [search]);
-
-
-    return(
+      
+      return(
         <View style={styles.container}>
            <Image
                 style={styles.homelogo}
@@ -40,7 +38,7 @@ export default function SpecificEvent({navigation}) {
              <Image
                 style={styles.tinyLogo}
                 source={{
-                uri: "https://res.cloudinary.com/dotz6cdgt/image/upload/v1679713666/pexels-fabian-wiktor-994605_qifbed.jpg",
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481372/3_vgqveh.jpg",
                 }}
               />
           </View>
@@ -51,7 +49,6 @@ export default function SpecificEvent({navigation}) {
                     marginTop:27,
                     fontSize: 19,
                     fontWeight: "bold",
-                    fontFamily: "Times New Roman",
                     color:"#000000"
                 }}
                  >
@@ -83,7 +80,6 @@ export default function SpecificEvent({navigation}) {
                     marginTop:55,
                     fontSize: 18,
                     fontWeight: "bold",
-                    fontFamily: "Times New Roman",
                     color:"#52595D"
                 }}
                  >
@@ -101,7 +97,6 @@ export default function SpecificEvent({navigation}) {
                     marginTop:55,
                     fontSize: 18,
                     fontWeight: "bold",
-                    fontFamily: "Times New Roman",
                     color:"#52595D"
                 }}
                  >
@@ -119,7 +114,6 @@ export default function SpecificEvent({navigation}) {
                     marginTop:55,
                     fontSize: 18,
                     fontWeight: "bold",
-                    fontFamily: "Times New Roman",
                     color:"#52595D"
                 }}
                  >
@@ -137,7 +131,6 @@ export default function SpecificEvent({navigation}) {
                     marginTop:55,
                     fontSize: 18,
                     fontWeight: "bold",
-                    fontFamily: "Times New Roman",
                     color:"#52595D"
                 }}
                  >
@@ -150,15 +143,14 @@ export default function SpecificEvent({navigation}) {
                 fontSize: 18,
                 marginTop:20,
                 fontWeight: "bold",
-                fontFamily: "Times New Roman",
                 color:"#000000"
                }}>
                 Description {'\n'}
               </Text>
              <ScrollView>
-             {(search === "" ? event : filterEvent).map(
-                     (event, index) => (
-                  <View key={event + index}>
+             {(search === "" ? blog : filterBlog).map(
+                     (blog, index) => (
+                  <View key={blog + index}>
                 <View style={styles.rect1}>
                 <Text style={{
                     marginLeft:20,
@@ -168,7 +160,7 @@ export default function SpecificEvent({navigation}) {
                     fontWeight:"bold",
                     marginTop:10
                 }}>
-                {event.event_name} -    {event.type}
+                {blog.blogName} -    {blog.type}
                 </Text>
                 <Image
                     style={styles.tinyLogo8}
@@ -179,36 +171,13 @@ export default function SpecificEvent({navigation}) {
                 <Text style={{
                     marginLeft:40,
                     fontSize: 15,
-                    marginTop:3,
-                    fontFamily:"Times New Roman",
-                    color:"#52595D",
-                    fontWeight:"bold"
-                }}>
-                  {event.location} {/* {hotel.location} */}
-                    {'\n'}
-                </Text>
-                <Text style={{
-                    marginLeft:40,
-                    fontSize: 15,
                     marginTop:-13,
                     fontFamily:"Times New Roman",
                     color:"#52595D",
                     fontWeight:"bold"
                 }}>
-                  {event.date}
+                  {blog.date}
                     {'\n'}
-                </Text>
-                <Text style={{
-                    marginLeft:38,
-                    fontSize: 15,
-                    marginTop:-10,
-                    fontFamily:"Times New Roman",
-                    color:"#000000",
-                    textAlign:"justify",
-                    fontWeight:"bold",
-                    marginRight:20
-                }}>
-               Ticket Price :  {event.ticket_price}{'\n'}
                 </Text>
                 <Text style={{
                     marginLeft:20,
@@ -219,7 +188,7 @@ export default function SpecificEvent({navigation}) {
                     textAlign:"justify",
                     fontWeight:"bold",
                     marginRight:20
-                }}> {event.description}
+                }}> {blog.description}
                 </Text>
                   </View>
                 </View>
@@ -273,12 +242,12 @@ const styles = StyleSheet.create({
         shadowRadius: 13,
       },
     tinyLogo: {
-        width: 400,
+        width: 357,
         height: 200,
         marginBottom: -20,
         marginTop: -10,
         borderRadius: 5,
-        marginLeft: -9,
+        marginLeft: 1,
       },
     tinyLogo2: {
         width: 46,
