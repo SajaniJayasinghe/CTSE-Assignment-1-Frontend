@@ -21,6 +21,9 @@ import SpecificEvent from "./Screens/Events/SpecificEvent";
 import AddHotels from "./Screens/Hotels/AddHotels";
 import HotelDetails from "./Screens/Hotels/HotelDetails";
 import HotelHome from "./Screens/Hotels/HotelHome";
+import UpdateHotelDetails from "./Screens/Hotels/UpdateHotelDetails";
+import HotelList from "./Screens/Hotels/HotelList";
+import SpecificHotel from "./Screens/Hotels/SpecificHotel";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -49,6 +52,12 @@ export default function App() {
         <Stack.Screen name="AddHotels" component={AddHotels} />
         <Stack.Screen name="HotelDetails" component={HotelDetails} />
         <Stack.Screen name="HotelHome" component={HotelHome} />
+        <Stack.Screen
+          name="UpdateHotelDetails"
+          component={UpdateHotelDetails}
+        />
+        <Stack.Screen name="HotelList" component={HotelList} />
+        <Stack.Screen name="SpecificHotel" component={SpecificHotel} />
       </Stack.Navigator>
     </NavigationContainer>
   );
