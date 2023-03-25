@@ -73,7 +73,7 @@ export default function HotelDetails({ navigation }) {
       >
         {" "}
         Hotel Name
-        {/* {hotel.name} */}
+        {hotel.name}
       </Text>
       <View style={styles.rect}>
         <Image
@@ -215,11 +215,6 @@ export default function HotelDetails({ navigation }) {
         Description {"\n"}
       </Text>
       <TouchableOpacity
-        // onPress={() =>
-        //   navigation.navigate("UpdateHotelDetails", {
-        //     donationID: donations._id,
-        //   })
-        // }
         onPress={() => navigation.navigate("UpdateHotelDetails")}
       >
         <Icon
@@ -251,7 +246,7 @@ export default function HotelDetails({ navigation }) {
               marginTop: 15,
             }}
           >
-            Araliya Beach Resort Unawatuna {/* {hotel.name} */}
+            {hotel.name}
           </Text>
           <Image
             style={styles.tinyLogo6}
@@ -269,7 +264,7 @@ export default function HotelDetails({ navigation }) {
               fontWeight: "bold",
             }}
           >
-            Unawatuna, Southern Province, Sri Lanka {/* {hotel.name} */}
+            {hotel.address}
             {"\n"}
           </Text>
           <Text
@@ -284,15 +279,7 @@ export default function HotelDetails({ navigation }) {
               marginRight: 20,
             }}
           >
-            {/* {hotel.description} */}
-            Take advantage of a free breakfast buffet, a rooftop terrace, and a
-            coffee shop/cafe at Araliya Beach Resort and Spa. This resort is a
-            great place to bask in the sun with a white sand beach. Treat
-            yourself to a Thai massage at the onsite spa. Be sure to enjoy a
-            meal at any of the 4 onsite restaurants, which feature a poolside
-            location and garden views. In addition to a garden and dry
-            cleaning/laundry services, guests can connect to free in-room WiFi,
-            with speed of 50+ Mbps.
+            {hotel.description}
           </Text>
         </View>
       </ScrollView>
