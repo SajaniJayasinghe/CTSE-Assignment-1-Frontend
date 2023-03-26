@@ -47,47 +47,54 @@ export default function AddHotels({ navigation }) {
   const addHotel = () => {
     const URL = `http://localhost:8080/api/hotels/addhotel`;
 
-    const payload = new FormData();
-    setLoading(true);
-    payload.append("name", name);
-    payload.append("description", description);
-    payload.append("picture", {
-      uri: image,
-      type: "image/jpeg",
-      name: "image.jpg",
-    });
-    payload.append("address", address);
-    payload.append("phone", phone);
-
-    //for multiple selection
-    if (selectedItems.length > 0) {
-      for (var i = 0; i < selectedItems.length; i++) {
-        payload.append(`facilities[${i}]`, selectedItems[i]);
-      }
-    }
-
-    axios
-      .post(URL, payload, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        Alert.alert("Success", "Hotel Added Successfully");
-        setLoading(false);
-        navigation.navigate("HotelHome");
-      })
-      .catch((error) => {
-        console.log(error);
-        setLoading(false);
-        Alert.alert(
-          "Error",
-          "Hotel adding Unsuccessful",
-          [{ text: "Check Again" }],
-          { cancelable: false }
-        );
+    if (!name) {
+      setValidationErrors({ name: "Hotel name is Required" });
+    } else if (!image) {
+      setValidationErrors({ picture: "Picture is Required" });
+    } else {
+      const payload = new FormData();
+      setLoading(true);
+      payload.append("name", name);
+      payload.append("description", description);
+      payload.append("picture", {
+        uri: image,
+        type: "image/jpeg",
+        name: "image.jpg",
       });
+      payload.append("address", address);
+      payload.append("phone", phone);
+
+      //for multiple selection
+      if (selectedItems.length > 0) {
+        for (var i = 0; i < selectedItems.length; i++) {
+          payload.append(`facilities[${i}]`, selectedItems[i]);
+        }
+      }
+
+      axios
+        .post(URL, payload, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          Alert.alert("Success", "Hotel Added Successfully");
+          setLoading(false);
+          navigation.navigate("HotelHome");
+        })
+        .catch((error) => {
+          console.log(error);
+          setLoading(false);
+          Alert.alert(
+            "Error",
+            "Hotel adding Unsuccessful",
+            [{ text: "Check Again" }],
+            { cancelable: false }
+          );
+        });
+    }
   };
+
   console.log(image);
   //for Image upload
   const pickImage = async () => {
@@ -186,6 +193,13 @@ export default function AddHotels({ navigation }) {
               onChange={(e) => setname(e.nativeEvent.text)}
               value={name}
             />
+            {validationErrors.name ? (
+              <Text style={styles.errorTextSelection}>
+                {validationErrors.name}
+              </Text>
+            ) : (
+              ""
+            )}
             <Text style={styles.nameText1}>Enter Hotel Address</Text>
             <TextInput
               placeholder="Enter Hotel Address here"
@@ -221,6 +235,13 @@ export default function AddHotels({ navigation }) {
                 <Text style={styles.uploadTxt}>Upload</Text>
               </TouchableOpacity>
             </View>
+            {validationErrors.picture ? (
+              <Text style={styles.errorTextSelection}>
+                {validationErrors.picture}
+              </Text>
+            ) : (
+              ""
+            )}
           </ScrollView>
         </View>
         <View>
@@ -388,5 +409,23 @@ const styles = StyleSheet.create({
     marginTop: "12%",
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  errorText: {
+    width: "100%",
+    marginLeft: "3%",
+    color: "red",
+    marginTop: "-4%",
+    marginBottom: "3%",
+    fontSize: 12,
+    textAlign: "left",
+  },
+  errorTextSelection: {
+    width: "100%",
+    marginLeft: "10%",
+    color: "red",
+    marginTop: "2%",
+    marginBottom: "3%",
+    fontSize: 12,
+    textAlign: "left",
   },
 });

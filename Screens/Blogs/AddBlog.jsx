@@ -47,47 +47,55 @@ export default function AddBlog({ navigation }) {
   const addblog = () => {
     const URL = `http://localhost:8080/api/blog/addblog`;
 
-    const payload = new FormData();
-    setLoading(true);
-    payload.append("blogName", blogName);
-    payload.append("description", description);
-    payload.append("picture", {
-      uri: image,
-      type: "image/jpeg",
-      name: "image.jpg",
-    });
-    payload.append("date", date);
-    console.log(payload);
-
-    //for multiple selection
-    if (selectedItems.length > 0) {
-      for (var i = 0; i < selectedItems.length; i++) {
-        payload.append(`type[${i}]`, selectedItems[i]);
-      }
-    }
-
-    axios
-      .post(URL, payload, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        Alert.alert("Success", "Blog Added Successfully");
-        setLoading(false);
-        navigation.navigate("BlogsHome");
-      })
-      .catch((error) => {
-        console.log(error);
-        setLoading(false);
-        Alert.alert(
-          "Error",
-          "Blog adding Unsuccessful",
-          [{ text: "Check Again" }],
-          { cancelable: false }
-        );
+    if (!blogName) {
+      setValidationErrors({
+        blogName: "Blog Name is required",
       });
+    } else if (!image) {
+      setValidationErrors({ picture: "Picture is Required" });
+    } else {
+      const payload = new FormData();
+      setLoading(true);
+      payload.append("blogName", blogName);
+      payload.append("description", description);
+      payload.append("picture", {
+        uri: image,
+        type: "image/jpeg",
+        name: "image.jpg",
+      });
+      payload.append("date", date);
+      console.log(payload);
+
+      //for multiple selection
+      if (selectedItems.length > 0) {
+        for (var i = 0; i < selectedItems.length; i++) {
+          payload.append(`type[${i}]`, selectedItems[i]);
+        }
+      }
+
+      axios
+        .post(URL, payload, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          Alert.alert("Success", "Blog Added Successfully");
+          setLoading(false);
+          navigation.navigate("BlogsHome");
+        })
+        .catch((error) => {
+          console.log(error);
+          setLoading(false);
+          Alert.alert(
+            "Error",
+            "Blog adding Unsuccessful",
+            [{ text: "Check Again" }],
+            { cancelable: false }
+          );
+        });
+    }
   };
 
   //for Image upload
@@ -186,6 +194,13 @@ export default function AddBlog({ navigation }) {
               onChange={(e) => setblogName(e.nativeEvent.text)}
               value={blogName}
             />
+            {validationErrors.blogName ? (
+              <Text style={styles.errorTextSelection}>
+                {validationErrors.blogName}
+              </Text>
+            ) : (
+              ""
+            )}
 
             <Text style={styles.nameText2}>Enter Description</Text>
             <TextInput
@@ -193,6 +208,13 @@ export default function AddBlog({ navigation }) {
               style={styles.nameText3}
               value={description}
               onChange={(e) => setdescription(e.nativeEvent.text)}
+            />
+            <Text style={styles.nameText2}>Enter Date </Text>
+            <TextInput
+              placeholder="Enter Date"
+              style={styles.textInput}
+              onChange={(e) => setdate(e.nativeEvent.text)}
+              value={date}
             />
 
             <View style={styles.imageUploadField}>
@@ -207,13 +229,13 @@ export default function AddBlog({ navigation }) {
                 <Text style={styles.uploadTxt}>Upload</Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.nameText2}>Enter Date </Text>
-            <TextInput
-              placeholder="Enter Date"
-              style={styles.textInput}
-              onChange={(e) => setdate(e.nativeEvent.text)}
-              value={date}
-            />
+            {validationErrors.picture ? (
+              <Text style={styles.errorTextSelection}>
+                {validationErrors.picture}
+              </Text>
+            ) : (
+              ""
+            )}
           </View>
           <TouchableOpacity
             style={[styles.containerx, styles.materialButtonDark1]}
@@ -455,5 +477,23 @@ const styles = StyleSheet.create({
     marginTop: "12%",
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  errorText: {
+    width: "100%",
+    marginLeft: "3%",
+    color: "red",
+    marginTop: "-4%",
+    marginBottom: "3%",
+    fontSize: 12,
+    textAlign: "left",
+  },
+  errorTextSelection: {
+    width: "100%",
+    marginLeft: "10%",
+    color: "red",
+    marginTop: "2%",
+    marginBottom: "3%",
+    fontSize: 12,
+    textAlign: "left",
   },
 });

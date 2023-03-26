@@ -32,50 +32,62 @@ export default function EventList({ navigation }) {
   }, [search]);
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.inputserach}
-        placeholder="Search for Events"
-        value={search}
-        onChangeText={(text) => setSearch(text)}
-      />
-      <Text style={styles.Text1}>Event List</Text>
+    <>
+      <View style={styles.container}>
+        <View>
+          <Text style={styles.Text1}>All Events</Text>
+          <TextInput
+            style={styles.inputserach}
+            placeholder="Search for Event name"
+            value={search}
+            onChangeText={(text) => setSearch(text)}
+          />
 
-      <ScrollView style={{ display: "flex", flexDirection: "column" }}>
-        {(search === "" ? event : filterEvent).map((event, index) => (
-          <View key={event + index}>
-            <View style={styles.hotel}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("SpecificEvent")}
-              >
-                <Image
-                  style={styles.tinyLogo1}
-                  source={{ uri: event.picture }}
-                />
-
-                <Text
-                  style={{
-                    color: "#000000",
-                    textAlign: "center",
-                    marginTop: 30,
-                    marginBottom: 10,
-                    fontSize: 18,
-                    fontWeight: "bold",
-                    fontFamily: "Times New Roman",
-                  }}
-                >
-                  {event.event_name}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
-      </ScrollView>
-    </View>
+          <ScrollView style={{ display: "flex", flexDirection: "column" }}>
+            {(search === "" ? event : filterEvent).map((event, index) => (
+              <View key={event + index}>
+                <View style={styles.event}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("SpecificEvent", event._id)
+                    }
+                  >
+                    <Image
+                      style={styles.tinyLogo1}
+                      source={{ uri: event.picture }}
+                    />
+                    <Text
+                      style={{
+                        color: "#000000",
+                        textAlign: "center",
+                        marginTop: 30,
+                        fontSize: 18,
+                        fontWeight: "bold",
+                        fontFamily: "Times New Roman",
+                      }}
+                    >
+                      {event.event_name}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+      </View>
+      <TouchableOpacity onPress={() => navigation.navigate("AddEvent")}>
+        <Image
+          style={styles.addevent}
+          source={{
+            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679429885/11-removebg-preview_l55wvj.png",
+          }}
+        />
+      </TouchableOpacity>
+    </>
   );
 }
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
@@ -87,7 +99,7 @@ export const styles = StyleSheet.create({
     elevation: 3,
     borderRadius: 40,
     padding: 10,
-    marginTop: 30,
+    marginTop: 20,
     width: 350,
     justifyContent: "center",
     alignItems: "center",
@@ -95,22 +107,25 @@ export const styles = StyleSheet.create({
     height: 40,
     borderWidth: 1,
   },
-  homelogo: {
-    width: 400,
-    height: 20,
-    marginTop: 0,
-    marginLeft: 0,
-  },
+
   Text1: {
     color: "#000000",
     textAlign: "center",
     marginTop: 20,
-    marginLeft: -250,
-    fontSize: 20,
+    fontSize: 30,
+    marginBottom: 10,
     fontWeight: "bold",
     fontFamily: "Times New Roman",
   },
-  hotel: {
+  tinyLogo1: {
+    width: 350,
+    height: 200,
+    marginBottom: -20,
+    marginTop: 0,
+    marginLeft: 0,
+    borderRadius: 25,
+  },
+  event: {
     width: 350,
     height: 200,
     backgroundColor: "rgba(255,255,255,1)",
@@ -123,15 +138,16 @@ export const styles = StyleSheet.create({
     elevation: 39,
     shadowOpacity: 1,
     marginTop: 20,
-    marginLeft: 19,
+    marginLeft: 22,
+    marginBottom: 30,
     shadowRadius: 13,
   },
-  tinyLogo1: {
-    width: 350,
-    height: 160,
-    marginBottom: -20,
-    marginTop: 0,
+  addevent: {
+    width: 120,
+    height: 120,
+    marginLeft: 270,
     borderRadius: 25,
-    marginLeft: 0,
+    marginTop: 0,
+    borderColor: "black",
   },
 });

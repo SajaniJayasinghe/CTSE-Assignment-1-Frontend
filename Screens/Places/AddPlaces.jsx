@@ -55,46 +55,56 @@ export default function AddPlaces({ navigation }) {
   const addplace = () => {
     const URL = `http://localhost:8080/api/places/addplace`;
 
-    const payload = new FormData();
-    setLoading(true);
-    payload.append("name", name);
-    payload.append("type", type);
-    payload.append("description", description);
-    payload.append("picture", {
-      uri: image,
-      type: "image/jpeg",
-      name: "image.jpg",
-    });
-    payload.append("city", city);
-
-    //for multiple selection
-    if (selectedItems.length > 0) {
-      for (var i = 0; i < selectedItems.length; i++) {
-        payload.append(`facilities[${i}]`, selectedItems[i]);
-      }
-    }
-
-    axios
-      .post(URL, payload, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        Alert.alert("Success", "Place Added Successfully");
-        setLoading(false);
-        navigation.navigate("PlacesHome");
-      })
-      .catch((error) => {
-        console.log(error);
-        setLoading(false);
-        Alert.alert(
-          "Error",
-          "Place adding Unsuccessful",
-          [{ text: "Check Again" }],
-          { cancelable: false }
-        );
+    if (!name) {
+      setValidationErrors({ name: "Enter Place Name" });
+    } else if (!image) {
+      setValidationErrors({ image: "Please Upload Image" });
+    } else if (!city) {
+      setValidationErrors({ city: "Enter City" });
+    } else if (!description) {
+      setValidationErrors({ description: "Enter Place Description" });
+    } else {
+      const payload = new FormData();
+      setLoading(true);
+      payload.append("name", name);
+      payload.append("type", type);
+      payload.append("description", description);
+      payload.append("picture", {
+        uri: image,
+        type: "image/jpeg",
+        name: "image.jpg",
       });
+      payload.append("city", city);
+
+      //for multiple selection
+      if (selectedItems.length > 0) {
+        for (var i = 0; i < selectedItems.length; i++) {
+          payload.append(`facilities[${i}]`, selectedItems[i]);
+        }
+      }
+
+      axios
+        .post(URL, payload, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          Alert.alert("Success", "Place Added Successfully");
+          setLoading(false);
+          navigation.navigate("PlacesHome");
+        })
+        .catch((error) => {
+          console.log(error);
+          setLoading(false);
+          Alert.alert(
+            "Error",
+            "Place adding Unsuccessful",
+            [{ text: "Check Again" }],
+            { cancelable: false }
+          );
+        });
+    }
   };
 
   //for Image upload
@@ -146,6 +156,13 @@ export default function AddPlaces({ navigation }) {
             value={name}
             onChange={(e) => setname(e.nativeEvent.text)}
           />
+          {validationErrors.name ? (
+            <Text style={styles.errorTextSelection}>
+              {validationErrors.name}
+            </Text>
+          ) : (
+            ""
+          )}
 
           <Text style={styles.nameText3}>Select Place Type</Text>
           <Dropdown
@@ -225,6 +242,7 @@ export default function AddPlaces({ navigation }) {
               setcity(e.nativeEvent.text);
             }}
           />
+
           <Text style={styles.nameText3}>Enter Description</Text>
           <TextInput
             placeholder="Enter Description here"
@@ -234,6 +252,7 @@ export default function AddPlaces({ navigation }) {
             }}
             value={description}
           />
+
           <View style={styles.imageUploadField}>
             <TextInput
               style={styles.ImageTextInput}
@@ -246,6 +265,13 @@ export default function AddPlaces({ navigation }) {
               <Text style={styles.uploadTxt}>Upload</Text>
             </TouchableOpacity>
           </View>
+          {validationErrors.picture ? (
+            <Text style={styles.errorTextSelection}>
+              {validationErrors.picture}
+            </Text>
+          ) : (
+            ""
+          )}
         </ScrollView>
         <TouchableOpacity
           style={[styles.containerx, styles.materialButtonDark1]}
@@ -319,13 +345,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 18,
     marginTop: 5,
+    marginBottom: 5,
     marginLeft: 36,
   },
   nameText4: {
     color: "#6D7B8D",
     fontSize: 16,
     lineHeight: 18,
-    marginTop: 7,
+    marginTop: 0,
     marginLeft: 36,
   },
   textInput: {
@@ -386,8 +413,8 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     elevation: 5,
     shadowOpacity: 0,
-    marginTop: 0,
-    marginBottom: 10,
+    marginTop: -10,
+    marginBottom: 50,
     marginLeft: 90,
   },
   loginButton: {
@@ -466,5 +493,23 @@ const styles = StyleSheet.create({
     marginTop: "12%",
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  errorText: {
+    width: "100%",
+    marginLeft: "3%",
+    color: "red",
+    marginTop: "-4%",
+    marginBottom: "3%",
+    fontSize: 12,
+    textAlign: "left",
+  },
+  errorTextSelection: {
+    width: "100%",
+    marginLeft: "10%",
+    color: "red",
+    marginTop: "2%",
+    marginBottom: "3%",
+    fontSize: 12,
+    textAlign: "left",
   },
 });
