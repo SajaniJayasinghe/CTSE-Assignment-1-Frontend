@@ -6,7 +6,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  TextInput,
+  TextInput
 } from "react-native";
 import axios from "axios";
 
@@ -63,7 +63,7 @@ export default function EventsHome({ navigation }) {
                         marginTop: 30,
                         fontSize: 18,
                         fontWeight: "bold",
-                        fontFamily: "Times New Roman",
+                        fontFamily: "Times New Roman"
                       }}
                     >
                       {event.event_name}
@@ -79,7 +79,7 @@ export default function EventsHome({ navigation }) {
         <Image
           style={styles.addevent}
           source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679429885/11-removebg-preview_l55wvj.png",
+            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679429885/11-removebg-preview_l55wvj.png"
           }}
         />
       </TouchableOpacity>
@@ -89,7 +89,7 @@ export default function EventsHome({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   inputserach: {
     backgroundColor: "white",
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginLeft: 20,
     height: 40,
-    borderWidth: 1,
+    borderWidth: 1
   },
 
   Text1: {
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     marginBottom: 10,
     fontWeight: "bold",
-    fontFamily: "Times New Roman",
+    fontFamily: "Times New Roman"
   },
   tinyLogo1: {
     width: 350,
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: 0,
     marginLeft: 0,
-    borderRadius: 25,
+    borderRadius: 25
   },
   event: {
     width: 350,
@@ -133,14 +133,14 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(208,194,194,1)",
     shadowOffset: {
       width: 5,
-      height: 5,
+      height: 5
     },
     elevation: 39,
     shadowOpacity: 1,
     marginTop: 20,
     marginLeft: 22,
     marginBottom: 30,
-    shadowRadius: 13,
+    shadowRadius: 13
   },
   addevent: {
     width: 120,
@@ -148,6 +148,6 @@ const styles = StyleSheet.create({
     marginLeft: 270,
     borderRadius: 25,
     marginTop: 0,
-    borderColor: "black",
-  },
+    borderColor: "black"
+  }
 });

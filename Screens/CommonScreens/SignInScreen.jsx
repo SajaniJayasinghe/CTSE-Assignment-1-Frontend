@@ -26,7 +26,7 @@ export default function SignInScreen({ navigation }) {
     await axios
       .post("http://localhost:8080/api/user/login", {
         email,
-        password,
+        password
       })
       .then((res) => {
         if (res.data) {
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   loginText3: {
     color: "black",
     fontSize: 18,
-    lineHeight: 18,
+    lineHeight: 18
   },
   loginText4: {
     color: "black",
@@ -179,7 +179,18 @@ const styles = StyleSheet.create({
     shadowOffset: {
       height: 1,
     },
+  },
 
+  containerx: {
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    borderRadius: 2,
+    shadowColor: "#000",
+    shadowOffset: {
+      height: 1
+    },
     shadowOpacity: 0.35,
     shadowRadius: 5,
     elevation: 2,

@@ -4,7 +4,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  ScrollView,
+  ScrollView
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
@@ -33,8 +33,8 @@ export default function UserDashBoard({ route, navigation }) {
     await axios
       .get("http://localhost:8080/api/user/userprofile", {
         headers: {
-          Authorization: userToken,
-        },
+          Authorization: userToken
+        }
       })
       .then((res) => {
         setProfile(res.data.User);
@@ -64,7 +64,7 @@ export default function UserDashBoard({ route, navigation }) {
         <Image
           style={styles.logo}
           source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679339046/user-removebg-preview_iwug42.png",
+            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679339046/user-removebg-preview_iwug42.png"
           }}
         />
         <Text
@@ -74,7 +74,7 @@ export default function UserDashBoard({ route, navigation }) {
             marginBottom: 10,
             fontSize: 18,
             fontWeight: "bold",
-            fontFamily: "Times New Roman",
+            fontFamily: "Times New Roman"
           }}
         >
           Hi, {profile.name}
@@ -88,7 +88,7 @@ export default function UserDashBoard({ route, navigation }) {
           marginLeft: -75,
           fontSize: 20,
           fontWeight: "bold",
-          fontFamily: "Times New Roman",
+          fontFamily: "Times New Roman"
         }}
       >
         Popular Location In this Month
@@ -108,7 +108,7 @@ export default function UserDashBoard({ route, navigation }) {
             <Image
               style={styles.tinyLogo}
               source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679392630/14_bzemlw.jpg",
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679392630/14_bzemlw.jpg"
               }}
             />
             <Text
@@ -119,7 +119,7 @@ export default function UserDashBoard({ route, navigation }) {
                 marginBottom: 10,
                 fontSize: 18,
                 fontWeight: "bold",
-                fontFamily: "Times New Roman",
+                fontFamily: "Times New Roman"
               }}
             >
               Sigiriya
@@ -133,7 +133,7 @@ export default function UserDashBoard({ route, navigation }) {
             <Image
               style={styles.tinyLogo1}
               source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679389476/13_edwh7e.webp",
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679389476/13_edwh7e.webp"
               }}
             />
             <Text
@@ -144,7 +144,7 @@ export default function UserDashBoard({ route, navigation }) {
                 marginBottom: 10,
                 fontSize: 18,
                 fontWeight: "bold",
-                fontFamily: "Times New Roman",
+                fontFamily: "Times New Roman"
               }}
             >
               Kalpitiya
@@ -158,7 +158,7 @@ export default function UserDashBoard({ route, navigation }) {
             <Image
               style={styles.tinyLogo}
               source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679393025/15_cowsqm.webp",
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679393025/15_cowsqm.webp"
               }}
             />
             <Text
@@ -169,7 +169,7 @@ export default function UserDashBoard({ route, navigation }) {
                 marginBottom: 10,
                 fontSize: 18,
                 fontWeight: "bold",
-                fontFamily: "Times New Roman",
+                fontFamily: "Times New Roman"
               }}
             >
               Mirirssa
@@ -183,7 +183,7 @@ export default function UserDashBoard({ route, navigation }) {
             <Image
               style={styles.tinyLogo1}
               source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679387783/9_bah0bc.jpg",
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679387783/9_bah0bc.jpg"
               }}
             />
             <Text
@@ -194,7 +194,7 @@ export default function UserDashBoard({ route, navigation }) {
                 marginBottom: 10,
                 fontSize: 20,
                 fontWeight: "bold",
-                fontFamily: "Times New Roman",
+                fontFamily: "Times New Roman"
               }}
             >
               Ella
@@ -208,7 +208,7 @@ export default function UserDashBoard({ route, navigation }) {
             <Image
               style={styles.tinyLogo1}
               source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679389317/11_vyatdh.webp",
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679389317/11_vyatdh.webp"
               }}
             />
             <Text
@@ -219,7 +219,7 @@ export default function UserDashBoard({ route, navigation }) {
                 marginBottom: 10,
                 fontSize: 18,
                 fontWeight: "bold",
-                fontFamily: "Times New Roman",
+                fontFamily: "Times New Roman"
               }}
             >
               Jetwing Villa
@@ -236,7 +236,7 @@ export default function UserDashBoard({ route, navigation }) {
           marginLeft: -150,
           fontSize: 20,
           fontWeight: "bold",
-          fontFamily: "Times New Roman",
+          fontFamily: "Times New Roman"
         }}
       >
         Recommended for You
@@ -272,7 +272,7 @@ export default function UserDashBoard({ route, navigation }) {
               marginLeft: 30,
               fontSize: 18,
               fontWeight: "bold",
-              fontFamily: "Times New Roman",
+              fontFamily: "Times New Roman"
             }}
           >
             Popular Categories
@@ -284,7 +284,7 @@ export default function UserDashBoard({ route, navigation }) {
             <Image
               style={styles.tinyLogo2}
               source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679372412/Screenshot_2023-03-21_at_09.49.09_mqtose.png",
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679372412/Screenshot_2023-03-21_at_09.49.09_mqtose.png"
               }}
             />
           </TouchableOpacity>
@@ -296,7 +296,7 @@ export default function UserDashBoard({ route, navigation }) {
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
-              color: "#52595D",
+              color: "#52595D"
             }}
           >
             Hotels
@@ -308,7 +308,7 @@ export default function UserDashBoard({ route, navigation }) {
             <Image
               style={styles.tinyLogo3}
               source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679372173/beach_lawbaj.jpg",
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679372173/beach_lawbaj.jpg"
               }}
             />
           </TouchableOpacity>
@@ -319,7 +319,7 @@ export default function UserDashBoard({ route, navigation }) {
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
-              color: "#52595D",
+              color: "#52595D"
             }}
           >
             Places
@@ -329,7 +329,7 @@ export default function UserDashBoard({ route, navigation }) {
             <Image
               style={styles.tinyLogo4}
               source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679372338/Screenshot_2023-03-21_at_09.45.12_e2t9so.png",
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679372338/Screenshot_2023-03-21_at_09.45.12_e2t9so.png"
               }}
             />
           </TouchableOpacity>
@@ -341,7 +341,7 @@ export default function UserDashBoard({ route, navigation }) {
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
-              color: "#52595D",
+              color: "#52595D"
             }}
           >
             Events
@@ -351,7 +351,7 @@ export default function UserDashBoard({ route, navigation }) {
             <Image
               style={styles.tinyLogo5}
               source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679372230/blog_o7qs8g.png",
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679372230/blog_o7qs8g.png"
               }}
             />
           </TouchableOpacity>
@@ -363,7 +363,7 @@ export default function UserDashBoard({ route, navigation }) {
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
-              color: "#52595D",
+              color: "#52595D"
             }}
           >
             Blogs
@@ -377,23 +377,23 @@ export default function UserDashBoard({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFEFA",
+    backgroundColor: "#FFFEFA"
   },
   container1: {
     width: 500,
     height: 430,
-    marginTop: 40,
+    marginTop: 40
   },
   container2: {
     width: 500,
     height: 190,
-    marginTop: -80,
+    marginTop: -80
   },
   logo: {
     width: 55,
     height: 55,
     marginLeft: 320,
-    marginTop: 13,
+    marginTop: 13
   },
   rect: {
     width: 178,
@@ -403,20 +403,20 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(208,194,194,1)",
     shadowOffset: {
       width: 5,
-      height: 5,
+      height: 5
     },
     elevation: 39,
     shadowOpacity: 1,
     marginTop: 20,
     marginLeft: 14,
-    shadowRadius: 13,
+    shadowRadius: 13
   },
 
   tinyLogo: {
     width: 178,
     height: 170,
     marginBottom: -20,
-    borderRadius: 25,
+    borderRadius: 25
   },
   rect1: {
     width: 178,
@@ -426,13 +426,13 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(208,194,194,1)",
     shadowOffset: {
       width: 5,
-      height: 5,
+      height: 5
     },
     elevation: 39,
     shadowOpacity: 1,
     marginTop: 20,
     marginLeft: 10,
-    shadowRadius: 13,
+    shadowRadius: 13
   },
 
   rect4: {
@@ -442,13 +442,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 20,
     marginLeft: 20,
-    borderRadius: 30,
+    borderRadius: 30
   },
   tinyLogo1: {
     width: 178,
     height: 170,
     marginBottom: -20,
-    borderRadius: 25,
+    borderRadius: 25
   },
   tinyLogo2: {
     width: 70,
@@ -456,7 +456,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: 15,
     borderRadius: 100,
-    marginLeft: 20,
+    marginLeft: 20
   },
   tinyLogo3: {
     width: 70,
@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: -100,
     borderRadius: 100,
-    marginLeft: 115,
+    marginLeft: 115
   },
   tinyLogo4: {
     width: 70,
@@ -472,7 +472,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: -100,
     borderRadius: 100,
-    marginLeft: 215,
+    marginLeft: 215
   },
   tinyLogo5: {
     width: 70,
@@ -480,7 +480,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: -100,
     borderRadius: 100,
-    marginLeft: 305,
+    marginLeft: 305
   },
   rectangle: {
     width: 365,
@@ -490,14 +490,14 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(208,194,194,1)",
     shadowOffset: {
       width: 5,
-      height: 5,
+      height: 5
     },
     elevation: 39,
     shadowOpacity: 1,
     marginTop: 10,
     marginLeft: 14,
     marginBottom: 20,
-    shadowRadius: 13,
+    shadowRadius: 13
   },
   rectinyLogo: {
     width: 365,
@@ -505,6 +505,6 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: -1,
     borderRadius: 25,
-    marginLeft: 1,
-  },
+    marginLeft: 1
+  }
 });

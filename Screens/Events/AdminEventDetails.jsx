@@ -6,7 +6,7 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  Alert,
+  Alert
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
@@ -45,12 +45,12 @@ export default function AdminEventDetails({ route, navigation }) {
             .catch((e) => {
               console.error(e);
             });
-        },
+        }
       },
       {
         text: "Cancel",
-        onPress: () => console.log("Cancel Pressed"),
-      },
+        onPress: () => console.log("Cancel Pressed")
+      }
     ]);
   };
 
@@ -64,7 +64,7 @@ export default function AdminEventDetails({ route, navigation }) {
           marginLeft: -10,
           marginTop: 15,
           color: "#3F000F",
-          fontFamily: "Times New Roman",
+          fontFamily: "Times New Roman"
         }}
       >
         {" "}
@@ -81,7 +81,7 @@ export default function AdminEventDetails({ route, navigation }) {
             fontSize: 19,
             fontWeight: "bold",
             fontFamily: "Times New Roman",
-            color: "#000000",
+            color: "#000000"
           }}
         >
           Amenities
@@ -103,7 +103,7 @@ export default function AdminEventDetails({ route, navigation }) {
           <Image
             style={styles.tinyLogo2}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483250/music-removebg-preview_deu4xd.png",
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483250/music-removebg-preview_deu4xd.png"
             }}
           />
           <Text
@@ -113,7 +113,7 @@ export default function AdminEventDetails({ route, navigation }) {
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
-              color: "#52595D",
+              color: "#52595D"
             }}
           >
             Music
@@ -121,7 +121,7 @@ export default function AdminEventDetails({ route, navigation }) {
           <Image
             style={styles.tinyLogo3}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/pho-removebg-preview_kijiez.png",
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/pho-removebg-preview_kijiez.png"
             }}
           />
           <Text
@@ -131,7 +131,7 @@ export default function AdminEventDetails({ route, navigation }) {
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
-              color: "#52595D",
+              color: "#52595D"
             }}
           >
             Photography
@@ -139,7 +139,7 @@ export default function AdminEventDetails({ route, navigation }) {
           <Image
             style={styles.tinyLogo4}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/Screenshot_2023-03-22_at_16.35.13-removebg-preview_m7iojm.png",
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/Screenshot_2023-03-22_at_16.35.13-removebg-preview_m7iojm.png"
             }}
           />
           <Text
@@ -149,7 +149,7 @@ export default function AdminEventDetails({ route, navigation }) {
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
-              color: "#52595D",
+              color: "#52595D"
             }}
           >
             Dance
@@ -157,7 +157,7 @@ export default function AdminEventDetails({ route, navigation }) {
           <Image
             style={styles.tinyLogo5}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/ga-removebg-preview_xtsstk.png",
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/ga-removebg-preview_xtsstk.png"
             }}
           />
           <Text
@@ -167,7 +167,7 @@ export default function AdminEventDetails({ route, navigation }) {
               fontSize: 18,
               fontWeight: "bold",
               fontFamily: "Times New Roman",
-              color: "#52595D",
+              color: "#52595D"
             }}
           >
             Games
@@ -181,7 +181,7 @@ export default function AdminEventDetails({ route, navigation }) {
           marginTop: 25,
           fontWeight: "bold",
           fontFamily: "Times New Roman",
-          color: "grey",
+          color: "grey"
         }}
       >
         Description {"\n"}
@@ -197,7 +197,7 @@ export default function AdminEventDetails({ route, navigation }) {
             marginTop: -43,
             marginLeft: 270,
             marginBottom: -30,
-            borderRadius: 30,
+            borderRadius: 30
           }}
         />
       </TouchableOpacity>
@@ -217,7 +217,7 @@ export default function AdminEventDetails({ route, navigation }) {
               fontFamily: "Times New Roman",
               color: "#0C090A",
               fontWeight: "bold",
-              marginTop: 10,
+              marginTop: 10
             }}
           >
             {event.event_name} - {event.type}
@@ -225,7 +225,7 @@ export default function AdminEventDetails({ route, navigation }) {
           <Image
             style={styles.tinyLogo6}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679471650/2838912_zdihvz.png",
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679471650/2838912_zdihvz.png"
             }}
           />
           <Text
@@ -235,7 +235,7 @@ export default function AdminEventDetails({ route, navigation }) {
               marginTop: 0,
               fontFamily: "Times New Roman",
               color: "#52595D",
-              fontWeight: "bold",
+              fontWeight: "bold"
             }}
           >
             {event.location}
@@ -248,7 +248,7 @@ export default function AdminEventDetails({ route, navigation }) {
               marginTop: -13,
               fontFamily: "Times New Roman",
               color: "#52595D",
-              fontWeight: "bold",
+              fontWeight: "bold"
             }}
           >
             {event.date}
@@ -261,7 +261,7 @@ export default function AdminEventDetails({ route, navigation }) {
               marginTop: -13,
               fontFamily: "Times New Roman",
               color: "#000000",
-              fontWeight: "bold",
+              fontWeight: "bold"
             }}
           >
             Tickect Prices : {event.ticket_price}
@@ -275,7 +275,7 @@ export default function AdminEventDetails({ route, navigation }) {
               color: "#52595D",
               textAlign: "justify",
               fontWeight: "bold",
-              marginRight: 20,
+              marginRight: 20
             }}
           >
             {event.description}
@@ -288,7 +288,7 @@ export default function AdminEventDetails({ route, navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   rect: {
     width: 357,
@@ -298,13 +298,13 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(208,194,194,1)",
     shadowOffset: {
       width: 5,
-      height: 5,
+      height: 5
     },
     elevation: 39,
     shadowOpacity: 1,
     marginTop: 20,
     marginLeft: 14,
-    shadowRadius: 13,
+    shadowRadius: 13
   },
   rect1: {
     width: 370,
@@ -313,14 +313,14 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(208,194,194,1)",
     shadowOffset: {
       width: 5,
-      height: 5,
+      height: 5
     },
     elevation: 39,
     shadowOpacity: 1,
     marginTop: -15,
     marginLeft: 10,
     marginRight: 20,
-    shadowRadius: 13,
+    shadowRadius: 13
   },
   tinyLogo: {
     width: 357,
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: -10,
     borderRadius: 5,
-    marginLeft: 1,
+    marginLeft: 1
   },
   tinyLogo2: {
     width: 46,
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: 8,
     borderRadius: 100,
-    marginLeft: 30,
+    marginLeft: 30
   },
   tinyLogo3: {
     width: 76,
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: -8,
     borderRadius: 100,
-    marginLeft: 28,
+    marginLeft: 28
   },
   tinyLogo4: {
     width: 46,
@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: 8,
     borderRadius: 100,
-    marginLeft: 25,
+    marginLeft: 25
   },
   tinyLogo5: {
     width: 46,
@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: 8,
     borderRadius: 100,
-    marginLeft: 35,
+    marginLeft: 35
   },
   tinyLogo6: {
     width: 18,
@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: 13,
     borderRadius: 100,
-    marginLeft: 19,
+    marginLeft: 19
   },
   tinyLogo7: {
     width: 46,
@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: 8,
     borderRadius: 100,
-    marginLeft: 32,
+    marginLeft: 32
   },
   icon: {
     color: "#8B0000",
@@ -384,6 +384,6 @@ const styles = StyleSheet.create({
     height: 60,
     width: 40,
     marginLeft: 330,
-    marginTop: -45,
-  },
+    marginTop: -45
+  }
 });

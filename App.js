@@ -9,6 +9,13 @@ import UserProfile from "./Screens/CommonScreens/UserProfile";
 import UpdateUserProfile from "./Screens/CommonScreens/UpdateUserProfile";
 import UserDashboard from "./Screens/CommonScreens/UserDashboard";
 
+import PlacesHome from "./Screens/Places/PlacesHome";
+import AddPlaces from "./Screens/Places/AddPlaces";
+import PlaceDetails from "./Screens/Places/PlaceDetails";
+import UpdatePlace from "./Screens/Places/UpdatePlace";
+import PlaceList from "./Screens/Places/PlaceList";
+import SpecificPlace from "./Screens/Places/SpecificPlace";
+
 //Sajani
 import EventsHome from "./Screens/Events/EventsHome";
 import AdminEventDetails from "./Screens/Events/AdminEventDetails";

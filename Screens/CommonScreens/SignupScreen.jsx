@@ -27,6 +27,11 @@ export default function SignupScreen({ navigation }) {
 
       await axios
         .post("http://localhost:8080/api/user/register", payload)
+        password: password
+      };
+
+      await axios
+        .post(`http://localhost:8080/api/user/register`, payload)
         .then((res) => {
           if (res.data.status) {
             Alert.alert("Success", "Registered Successfully");
@@ -143,6 +148,7 @@ const styles = StyleSheet.create({
     marginLeft: 35,
     borderWidth: 1,
     borderColor: "#5C3317",
+
   },
   Text2: {
     color: "#6D7B8D",
@@ -184,14 +190,14 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     fontSize: 18,
-    lineHeight: 18,
+    lineHeight: 18
   },
   loginText4: {
     color: "black",
     fontSize: 15,
     lineHeight: 18,
     marginTop: 0,
-    marginLeft: 80,
+    marginLeft: 80
   },
   loginText5: {
     color: "blue",
