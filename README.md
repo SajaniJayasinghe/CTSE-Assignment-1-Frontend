@@ -1,4 +1,4 @@
-# CTSE-Assignment-1-Frontend
+# CTSE-Assignment-Travel App
 
 A travel mobile app is a piece of software created to aid with trip planning on mobile devices. These applications offer a variety of services, such as hotels, events, and blogs that recommends places to travel.
 Making trip management and planning more convenient, effective, and personalized is the main goal of our travel app. Travelers may search for places, hotels, events, and blogs all in one place with the using this app. In general, travel applications have transformed how individuals organize and plan their trip, making it simpler and more readily available than before.
