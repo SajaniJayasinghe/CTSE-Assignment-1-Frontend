@@ -3,9 +3,10 @@ import {
   Image,
   StyleSheet,
   Text,
+  Alert,
   TouchableOpacity,
   TextInput,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
@@ -21,7 +22,7 @@ export default function UpdateHotelDetails({ route, navigation }) {
     { label: "AC", value: "AC" },
     { label: "Food", value: "Food" },
     { label: "Pool", value: "Pool" },
-    { label: "Parking", value: "Parking" }
+    { label: "Parking", value: "Parking" },
   ];
 
   const [name, setname] = useState("");
@@ -30,12 +31,12 @@ export default function UpdateHotelDetails({ route, navigation }) {
   const [address, setaddress] = useState("");
   const [phone, setphone] = useState("");
   const [facilities, setfacilities] = useState();
-  const [hotelID, sethotelID] = useState("");
+  const [hotelID, sethotelID] = useState(route.params);
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageUploadStatus, setImageUploadStatus] = useState(
-    "Choose Event Picture"
+    "Choose Hotel Picture"
   );
   const [validationErrors, setValidationErrors] = useState({});
   const [error, setError] = useState("");
@@ -78,7 +79,7 @@ export default function UpdateHotelDetails({ route, navigation }) {
       description: description,
       address: address,
       phone: phone,
-      facilities: selectedItems
+      facilities: selectedItems,
     };
 
     try {
@@ -108,7 +109,7 @@ export default function UpdateHotelDetails({ route, navigation }) {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1
+      quality: 1,
     });
 
     if (!result.canceled) {
@@ -133,7 +134,7 @@ export default function UpdateHotelDetails({ route, navigation }) {
               marginTop: 15,
               color: "#3F000F",
               marginBottom: 10,
-              fontFamily: "Times New Roman"
+              fontFamily: "Times New Roman",
             }}
           >
             Update Hotel Details
@@ -142,7 +143,7 @@ export default function UpdateHotelDetails({ route, navigation }) {
             <Image
               style={styles.tinyLogo}
               source={{
-                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679427495/cinnamon_jmlgpz.webp"
+                uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679427495/cinnamon_jmlgpz.webp",
               }}
             />
           </View>
@@ -158,7 +159,7 @@ export default function UpdateHotelDetails({ route, navigation }) {
               style={styles.textInputnew}
               placeholderStyle={{
                 fontSize: 14,
-                color: "grey"
+                color: "grey",
               }}
               search
               data={data}
@@ -183,7 +184,7 @@ export default function UpdateHotelDetails({ route, navigation }) {
                       gap: 15,
                       marginTop: "5%",
                       marginBottom: "9%",
-                      marginLeft: "22%"
+                      marginLeft: "22%",
                     }}
                   >
                     <Text style={styles.textSelectedStyle}>{item.label}</Text>
@@ -262,21 +263,21 @@ export default function UpdateHotelDetails({ route, navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   nameText: {
     color: "#6D7B8D",
     fontSize: 16,
     lineHeight: 18,
     marginTop: 17,
-    marginLeft: 36
+    marginLeft: 36,
   },
   nameText1: {
     color: "#6D7B8D",
     fontSize: 16,
     lineHeight: 18,
     marginTop: 5,
-    marginLeft: 36
+    marginLeft: 36,
   },
   nameText2: {
     height: 80,
@@ -287,7 +288,7 @@ const styles = StyleSheet.create({
     marginTop: 7,
     marginLeft: 36,
     borderWidth: 1,
-    borderColor: "#560319"
+    borderColor: "#560319",
   },
   textInput: {
     height: 50,
@@ -298,7 +299,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 36,
     borderWidth: 1,
-    borderColor: "#560319"
+    borderColor: "#560319",
   },
   address: {
     height: 55,
@@ -310,7 +311,7 @@ const styles = StyleSheet.create({
     marginLeft: 36,
     borderWidth: 1,
     marginBottom: 10,
-    borderColor: "#560319"
+    borderColor: "#560319",
   },
   description: {
     height: 75,
@@ -322,7 +323,7 @@ const styles = StyleSheet.create({
     marginLeft: 36,
     borderWidth: 1,
     marginBottom: 10,
-    borderColor: "#560319"
+    borderColor: "#560319",
   },
   dropdown: {
     margin: 16,
@@ -333,7 +334,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 1
+      height: 1,
     },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
@@ -342,7 +343,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginTop: 10,
     width: 320,
-    marginLeft: 36
+    marginLeft: 36,
   },
   containerx: {
     backgroundColor: "#FFFFFF",
@@ -352,7 +353,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     shadowColor: "#000",
     shadowOffset: {
-      height: 1
+      height: 1,
     },
 
     shadowOpacity: 0.35,
@@ -360,7 +361,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     minWidth: 88,
     paddingLeft: 26,
-    paddingRight: 16
+    paddingRight: 16,
   },
   materialButtonDark1: {
     height: 40,
@@ -372,19 +373,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0,
     marginTop: 15,
     marginBottom: 10,
-    marginLeft: 90
+    marginLeft: 90,
   },
   loginButton: {
     color: "white",
     fontWeight: "bold",
     fontSize: 18,
-    lineHeight: 18
+    lineHeight: 18,
   },
   logo1: {
     width: 400,
     height: 50,
     marginTop: -1,
-    marginLeft: 0
+    marginLeft: 0,
   },
   ImageTextInput: {
     width: "50%",
@@ -395,14 +396,14 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     color: "gray",
     marginLeft: "10%",
-    marginTop: "5%"
+    marginTop: "5%",
   },
   imageUploadField: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    marginBottom: "5%"
+    marginBottom: "5%",
   },
 
   ImageTextInput: {
@@ -414,7 +415,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     color: "gray",
     marginLeft: "10%",
-    marginTop: "5%"
+    marginTop: "5%",
   },
   uploadButton: {
     width: "30%",
@@ -427,7 +428,7 @@ const styles = StyleSheet.create({
     minHeight: 50,
     marginTop: "5%",
     marginLeft: responsiveWidth(2),
-    fontFamily: "Times New Roman"
+    fontFamily: "Times New Roman",
   },
   textInputnew: {
     width: "80%",
@@ -438,18 +439,18 @@ const styles = StyleSheet.create({
     marginLeft: "10%",
     marginTop: "5%",
     borderColor: "grey",
-    borderWidth: 1
+    borderWidth: 1,
   },
   item: {
     padding: 17,
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
   arrowHeader: {
     paddingHorizontal: "5%",
     marginTop: "12%",
     flexDirection: "row",
-    justifyContent: "space-between"
-  }
+    justifyContent: "space-between",
+  },
 });

@@ -6,7 +6,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  TextInput
+  TextInput,
 } from "react-native";
 import axios from "axios";
 
@@ -37,7 +37,7 @@ export default function PlacesHome({ navigation }) {
           <Image
             style={styles.log}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679492857/1_xmbgom.jpg"
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679492857/1_xmbgom.jpg",
             }}
           />
           <View style={styles.rect3}>
@@ -47,7 +47,7 @@ export default function PlacesHome({ navigation }) {
                 marginLeft: 30,
                 fontSize: 20,
                 fontWeight: "bold",
-                fontFamily: "Times New Roman"
+                fontFamily: "Times New Roman",
               }}
             >
               Popular Places
@@ -63,7 +63,7 @@ export default function PlacesHome({ navigation }) {
                 <Image
                   style={styles.tinyLogo}
                   source={{
-                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679490128/beach-removebg-preview_uugwzy.png"
+                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679490128/beach-removebg-preview_uugwzy.png",
                   }}
                 />
               </TouchableOpacity>
@@ -74,7 +74,7 @@ export default function PlacesHome({ navigation }) {
                   fontSize: 18,
                   fontWeight: "bold",
                   fontFamily: "Times New Roman",
-                  color: "#52595D"
+                  color: "#52595D",
                 }}
                 // value={
               >
@@ -86,7 +86,7 @@ export default function PlacesHome({ navigation }) {
                 <Image
                   style={styles.tinyLogo2}
                   source={{
-                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679386912/8_glxli8.png"
+                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679386912/8_glxli8.png",
                   }}
                 />
               </TouchableOpacity>
@@ -97,7 +97,7 @@ export default function PlacesHome({ navigation }) {
                   fontSize: 18,
                   fontWeight: "bold",
                   fontFamily: "Times New Roman",
-                  color: "#52595D"
+                  color: "#52595D",
                 }}
               >
                 Mountain
@@ -108,7 +108,7 @@ export default function PlacesHome({ navigation }) {
                 <Image
                   style={styles.tinyLogo3}
                   source={{
-                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679372064/waterfall_byhiyn.jpg"
+                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679372064/waterfall_byhiyn.jpg",
                   }}
                 />
               </TouchableOpacity>
@@ -119,7 +119,7 @@ export default function PlacesHome({ navigation }) {
                   fontSize: 18,
                   fontWeight: "bold",
                   fontFamily: "Times New Roman",
-                  color: "#52595D"
+                  color: "#52595D",
                 }}
               >
                 Waterfalls
@@ -130,7 +130,7 @@ export default function PlacesHome({ navigation }) {
                 <Image
                   style={styles.tinyLogo4}
                   source={{
-                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679490562/forest_owg66p.jpg"
+                    uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679490562/forest_owg66p.jpg",
                   }}
                 />
               </TouchableOpacity>
@@ -141,7 +141,7 @@ export default function PlacesHome({ navigation }) {
                   fontSize: 18,
                   fontWeight: "bold",
                   fontFamily: "Times New Roman",
-                  color: "#52595D"
+                  color: "#52595D",
                 }}
               >
                 Forest
@@ -150,7 +150,7 @@ export default function PlacesHome({ navigation }) {
           </View>
           <TextInput
             style={styles.inputserach}
-            placeholder="Search for Place name"
+            placeholder="Search for Places"
             value={search}
             onChangeText={(text) => setSearch(text)}
           />
@@ -159,18 +159,7 @@ export default function PlacesHome({ navigation }) {
             {(search === "" ? place : filterEvent).map((place, index) => (
               <View key={place + index}>
                 <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate("PlaceDetails", {
-                      placeID: place._id,
-                      name: place.name,
-                      description: place.description,
-                      location: place.location,
-                      picture: place.picture,
-                      city: place.city,
-                      type: place.type,
-                      facilities: place.facilities
-                    })
-                  }
+                  onPress={() => navigation.navigate("PlaceDetails", place._id)}
                 >
                   <Image
                     style={styles.addPlaces}
@@ -180,7 +169,7 @@ export default function PlacesHome({ navigation }) {
                     style={{
                       textAlign: "center",
                       marginTop: -5,
-                      fontSize: 18
+                      fontSize: 18,
                     }}
                   >
                     {place.name}
@@ -207,18 +196,18 @@ export default function PlacesHome({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   log: {
     width: 400,
     height: 80,
     marginTop: -20,
-    marginLeft: 0
+    marginLeft: 0,
   },
   container2: {
     width: 500,
     height: 180,
-    marginTop: 20
+    marginTop: 20,
   },
   tinyLogo: {
     width: 70,
@@ -226,7 +215,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: 20,
     borderRadius: 100,
-    marginLeft: 20
+    marginLeft: 20,
   },
   tinyLogo2: {
     width: 70,
@@ -234,7 +223,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: 20,
     borderRadius: 100,
-    marginLeft: 40
+    marginLeft: 40,
   },
   tinyLogo3: {
     width: 70,
@@ -242,7 +231,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: 20,
     borderRadius: 100,
-    marginLeft: 25
+    marginLeft: 25,
   },
   tinyLogo4: {
     width: 70,
@@ -250,7 +239,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: 20,
     borderRadius: 100,
-    marginLeft: 16
+    marginLeft: 16,
   },
   inputserach: {
     backgroundColor: "white",
@@ -266,7 +255,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginLeft: 20,
     height: 40,
-    borderWidth: 1
+    borderWidth: 1,
   },
   Text1: {
     color: "#000000",
@@ -274,7 +263,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     fontSize: 20,
     fontWeight: "bold",
-    fontFamily: "Times New Roman"
+    fontFamily: "Times New Roman",
   },
   places: {
     width: 350,
@@ -284,13 +273,13 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(208,194,194,1)",
     shadowOffset: {
       width: 5,
-      height: 5
+      height: 5,
     },
     elevation: 39,
     shadowOpacity: 1,
     marginTop: 10,
     marginLeft: 22,
-    shadowRadius: 13
+    shadowRadius: 13,
   },
   tinyLogo1: {
     width: 350,
@@ -298,7 +287,7 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: 0,
     marginLeft: 0,
-    borderRadius: 25
+    borderRadius: 25,
   },
   addPlaces: {
     width: 350,
@@ -306,7 +295,7 @@ const styles = StyleSheet.create({
     marginBottom: "5%",
     marginTop: "5%",
     marginLeft: "5%",
-    borderRadius: 25
+    borderRadius: 25,
   },
   addbutton: {
     width: 120,
@@ -314,6 +303,6 @@ const styles = StyleSheet.create({
     marginLeft: 270,
     borderRadius: 25,
     marginTop: 0,
-    borderColor: "black"
-  }
+    borderColor: "black",
+  },
 });

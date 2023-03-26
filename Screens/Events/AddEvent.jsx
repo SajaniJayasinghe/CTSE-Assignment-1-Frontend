@@ -8,7 +8,7 @@ import {
   ScrollView,
   TextInput,
   Alert,
-  Button
+  Button,
 } from "react-native";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
@@ -23,7 +23,7 @@ export default function AddEvent({ navigation }) {
     { label: "Cultural", value: "Cultural" },
     { label: "BeachParty", value: "BeachParty" },
     { label: "DJNight", value: "DJNight" },
-    { label: "Adventure", value: "Adventure" }
+    { label: "Adventure", value: "Adventure" },
   ];
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
@@ -47,51 +47,59 @@ export default function AddEvent({ navigation }) {
     );
   };
 
+  // console.log(validationErrors);
   const addevent = () => {
+    setValidationErrors({});
     const URL = `http://localhost:8080/api/events/addevent`;
 
-    const payload = new FormData();
-    setLoading(true);
-    payload.append("event_name", event_name);
-    payload.append("description", description);
-    payload.append("picture", {
-      uri: image,
-      type: "image/jpeg",
-      name: "image.jpg"
-    });
-    payload.append("location", location);
-    payload.append("date", date);
-    payload.append("ticket_price", ticket_price);
-
-    console.log(payload);
-    //for multiple selection
-    if (selectedItems.length > 0) {
-      for (var i = 0; i < selectedItems.length; i++) {
-        payload.append(`type[${i}]`, selectedItems[i]);
-      }
-    }
-
-    axios
-      .post(URL, payload, {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      })
-      .then((res) => {
-        Alert.alert("Success", "Event Added Successfully");
-        setLoading(false);
-        navigation.navigate("EventsHome");
-      })
-      .catch((error) => {
-        console.log(error);
-        setLoading(false);
-        Alert.alert(
-          "Error",
-          "Event adding Unsuccessful",
-          [{ text: "Check Again" }],
-          { cancelable: false }
-        );
+    if (!event_name) {
+      setValidationErrors({ event_name: "Event Name is Required" });
+    } else if (!image) {
+      setValidationErrors({ picture: "Picture is Required" });
+    } else {
+      const payload = new FormData();
+      setLoading(true);
+      payload.append("event_name", event_name);
+      payload.append("description", description);
+      payload.append("picture", {
+        uri: image,
+        type: "image/jpeg",
+        name: "image.jpg",
       });
+      payload.append("location", location);
+      payload.append("date", date);
+      payload.append("ticket_price", ticket_price);
+
+      console.log(payload);
+      //for multiple selection
+      if (selectedItems.length > 0) {
+        for (var i = 0; i < selectedItems.length; i++) {
+          payload.append(`type[${i}]`, selectedItems[i]);
+        }
+      }
+
+      axios
+        .post(URL, payload, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          Alert.alert("Success", "Event Added Successfully");
+          setLoading(false);
+          navigation.navigate("EventsHome");
+        })
+        .catch((error) => {
+          console.log(error);
+          setLoading(false);
+          Alert.alert(
+            "Error",
+            "Event adding Unsuccessful",
+            [{ text: "Check Again" }],
+            { cancelable: false }
+          );
+        });
+    }
   };
 
   //for Image upload
@@ -100,7 +108,7 @@ export default function AddEvent({ navigation }) {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1
+      quality: 1,
     });
 
     if (!result.canceled) {
@@ -118,13 +126,14 @@ export default function AddEvent({ navigation }) {
         <Image
           style={styles.tinyLogo}
           source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679492857/1_xmbgom.jpg"
+            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679492857/1_xmbgom.jpg",
           }}
         />
+
         <Image
           style={styles.dance}
           source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/Screenshot_2023-03-22_at_16.35.13-removebg-preview_m7iojm.png"
+            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/Screenshot_2023-03-22_at_16.35.13-removebg-preview_m7iojm.png",
           }}
         />
         <Text
@@ -134,7 +143,7 @@ export default function AddEvent({ navigation }) {
             fontSize: 36,
             marginLeft: -10,
             marginTop: 0,
-            color: "#3F000F"
+            color: "#3F000F",
           }}
         >
           Add New Event
@@ -147,7 +156,7 @@ export default function AddEvent({ navigation }) {
                 fontSize: 15,
                 color: "#BCC6CC",
                 marginTop: 10,
-                marginBottom: 10
+                marginBottom: 10,
               }}
               search
               data={data}
@@ -172,7 +181,7 @@ export default function AddEvent({ navigation }) {
                       gap: 15,
                       marginTop: "5%",
                       marginBottom: "9%",
-                      marginLeft: "18%"
+                      marginLeft: "18%",
                     }}
                   >
                     <Text style={styles.textSelectedStyle}>{item.label}</Text>
@@ -196,6 +205,13 @@ export default function AddEvent({ navigation }) {
               onChange={(e) => setevent_name(e.nativeEvent.text)}
               value={event_name}
             />
+            {validationErrors.event_name ? (
+              <Text style={styles.errorTextSelection}>
+                {validationErrors.event_name}
+              </Text>
+            ) : (
+              ""
+            )}
             <Text style={styles.nameText2}>Enter Location</Text>
             <TextInput
               placeholder="Enter Location "
@@ -236,6 +252,13 @@ export default function AddEvent({ navigation }) {
                 <Text style={styles.uploadTxt}>Upload</Text>
               </TouchableOpacity>
             </View>
+            {validationErrors.picture ? (
+              <Text style={styles.errorTextSelection}>
+                {validationErrors.picture}
+              </Text>
+            ) : (
+              ""
+            )}
           </View>
           <TouchableOpacity
             style={[styles.containerx, styles.materialButtonDark1]}
@@ -254,7 +277,7 @@ export default function AddEvent({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   rect: {
     width: 360,
@@ -264,26 +287,26 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(208,194,194,1)",
     shadowOffset: {
       width: 5,
-      height: 5
+      height: 5,
     },
     elevation: 39,
     shadowOpacity: 1,
     marginTop: 10,
     marginLeft: 14,
-    shadowRadius: 13
+    shadowRadius: 13,
   },
   tinyLogo: {
     width: 400,
     height: 70,
     marginTop: 0,
-    marginLeft: 0
+    marginLeft: 0,
   },
   dance: {
     width: 100,
     height: 100,
     marginTop: -50,
     marginLeft: 150,
-    borderRadius: 25
+    borderRadius: 25,
   },
 
   nameText: {
@@ -291,28 +314,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 18,
     marginTop: 10,
-    marginLeft: 36
+    marginLeft: 36,
   },
   nameText1: {
     color: "#6D7B8D",
     fontSize: 16,
     lineHeight: 18,
     marginTop: 10,
-    marginLeft: 36
+    marginLeft: 36,
   },
   nameText2: {
     color: "#6D7B8D",
     fontSize: 16,
     lineHeight: 18,
     marginTop: -5,
-    marginLeft: 36
+    marginLeft: 36,
   },
   nameText2: {
     color: "#6D7B8D",
     fontSize: 16,
     lineHeight: 18,
     marginTop: 5,
-    marginLeft: 36
+    marginLeft: 36,
   },
   nameText3: {
     height: 80,
@@ -324,7 +347,6 @@ const styles = StyleSheet.create({
     marginLeft: 36,
     borderWidth: 1,
     borderColor: "#560319",
-    fontFamily: "Times New Roman"
   },
   textInput: {
     height: 45,
@@ -336,7 +358,6 @@ const styles = StyleSheet.create({
     marginLeft: 36,
     borderWidth: 1,
     borderColor: "#560319",
-    fontFamily: "Times New Roman"
   },
   containerx: {
     backgroundColor: "#FFFFFF",
@@ -346,7 +367,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     shadowColor: "#000",
     shadowOffset: {
-      height: 1
+      height: 1,
     },
 
     shadowOpacity: 0.35,
@@ -354,7 +375,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     minWidth: 88,
     paddingLeft: 26,
-    paddingRight: 16
+    paddingRight: 16,
   },
   materialButtonDark1: {
     height: 40,
@@ -365,21 +386,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0,
     marginTop: 2,
     marginBottom: 10,
-    marginLeft: 90
+    marginLeft: 90,
   },
   loginButton: {
     color: "white",
     fontWeight: "bold",
     fontSize: 18,
     lineHeight: 18,
-    fontFamily: "Times New Roman"
   },
   imageUploadField: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    marginBottom: "5%"
+    marginBottom: "5%",
   },
 
   ImageTextInput: {
@@ -391,7 +411,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     color: "gray",
     marginLeft: "10%",
-    marginTop: "5%"
+    marginTop: "5%",
   },
   uploadButton: {
     width: "30%",
@@ -403,7 +423,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     minHeight: 50,
     marginTop: "5%",
-    marginLeft: responsiveWidth(2)
+    marginLeft: responsiveWidth(2),
   },
   textInputnew: {
     width: "80%",
@@ -414,18 +434,36 @@ const styles = StyleSheet.create({
     marginLeft: "10%",
     marginTop: "5%",
     borderColor: "grey",
-    borderWidth: 1
+    borderWidth: 1,
   },
   item: {
     padding: 17,
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
   arrowHeader: {
     paddingHorizontal: "5%",
     marginTop: "12%",
     flexDirection: "row",
-    justifyContent: "space-between"
-  }
+    justifyContent: "space-between",
+  },
+  errorText: {
+    width: "100%",
+    marginLeft: "3%",
+    color: "red",
+    marginTop: "-4%",
+    marginBottom: "3%",
+    fontSize: 12,
+    textAlign: "left",
+  },
+  errorTextSelection: {
+    width: "100%",
+    marginLeft: "10%",
+    color: "red",
+    marginTop: "2%",
+    marginBottom: "3%",
+    fontSize: 12,
+    textAlign: "left",
+  },
 });

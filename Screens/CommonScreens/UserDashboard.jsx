@@ -278,7 +278,9 @@ export default function UserDashBoard({ route, navigation }) {
             Popular Categories
           </Text>
 
-          <TouchableOpacity onPress={() => navigation.navigate("HotelHome")}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("UserHotelList")}
+          >
             <Image
               style={styles.tinyLogo2}
               source={{
@@ -300,7 +302,9 @@ export default function UserDashBoard({ route, navigation }) {
             Hotels
           </Text>
 
-          <TouchableOpacity onPress={() => navigation.navigate("PlacesHome")}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("UserPlaceList")}
+          >
             <Image
               style={styles.tinyLogo3}
               source={{

@@ -82,7 +82,9 @@ export default function AdminDashboard({ route, navigation }) {
           Hi, {profile.name}
         </Text>
         <View>
-          <TouchableOpacity onPress={() => navigation.navigate("SignInScreen")}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("LoadingScreen")}
+          >
             <Image
               style={styles.logout}
               source={{
@@ -273,6 +275,8 @@ export default function AdminDashboard({ route, navigation }) {
                 >
                   <Image
                     style={styles.tinyLogo}
+                    delay={0}
+                    duration={6000}
                     source={{ uri: event.picture }}
                   />
                   <Text

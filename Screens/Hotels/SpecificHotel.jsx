@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Image,
@@ -6,30 +6,55 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
+import { useRoute } from "@react-navigation/native";
 
-export default function SpecificHotel({ navigation }) {
+export default function HotelDetails({ route, navigation }) {
   const [hotel, sethotel] = useState([]);
-  const [filterEvent, setfilterEvent] = useState([]);
-  const [search, setSearch] = useState("");
 
+  const getHotel = async () => {
+    await axios
+      .get(`http://localhost:8080/api/hotels/${route.params}`)
+      .then((res) => {
+        if (res.data.success) {
+          sethotel(res.data.existinghotel);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   useEffect(() => {
-    axios.get("http://localhost:8080/api/hotels/gethotel").then((res) => {
-      if (res.data.success) {
-        sethotel(res.data.existinghotels);
-      }
-    });
+    getHotel();
+    console.log(route.params);
   }, []);
 
-  const searchFunc = (text) => {
-    return hotel.filter((hotel) => hotel.hotel_name === text);
+  const deletehotel = async () => {
+    const hID = route.params.hID;
+    Alert.alert("Are you sure?", "This will permanently delete Hotel!", [
+      {
+        text: "OK",
+        onPress: async () => {
+          console.log(id);
+          axios
+            .delete(`http://localhost:8080/api/hotels/delete/${hID}`)
+            .then((res) => {
+              navigation.push("HotelHome");
+            })
+            .catch((e) => {
+              console.error(e);
+            });
+        },
+      },
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+      },
+    ]);
   };
-
-  useEffect(() => {
-    setfilterEvent(searchFunc(search));
-  }, [search]);
 
   return (
     <View style={styles.container}>
@@ -44,17 +69,10 @@ export default function SpecificHotel({ navigation }) {
           fontFamily: "Times New Roman",
         }}
       >
-        {" "}
-        Hotel Name
-        {/* {hotel.name} */}
+        {hotel.name}
       </Text>
       <View style={styles.rect}>
-        <Image
-          style={styles.tinyLogo}
-          source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679427495/cinnamon_jmlgpz.webp",
-          }}
-        />
+        <Image style={styles.tinyLogo} source={{ uri: hotel.picture }} />
       </View>
       <View>
         <Text
@@ -175,18 +193,7 @@ export default function SpecificHotel({ navigation }) {
           </Text>
         </ScrollView>
       </View>
-      <Text
-        style={{
-          marginLeft: 20,
-          fontSize: 18,
-          marginTop: 20,
-          fontWeight: "bold",
-          fontFamily: "Times New Roman",
-          color: "#000000",
-        }}
-      >
-        Description {"\n"}
-      </Text>
+
       <ScrollView>
         <View style={styles.rect1}>
           <Text
@@ -196,10 +203,10 @@ export default function SpecificHotel({ navigation }) {
               fontFamily: "Times New Roman",
               color: "#0C090A",
               fontWeight: "bold",
-              marginTop: 15,
+              marginTop: 40,
             }}
           >
-            Araliya Beach Resort Unawatuna {/* {hotel.name} */}
+            {hotel.name}
           </Text>
           <Image
             style={styles.tinyLogo6}
@@ -217,14 +224,33 @@ export default function SpecificHotel({ navigation }) {
               fontWeight: "bold",
             }}
           >
-            Unawatuna, Southern Province, Sri Lanka {/* {hotel.name} */}
+            {hotel.address}
+            {"\n"}
+          </Text>
+          <Image
+            style={styles.tinyLogo7}
+            source={{
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679730544/pngtree-phone-icon-png-image_5065646-removebg-preview_htdi2u.png",
+            }}
+          />
+          <Text
+            style={{
+              marginLeft: 40,
+              fontSize: 15,
+              marginTop: 2,
+              fontFamily: "Times New Roman",
+              color: "#52595D",
+              fontWeight: "bold",
+            }}
+          >
+            {hotel.phone}
             {"\n"}
           </Text>
           <Text
             style={{
               marginLeft: 20,
               fontSize: 15,
-              marginTop: 5,
+              marginTop: 10,
               fontFamily: "Times New Roman",
               color: "#52595D",
               textAlign: "justify",
@@ -232,15 +258,7 @@ export default function SpecificHotel({ navigation }) {
               marginRight: 20,
             }}
           >
-            {/* {hotel.description} */}
-            Take advantage of a free breakfast buffet, a rooftop terrace, and a
-            coffee shop/cafe at Araliya Beach Resort and Spa. This resort is a
-            great place to bask in the sun with a white sand beach. Treat
-            yourself to a Thai massage at the onsite spa. Be sure to enjoy a
-            meal at any of the 4 onsite restaurants, which feature a poolside
-            location and garden views. In addition to a garden and dry
-            cleaning/laundry services, guests can connect to free in-room WiFi,
-            with speed of 50+ Mbps.
+            {hotel.description}
           </Text>
         </View>
       </ScrollView>
@@ -252,12 +270,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  homelogo: {
-    width: 400,
-    height: 20,
-    marginTop: -5,
-    marginLeft: 0,
-  },
+
   rect: {
     width: 357,
     height: 167,
@@ -271,7 +284,7 @@ const styles = StyleSheet.create({
     elevation: 39,
     shadowOpacity: 1,
     marginTop: 20,
-    marginLeft: 14,
+    marginLeft: 15,
     shadowRadius: 13,
   },
   rect1: {
@@ -338,12 +351,20 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     marginLeft: 18,
   },
+  tinyLogo7: {
+    width: 15,
+    height: 15,
+    marginBottom: -20,
+    marginTop: 0,
+    borderRadius: 100,
+    marginLeft: 18,
+  },
   icon: {
     color: "#8B0000",
     fontSize: 28,
     height: 60,
     width: 40,
     marginLeft: 330,
-    marginTop: -45,
+    marginTop: 5,
   },
 });

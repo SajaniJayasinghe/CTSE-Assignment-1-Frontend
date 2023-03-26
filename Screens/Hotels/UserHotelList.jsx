@@ -1,60 +1,60 @@
-import React, { useEffect, useState } from "react";
 import {
   View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
   Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
   ScrollView,
+  TextInput,
 } from "react-native";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function EventList({ navigation }) {
-  const [event, setevent] = useState([]);
-  const [filterEvent, setfilterEvent] = useState([]);
+export default function UserHotelList({ navigation }) {
+  const [hotel, sethotel] = useState([]);
+  const [filterHotel, setfilterHotel] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:8080/api/events/getevent").then((res) => {
+    axios.get("http://localhost:8080/api/hotels/gethotel").then((res) => {
       if (res.data.success) {
-        setevent(res.data.Event);
+        sethotel(res.data.existinghotels);
       }
     });
   }, []);
 
   const searchFunc = (text) => {
-    return event.filter((event) => event.event_name === text);
+    return hotel.filter((hotel) => hotel.name === text);
   };
 
   useEffect(() => {
-    setfilterEvent(searchFunc(search));
+    setfilterHotel(searchFunc(search));
   }, [search]);
 
   return (
     <>
       <View style={styles.container}>
         <View>
-          <Text style={styles.Text1}>All Events</Text>
+          <Text style={styles.Text1}>All Hotels</Text>
           <TextInput
             style={styles.inputserach}
-            placeholder="Search for Event name"
+            placeholder="Search for Hotels"
             value={search}
             onChangeText={(text) => setSearch(text)}
           />
 
           <ScrollView style={{ display: "flex", flexDirection: "column" }}>
-            {(search === "" ? event : filterEvent).map((event, index) => (
-              <View key={event + index}>
-                <View style={styles.event}>
+            {(search === "" ? hotel : filterHotel).map((hotel, index) => (
+              <View key={hotel + index}>
+                <View style={styles.hotel}>
                   <TouchableOpacity
                     onPress={() =>
-                      navigation.navigate("SpecificEvent", event._id)
+                      navigation.navigate("SpecificHotel", hotel._id)
                     }
                   >
                     <Image
                       style={styles.tinyLogo1}
-                      source={{ uri: event.picture }}
+                      source={{ uri: hotel.picture }}
                     />
                     <Text
                       style={{
@@ -66,7 +66,7 @@ export default function EventList({ navigation }) {
                         fontFamily: "Times New Roman",
                       }}
                     >
-                      {event.event_name}
+                      {hotel.name}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -75,14 +75,6 @@ export default function EventList({ navigation }) {
           </ScrollView>
         </View>
       </View>
-      <TouchableOpacity onPress={() => navigation.navigate("AddEvent")}>
-        <Image
-          style={styles.addevent}
-          source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679429885/11-removebg-preview_l55wvj.png",
-          }}
-        />
-      </TouchableOpacity>
     </>
   );
 }
@@ -125,7 +117,7 @@ const styles = StyleSheet.create({
     marginLeft: 0,
     borderRadius: 25,
   },
-  event: {
+  hotel: {
     width: 350,
     height: 200,
     backgroundColor: "rgba(255,255,255,1)",
@@ -137,7 +129,7 @@ const styles = StyleSheet.create({
     },
     elevation: 39,
     shadowOpacity: 1,
-    marginTop: 20,
+    marginTop: 50,
     marginLeft: 22,
     marginBottom: 30,
     shadowRadius: 13,

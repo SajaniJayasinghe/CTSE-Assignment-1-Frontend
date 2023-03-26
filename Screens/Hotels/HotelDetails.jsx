@@ -13,7 +13,7 @@ import axios from "axios";
 import { useRoute } from "@react-navigation/native";
 
 export default function HotelDetails({ route, navigation }) {
-  const [hotel, sethotel] = useState([]);
+  const [hotel, sethotel] = useState("");
 
   const getHotel = async () => {
     await axios
@@ -32,15 +32,14 @@ export default function HotelDetails({ route, navigation }) {
     console.log(route.params);
   }, []);
 
-  const deletehotel = async () => {
-    const hID = route.params.hID;
+  const deletehotel = async (id) => {
     Alert.alert("Are you sure?", "This will permanently delete Hotel!", [
       {
         text: "OK",
         onPress: async () => {
           console.log(id);
           axios
-            .delete(`http://localhost:8080/api/hotels/delete/${hID}`)
+            .delete(`http://localhost:8080/api/hotels/delete/${id}`)
             .then((res) => {
               navigation.push("HotelHome");
             })

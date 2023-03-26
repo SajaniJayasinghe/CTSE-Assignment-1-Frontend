@@ -32,19 +32,13 @@ export default function BlogList({ navigation }) {
   }, [search]);
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.homelogo}
-        source={{
-          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679455037/Screenshot_2023-03-22_at_08.46.07_h1krq8.png",
-        }}
-      />
       <TextInput
         style={styles.inputserach}
-        placeholder="Search for Blog name"
+        placeholder="Search for Blogs"
         value={search}
         onChangeText={(text) => setSearch(text)}
       />
-      <Text style={styles.Text1}>Blog List</Text>
+      <Text style={styles.Text1}>Discover Blogs</Text>
 
       <ScrollView style={{ display: "flex", flexDirection: "column" }}>
         {(search === "" ? blog : filterBlog).map((blog, index) => (
@@ -110,8 +104,8 @@ const styles = StyleSheet.create({
     color: "#000000",
     textAlign: "center",
     marginTop: 20,
-    marginLeft: -250,
-    fontSize: 20,
+    marginLeft: 7,
+    fontSize: 25,
     fontWeight: "bold",
     fontFamily: "Times New Roman",
   },

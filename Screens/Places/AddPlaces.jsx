@@ -6,7 +6,7 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import axios from "axios";
@@ -22,13 +22,13 @@ export default function AddPlaces({ navigation }) {
     { label: "Beach", value: "Beach" },
     { label: "Mountain", value: "Mountain" },
     { label: "Waterfall", value: "Waterfall" },
-    { label: "Forest", value: "Forest" }
+    { label: "Forest", value: "Forest" },
   ];
   const placedata = [
     { label: "Wifi", value: "Wifi" },
     { label: "Parking", value: "Parking" },
     { label: "Food", value: "Food" },
-    { label: "NoSmoking", value: "NoSmoking" }
+    { label: "NoSmoking", value: "NoSmoking" },
   ];
 
   const [type, settype] = useState("");
@@ -55,46 +55,56 @@ export default function AddPlaces({ navigation }) {
   const addplace = () => {
     const URL = `http://localhost:8080/api/places/addplace`;
 
-    const payload = new FormData();
-    setLoading(true);
-    payload.append("name", name);
-    payload.append("type", type);
-    payload.append("description", description);
-    payload.append("picture", {
-      uri: image,
-      type: "image/jpeg",
-      name: "image.jpg"
-    });
-    payload.append("city", city);
-
-    //for multiple selection
-    if (selectedItems.length > 0) {
-      for (var i = 0; i < selectedItems.length; i++) {
-        payload.append(`facilities[${i}]`, selectedItems[i]);
-      }
-    }
-
-    axios
-      .post(URL, payload, {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      })
-      .then((res) => {
-        Alert.alert("Success", "Place Added Successfully");
-        setLoading(false);
-        navigation.navigate("PlacesHome");
-      })
-      .catch((error) => {
-        console.log(error);
-        setLoading(false);
-        Alert.alert(
-          "Error",
-          "Place adding Unsuccessful",
-          [{ text: "Check Again" }],
-          { cancelable: false }
-        );
+    if (!name) {
+      setValidationErrors({ name: "Enter Place Name" });
+    } else if (!image) {
+      setValidationErrors({ image: "Please Upload Image" });
+    } else if (!city) {
+      setValidationErrors({ city: "Enter City" });
+    } else if (!description) {
+      setValidationErrors({ description: "Enter Place Description" });
+    } else {
+      const payload = new FormData();
+      setLoading(true);
+      payload.append("name", name);
+      payload.append("type", type);
+      payload.append("description", description);
+      payload.append("picture", {
+        uri: image,
+        type: "image/jpeg",
+        name: "image.jpg",
       });
+      payload.append("city", city);
+
+      //for multiple selection
+      if (selectedItems.length > 0) {
+        for (var i = 0; i < selectedItems.length; i++) {
+          payload.append(`facilities[${i}]`, selectedItems[i]);
+        }
+      }
+
+      axios
+        .post(URL, payload, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          Alert.alert("Success", "Place Added Successfully");
+          setLoading(false);
+          navigation.navigate("PlacesHome");
+        })
+        .catch((error) => {
+          console.log(error);
+          setLoading(false);
+          Alert.alert(
+            "Error",
+            "Place adding Unsuccessful",
+            [{ text: "Check Again" }],
+            { cancelable: false }
+          );
+        });
+    }
   };
 
   //for Image upload
@@ -103,7 +113,7 @@ export default function AddPlaces({ navigation }) {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1
+      quality: 1,
     });
 
     if (!result.canceled) {
@@ -126,7 +136,7 @@ export default function AddPlaces({ navigation }) {
             marginLeft: -10,
             marginTop: 45,
             color: "#3F000F",
-            fontFamily: "Times New Roman"
+            fontFamily: "Times New Roman",
           }}
         >
           Add New Places
@@ -146,6 +156,13 @@ export default function AddPlaces({ navigation }) {
             value={name}
             onChange={(e) => setname(e.nativeEvent.text)}
           />
+          {validationErrors.name ? (
+            <Text style={styles.errorTextSelection}>
+              {validationErrors.name}
+            </Text>
+          ) : (
+            ""
+          )}
 
           <Text style={styles.nameText3}>Select Place Type</Text>
           <Dropdown
@@ -176,7 +193,7 @@ export default function AddPlaces({ navigation }) {
               color: "#BCC6CC",
               fontFamily: "Times New Roman",
               marginTop: 10,
-              marginBottom: 10
+              marginBottom: 10,
             }}
             search
             data={placedata}
@@ -195,13 +212,13 @@ export default function AddPlaces({ navigation }) {
                   style={{
                     flexDirection: "row",
                     justifyContent: "space-between",
-                    padding: 20,
+                    padding: 10,
                     backgroundColor: "white",
                     borderRadius: 5,
-                    gap: 20,
-                    marginTop: "10%",
-                    marginBottom: "10%",
-                    marginLeft: "8%"
+                    gap: 15,
+                    marginTop: "5%",
+                    marginBottom: "9%",
+                    marginLeft: "18%",
                   }}
                 >
                   <Text style={styles.textSelectedStyle}>{item.label}</Text>
@@ -225,6 +242,7 @@ export default function AddPlaces({ navigation }) {
               setcity(e.nativeEvent.text);
             }}
           />
+
           <Text style={styles.nameText3}>Enter Description</Text>
           <TextInput
             placeholder="Enter Description here"
@@ -234,6 +252,7 @@ export default function AddPlaces({ navigation }) {
             }}
             value={description}
           />
+
           <View style={styles.imageUploadField}>
             <TextInput
               style={styles.ImageTextInput}
@@ -246,6 +265,13 @@ export default function AddPlaces({ navigation }) {
               <Text style={styles.uploadTxt}>Upload</Text>
             </TouchableOpacity>
           </View>
+          {validationErrors.picture ? (
+            <Text style={styles.errorTextSelection}>
+              {validationErrors.picture}
+            </Text>
+          ) : (
+            ""
+          )}
         </ScrollView>
         <TouchableOpacity
           style={[styles.containerx, styles.materialButtonDark1]}
@@ -262,7 +288,7 @@ export default function AddPlaces({ navigation }) {
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   rect: {
     width: 360,
@@ -272,13 +298,13 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(208,194,194,1)",
     shadowOffset: {
       width: 5,
-      height: 5
+      height: 5,
     },
     elevation: 39,
     shadowOpacity: 1,
     marginTop: 25,
     marginLeft: 14,
-    shadowRadius: 13
+    shadowRadius: 13,
   },
 
   tinyLogo: {
@@ -287,21 +313,21 @@ const styles = StyleSheet.create({
     marginBottom: -20,
     marginTop: -15,
     borderRadius: 25,
-    marginLeft: 1
+    marginLeft: 1,
   },
   nameText: {
     color: "#6D7B8D",
     fontSize: 16,
     lineHeight: 18,
     marginTop: 30,
-    marginLeft: 36
+    marginLeft: 36,
   },
   nameText1: {
     color: "#6D7B8D",
     fontSize: 16,
     lineHeight: 18,
     marginTop: 0,
-    marginLeft: 36
+    marginLeft: 36,
   },
   nameText2: {
     height: 80,
@@ -312,21 +338,22 @@ const styles = StyleSheet.create({
     marginTop: 7,
     marginLeft: 36,
     borderWidth: 1,
-    borderColor: "#560319"
+    borderColor: "#560319",
   },
   nameText3: {
     color: "#6D7B8D",
     fontSize: 16,
     lineHeight: 18,
     marginTop: 5,
-    marginLeft: 36
+    marginBottom: 5,
+    marginLeft: 36,
   },
   nameText4: {
     color: "#6D7B8D",
     fontSize: 16,
     lineHeight: 18,
-    marginTop: 7,
-    marginLeft: 36
+    marginTop: 0,
+    marginLeft: 36,
   },
   textInput: {
     height: 40,
@@ -337,7 +364,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginLeft: 36,
     borderWidth: 1,
-    borderColor: "#560319"
+    borderColor: "#560319",
   },
   dropdown: {
     margin: 16,
@@ -348,7 +375,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 1
+      height: 1,
     },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
@@ -357,7 +384,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginTop: 10,
     width: 320,
-    marginLeft: 36
+    marginLeft: 36,
   },
   containerx: {
     backgroundColor: "#FFFFFF",
@@ -367,7 +394,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     shadowColor: "#000",
     shadowOffset: {
-      height: 1
+      height: 1,
     },
 
     shadowOpacity: 0.35,
@@ -376,7 +403,7 @@ const styles = StyleSheet.create({
     minWidth: 88,
     paddingLeft: 26,
     marginTop: 10,
-    paddingRight: 16
+    paddingRight: 16,
   },
   materialButtonDark1: {
     height: 40,
@@ -386,21 +413,21 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     elevation: 5,
     shadowOpacity: 0,
-    marginTop: 0,
-    marginBottom: 10,
-    marginLeft: 90
+    marginTop: -10,
+    marginBottom: 50,
+    marginLeft: 90,
   },
   loginButton: {
     color: "white",
     fontWeight: "bold",
     fontSize: 18,
-    lineHeight: 18
+    lineHeight: 18,
   },
   logo1: {
     width: 400,
     height: 50,
     marginTop: -1,
-    marginLeft: 0
+    marginLeft: 0,
   },
   textInputnew: {
     width: "80%",
@@ -411,14 +438,14 @@ const styles = StyleSheet.create({
     marginLeft: "10%",
     marginTop: "3%",
     borderColor: "grey",
-    borderWidth: 1
+    borderWidth: 1,
   },
   imageUploadField: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    marginBottom: "5%"
+    marginBottom: "5%",
   },
 
   ImageTextInput: {
@@ -430,7 +457,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     color: "gray",
     marginLeft: "10%",
-    marginTop: "5%"
+    marginTop: "5%",
   },
   uploadButton: {
     width: "30%",
@@ -442,7 +469,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     minHeight: 50,
     marginTop: "5%",
-    marginLeft: responsiveWidth(2)
+    marginLeft: responsiveWidth(2),
   },
   textInputnew: {
     width: "80%",
@@ -453,18 +480,36 @@ const styles = StyleSheet.create({
     marginLeft: "10%",
     marginTop: "5%",
     borderColor: "grey",
-    borderWidth: 1
+    borderWidth: 1,
   },
   item: {
     padding: 17,
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
   arrowHeader: {
     paddingHorizontal: "5%",
     marginTop: "12%",
     flexDirection: "row",
-    justifyContent: "space-between"
-  }
+    justifyContent: "space-between",
+  },
+  errorText: {
+    width: "100%",
+    marginLeft: "3%",
+    color: "red",
+    marginTop: "-4%",
+    marginBottom: "3%",
+    fontSize: 12,
+    textAlign: "left",
+  },
+  errorTextSelection: {
+    width: "100%",
+    marginLeft: "10%",
+    color: "red",
+    marginTop: "2%",
+    marginBottom: "3%",
+    fontSize: 12,
+    textAlign: "left",
+  },
 });

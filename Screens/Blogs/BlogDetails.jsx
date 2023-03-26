@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
-import { useRoute } from "@react-navigation/native";
 
 export default function BlogDetails({ route, navigation }) {
   const [blog, setblog] = useState("");
@@ -85,6 +84,7 @@ export default function BlogDetails({ route, navigation }) {
         >
           Amenities
         </Text>
+
         <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={false}
@@ -102,7 +102,7 @@ export default function BlogDetails({ route, navigation }) {
           <Image
             style={styles.tinyLogo2}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483250/music-removebg-preview_deu4xd.png",
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679771233/pngtree-book-icon-in-black-color-png-image_1713457_mfivfd.jpg",
             }}
           />
           <Text
@@ -115,48 +115,12 @@ export default function BlogDetails({ route, navigation }) {
               color: "#52595D",
             }}
           >
-            Music
+            Book
           </Text>
           <Image
             style={styles.tinyLogo3}
             source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/pho-removebg-preview_kijiez.png",
-            }}
-          />
-          <Text
-            style={{
-              marginLeft: -90,
-              marginTop: 55,
-              fontSize: 18,
-              fontWeight: "bold",
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-            }}
-          >
-            Photography
-          </Text>
-          <Image
-            style={styles.tinyLogo4}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/Screenshot_2023-03-22_at_16.35.13-removebg-preview_m7iojm.png",
-            }}
-          />
-          <Text
-            style={{
-              marginLeft: -48,
-              marginTop: 55,
-              fontSize: 18,
-              fontWeight: "bold",
-              fontFamily: "Times New Roman",
-              color: "#52595D",
-            }}
-          >
-            Dance
-          </Text>
-          <Image
-            style={styles.tinyLogo5}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679483251/ga-removebg-preview_xtsstk.png",
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679771390/png-transparent-video-production-freemake-video-er-video-icon-free-angle-text-rectangle-thumbnail_gdwo9m.png",
             }}
           />
           <Text
@@ -169,7 +133,25 @@ export default function BlogDetails({ route, navigation }) {
               color: "#52595D",
             }}
           >
-            Games
+            Videos
+          </Text>
+          <Image
+            style={styles.tinyLogo3}
+            source={{
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679771499/png-clipart-blogger-computer-icons-social-media-marketing-blog-icon-service-logo-thumbnail_kjocxc.png",
+            }}
+          />
+          <Text
+            style={{
+              marginLeft: -50,
+              marginTop: 55,
+              fontSize: 18,
+              fontWeight: "bold",
+              fontFamily: "Times New Roman",
+              color: "#52595D",
+            }}
+          >
+            Images
           </Text>
         </ScrollView>
       </View>
@@ -221,17 +203,12 @@ export default function BlogDetails({ route, navigation }) {
           >
             {blog.blogName} - {blog.type}
           </Text>
-          <Image
-            style={styles.tinyLogo6}
-            source={{
-              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679471650/2838912_zdihvz.png",
-            }}
-          />
+
           <Text
             style={{
-              marginLeft: 40,
+              marginLeft: 20,
               fontSize: 15,
-              marginTop: -13,
+              marginTop: 13,
               fontFamily: "Times New Roman",
               color: "#52595D",
               fontWeight: "bold",
@@ -308,17 +285,17 @@ const styles = StyleSheet.create({
     width: 46,
     height: 46,
     marginBottom: -20,
-    marginTop: 8,
+    marginTop: 5,
     borderRadius: 100,
-    marginLeft: 30,
+    marginLeft: 50,
   },
   tinyLogo3: {
-    width: 76,
-    height: 76,
+    width: 46,
+    height: 46,
     marginBottom: -20,
-    marginTop: -8,
+    marginTop: 5,
     borderRadius: 100,
-    marginLeft: 28,
+    marginLeft: 80,
   },
   tinyLogo4: {
     width: 46,

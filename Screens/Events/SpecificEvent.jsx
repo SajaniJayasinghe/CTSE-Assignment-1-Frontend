@@ -11,42 +11,72 @@ import {
 import axios from "axios";
 import { useRoute } from "@react-navigation/native";
 
-export default function SpecificEvent({ navigation }) {
-  const [event, setevent] = useState([]);
-  const [filterEvent, setfilterEvent] = useState([]);
-  const [search, setSearch] = useState("");
+export default function SpecificEvent({ route, navigation }) {
+  const [event, setevent] = useState("");
+  console.log(event);
 
+  const getEvent = async () => {
+    await axios
+      .get(`http://localhost:8080/api/events/${route.params}`)
+      .then((res) => {
+        if (res.data.success) {
+          setevent(res.data.Event);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   useEffect(() => {
-    axios.get("http://localhost:8080/api/events/getevent").then((res) => {
-      if (res.data.success) {
-        setevent(res.data.Event);
-      }
-    });
+    getEvent();
   }, []);
 
-  const searchFunc = (text) => {
-    return event.filter((event) => event.event_name === text);
+  const deleteevent = async (id) => {
+    Alert.alert("Are you sure?", "This will permanently delete Event!", [
+      {
+        text: "OK",
+        onPress: async () => {
+          axios
+            .delete(`http://localhost:8080/api/events/delete/${id}`)
+            .then((res) => {
+              navigation.push("EventsHome");
+            })
+            .catch((e) => {
+              console.error(e);
+            });
+        },
+      },
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+      },
+    ]);
   };
-
-  useEffect(() => {
-    setfilterEvent(searchFunc(search));
-  }, [search]);
 
   return (
     <View style={styles.container}>
+      <Text
+        style={{
+          fontWeight: "800",
+          textAlign: "center",
+          fontSize: 36,
+          marginLeft: -10,
+          marginTop: 15,
+          color: "#3F000F",
+          fontFamily: "Times New Roman",
+        }}
+      >
+        {" "}
+        {event.event_name}
+      </Text>
       <View style={styles.rect}>
-        <Image
-          style={styles.tinyLogo}
-          source={{
-            uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679481372/3_vgqveh.jpg",
-          }}
-        />
+        <Image style={styles.tinyLogo} source={{ uri: event.picture }} />
       </View>
       <View>
         <Text
           style={{
             marginLeft: 20,
-            marginTop: 27,
+            marginTop: 40,
             fontSize: 19,
             fontWeight: "bold",
             fontFamily: "Times New Roman",
@@ -145,97 +175,89 @@ export default function SpecificEvent({ navigation }) {
       </View>
       <Text
         style={{
-          marginLeft: 20,
-          fontSize: 18,
-          marginTop: 20,
+          marginLeft: 30,
+          fontSize: 20,
+          marginTop: 25,
           fontWeight: "bold",
           fontFamily: "Times New Roman",
-          color: "#000000",
+          color: "grey",
         }}
       >
         Description {"\n"}
       </Text>
       <ScrollView>
-        {(search === "" ? event : filterEvent).map((event, index) => (
-          <View key={event + index}>
-            <View style={styles.rect1}>
-              <Text
-                style={{
-                  marginLeft: 20,
-                  fontSize: 20,
-                  fontFamily: "Times New Roman",
-                  color: "#0C090A",
-                  fontWeight: "bold",
-                  marginTop: 10,
-                }}
-              >
-                {event.event_name} - {event.type}
-              </Text>
-              <Image
-                style={styles.tinyLogo8}
-                source={{
-                  uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679471650/2838912_zdihvz.png",
-                }}
-              />
-              <Text
-                style={{
-                  marginLeft: 40,
-                  fontSize: 15,
-                  marginTop: 3,
-                  fontFamily: "Times New Roman",
-                  color: "#52595D",
-                  fontWeight: "bold",
-                }}
-              >
-                {event.location} {/* {hotel.location} */}
-                {"\n"}
-              </Text>
-              <Text
-                style={{
-                  marginLeft: 40,
-                  fontSize: 15,
-                  marginTop: -13,
-                  fontFamily: "Times New Roman",
-                  color: "#52595D",
-                  fontWeight: "bold",
-                }}
-              >
-                {event.date}
-                {"\n"}
-              </Text>
-              <Text
-                style={{
-                  marginLeft: 38,
-                  fontSize: 15,
-                  marginTop: -10,
-                  fontFamily: "Times New Roman",
-                  color: "#000000",
-                  textAlign: "justify",
-                  fontWeight: "bold",
-                  marginRight: 20,
-                }}
-              >
-                Ticket Price : {event.ticket_price}
-                {"\n"}
-              </Text>
-              <Text
-                style={{
-                  marginLeft: 20,
-                  fontSize: 15,
-                  marginTop: 15,
-                  fontFamily: "Times New Roman",
-                  color: "#52595D",
-                  textAlign: "justify",
-                  fontWeight: "bold",
-                  marginRight: 20,
-                }}
-              >
-                {" "}
-                {event.description}
-              </Text>
-            </View>
-          </View>
-        ))}
+        <View style={styles.rect1}>
+          <Text
+            style={{
+              marginLeft: 20,
+              fontSize: 20,
+              fontFamily: "Times New Roman",
+              color: "#0C090A",
+              fontWeight: "bold",
+              marginTop: 10,
+            }}
+          >
+            {event.event_name} - {event.type}
+          </Text>
+          <Image
+            style={styles.tinyLogo6}
+            source={{
+              uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679471650/2838912_zdihvz.png",
+            }}
+          />
+          <Text
+            style={{
+              marginLeft: 40,
+              fontSize: 15,
+              marginTop: 0,
+              fontFamily: "Times New Roman",
+              color: "#52595D",
+              fontWeight: "bold",
+            }}
+          >
+            {event.location}
+            {"\n"}
+          </Text>
+          <Text
+            style={{
+              marginLeft: 40,
+              fontSize: 15,
+              marginTop: -13,
+              fontFamily: "Times New Roman",
+              color: "#52595D",
+              fontWeight: "bold",
+            }}
+          >
+            {event.date}
+            {"\n"}
+          </Text>
+          <Text
+            style={{
+              marginLeft: 40,
+              fontSize: 15,
+              marginTop: -13,
+              fontFamily: "Times New Roman",
+              color: "#000000",
+              fontWeight: "bold",
+            }}
+          >
+            Tickect Prices : {event.ticket_price}
+          </Text>
+          <Text
+            style={{
+              marginLeft: 20,
+              fontSize: 15,
+              marginTop: 15,
+              fontFamily: "Times New Roman",
+              color: "#52595D",
+              textAlign: "justify",
+              fontWeight: "bold",
+              marginRight: 20,
+            }}
+          >
+            {event.description}
+          </Text>
+        </View>
       </ScrollView>
     </View>
   );
@@ -244,12 +266,6 @@ export default function SpecificEvent({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  homelogo: {
-    width: 400,
-    height: 20,
-    marginTop: -5,
-    marginLeft: 0,
   },
   rect: {
     width: 357,
@@ -324,14 +340,13 @@ const styles = StyleSheet.create({
     marginLeft: 35,
   },
   tinyLogo6: {
-    width: 46,
-    height: 46,
+    width: 18,
+    height: 18,
     marginBottom: -20,
-    marginTop: 8,
+    marginTop: 13,
     borderRadius: 100,
-    marginLeft: 35,
+    marginLeft: 19,
   },
-
   tinyLogo7: {
     width: 46,
     height: 46,
@@ -339,14 +354,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     borderRadius: 100,
     marginLeft: 32,
-  },
-  tinyLogo8: {
-    width: 18,
-    height: 18,
-    marginBottom: -20,
-    marginTop: 13,
-    borderRadius: 100,
-    marginLeft: 19,
   },
   icon: {
     color: "#8B0000",

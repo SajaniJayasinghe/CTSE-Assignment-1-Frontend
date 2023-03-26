@@ -8,7 +8,7 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  Alert
+  Alert,
 } from "react-native";
 
 export default function SignupScreen({ navigation }) {
@@ -22,6 +22,11 @@ export default function SignupScreen({ navigation }) {
       const payload = {
         name: name,
         email: email,
+        password: password,
+      };
+
+      await axios
+        .post("http://localhost:8080/api/user/register", payload)
         password: password
       };
 
@@ -49,7 +54,7 @@ export default function SignupScreen({ navigation }) {
       <Image
         style={styles.logo}
         source={{
-          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679627198/Screenshot_2023-03-24_at_08.35.25-removebg-preview_x2ljmf.png"
+          uri: "https://res.cloudinary.com/nibmsa/image/upload/v1679627198/Screenshot_2023-03-24_at_08.35.25-removebg-preview_x2ljmf.png",
         }}
       />
 
@@ -60,7 +65,7 @@ export default function SignupScreen({ navigation }) {
           color: "#560319",
           fontWeight: "bold",
           marginBottom: -30,
-          textAlign: "center"
+          textAlign: "center",
         }}
       >
         CREATE ACCOUNT
@@ -86,6 +91,7 @@ export default function SignupScreen({ navigation }) {
       <TextInput
         placeholder="Enter Password here"
         style={styles.textInput}
+        secureTextEntry
         onChange={(e) => setPassword(e.nativeEvent.text)}
         value={password}
       />
@@ -94,6 +100,7 @@ export default function SignupScreen({ navigation }) {
       <TextInput
         placeholder="Re-Password here"
         style={styles.textInput}
+        secureTextEntry
         onChange={(e) => setConfirmPassword(e.nativeEvent.text)}
         value={confirmPassword}
       />
@@ -117,19 +124,19 @@ export default function SignupScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   logo: {
     width: 400,
     height: 190,
-    marginTop: 0
+    marginTop: 0,
   },
   Text: {
     color: "#6D7B8D",
     fontSize: 16,
     lineHeight: 18,
     marginTop: 50,
-    marginLeft: 40
+    marginLeft: 40,
   },
   textInput: {
     height: 40,
@@ -140,14 +147,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 35,
     borderWidth: 1,
-    borderColor: "#5C3317"
+    borderColor: "#5C3317",
+
   },
   Text2: {
     color: "#6D7B8D",
     fontSize: 16,
     lineHeight: 18,
     marginTop: 10,
-    marginLeft: 40
+    marginLeft: 40,
   },
   containerx: {
     backgroundColor: "#FFFFFF",
@@ -157,7 +165,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     shadowColor: "#000",
     shadowOffset: {
-      height: 1
+      height: 1,
     },
 
     shadowOpacity: 0.35,
@@ -165,7 +173,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     minWidth: 88,
     paddingLeft: 26,
-    paddingRight: 16
+    paddingRight: 16,
   },
   materialButtonDark: {
     height: 40,
@@ -176,7 +184,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0,
     marginTop: 25,
     marginBottom: 20,
-    marginLeft: 90
+    marginLeft: 90,
   },
   signupButton: {
     color: "white",
@@ -196,6 +204,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 18,
     marginTop: -18,
-    marginLeft: 260
-  }
+    marginLeft: 260,
+  },
 });

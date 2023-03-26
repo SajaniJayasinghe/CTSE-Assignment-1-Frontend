@@ -31,6 +31,7 @@ import PlaceDetails from "./Screens/Places/PlaceDetails";
 import UpdatePlace from "./Screens/Places/UpdatePlace";
 import PlaceList from "./Screens/Places/PlaceList";
 import SpecificPlace from "./Screens/Places/SpecificPlace";
+import UserPlaceList from "./Screens/Places/UserPlaceList";
 
 //Imaya
 import AddHotels from "./Screens/Hotels/AddHotels";
@@ -39,6 +40,7 @@ import HotelHome from "./Screens/Hotels/HotelHome";
 import UpdateHotelDetails from "./Screens/Hotels/UpdateHotelDetails";
 import HotelList from "./Screens/Hotels/HotelList";
 import SpecificHotel from "./Screens/Hotels/SpecificHotel";
+import UserHotelList from "./Screens/Hotels/UserHotelList";
 
 //Randy
 import AddBlog from "./Screens/Blogs/AddBlog";
@@ -78,6 +80,7 @@ export default function App() {
         <Stack.Screen name="UpdatePlace" component={UpdatePlace} />
         <Stack.Screen name="PlaceList" component={PlaceList} />
         <Stack.Screen name="SpecificPlace" component={SpecificPlace} />
+        <Stack.Screen name="UserPlaceList" component={UserPlaceList} />
 
         {/* Imaya */}
 
@@ -90,6 +93,7 @@ export default function App() {
         />
         <Stack.Screen name="HotelList" component={HotelList} />
         <Stack.Screen name="SpecificHotel" component={SpecificHotel} />
+        <Stack.Screen name="UserHotelList" component={UserHotelList} />
 
         {/* Randy */}
 
